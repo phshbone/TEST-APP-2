@@ -47,6 +47,24 @@
     });
   }
 
+  function removeObsoleteSwipeHint(){
+    if(!main||state.route!=='procedures')return;
+    const matches=[];
+    main.querySelectorAll('*').forEach(el=>{
+      const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(text.length>160)return;
+      if(/swipe\s+(left|right)/i.test(text)&&/back|return|go/i.test(text))matches.push(el);
+    });
+    matches.forEach(el=>{
+      if(!el.isConnected)return;
+      const childMatch=[...el.children].some(child=>{
+        const t=(child.textContent||'').replace(/\s+/g,' ').trim();
+        return t.length<=160&&/swipe\s+(left|right)/i.test(t)&&/back|return|go/i.test(t);
+      });
+      if(!childMatch)el.remove();
+    });
+  }
+
   function classifyBadges(){
     document.querySelectorAll('.badge').forEach(b=>{
       b.classList.remove('badge-official','badge-morris','badge-same','badge-early','badge-election','badge-critical','badge-master');
@@ -104,6 +122,7 @@
   function post(){
     measureNav();
     removeDuplicateWarnings();
+    removeObsoleteSwipeHint();
     formatCriticalWarnings();
     classifyBadges();
     wireTopButton();
