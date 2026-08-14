@@ -19,13 +19,11 @@
       if(!lines.length)return;
       let head=lines.shift();
       let body=lines.join(' ');
-      // Handle legacy cases where the closing star wrapped onto its own line.
       if(lines[0]==='★'){
         head=`${head} ★`;
         lines.shift();
         body=lines.join(' ');
       }
-      // If heading contains a second sentence, keep only the starred command as the heading.
       const secondStar=head.indexOf('★',1);
       if(secondStar>0){
         const remainder=head.slice(secondStar+1).trim();
@@ -59,6 +57,33 @@
     main.addEventListener('scroll',sync,{passive:true});
     sync();
   }
+
+  // Opening a Standard Voter Check-In lesson must leave the TOP of that lesson visible.
+  // The old body-scroll compensation became wrong after the center pane became the only scroller.
+  document.addEventListener('click',e=>{
+    const lessonButton=e.target.closest('[data-open-lesson]');
+    if(lessonButton&&main){
+      const key=lessonButton.dataset.openLesson;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        const card=document.querySelector(`[data-lesson-card="${CSS.escape(key)}"]`);
+        if(!card)return;
+        const delta=card.getBoundingClientRect().top-main.getBoundingClientRect().top;
+        main.scrollTop+=delta-8;
+      }));
+    }
+
+    // A deliberate tap on the Guide bottom-nav starts a fresh Guide visit.
+    // Do not carry a Procedure-return arrow from a previous cross-link into that visit.
+    const navGuide=e.target.closest('.bottom-nav [data-route="guide"]');
+    if(navGuide){
+      sessionStorage.removeItem('mpwReturnProcedure');
+      sessionStorage.removeItem('mpwReturnProcedureScroll');
+      sessionStorage.removeItem('mpwProcedureInternalOrigin');
+      document.getElementById('floatingProcedureReturn')?.classList.remove('visible');
+      document.getElementById('floatingInternalProcedureReturn')?.classList.remove('visible');
+      document.getElementById('floatingTopButton')?.classList.remove('suppressed-by-return');
+    }
+  },true);
 
   function post(){
     measureNav();
