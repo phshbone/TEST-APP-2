@@ -8,24 +8,19 @@
   };
   const utcDateString=(d=new Date())=>d.toISOString().slice(0,10);
 
-  // Correct an active-session date that rolled ahead because it was initialized from UTC.
   try{
     const local=localDateString(), utc=utcDateString();
     if(state.reportDate===utc && utc!==local){state.reportDate=local;saveState();}
   }catch(e){}
 
-  // iOS Safari is more reliable when the fixed nav is attached directly to body rather than
-  // living inside a transformed/scrolling application shell.
+  // Legacy fixed-nav logic intentionally disabled. The structural shell now owns navigation.
   function anchorPrimaryNav(){
     const nav=document.querySelector('.bottom-nav');
-    if(!nav) return;
-    if(nav.parentElement!==document.body) document.body.appendChild(nav);
+    if(!nav)return;
     const h=Math.ceil(nav.getBoundingClientRect().height)||88;
     document.documentElement.style.setProperty('--mpw-nav-height',`${h}px`);
   }
 
-  // Guide lesson statuses feed the broad Training Tracker subjects.
-  // A broad topic can contain several detailed Guide lessons, so the tracker receives the union.
   function lessonStatuses(key){
     const obj=state.lessonStatus?.[key]||{};
     return Array.isArray(obj.statuses)?obj.statuses:(obj.status?[obj.status]:[]);
@@ -49,7 +44,6 @@
     if(all.has('notReached'))mapped.push('notReached');
     setTrainingStatuses('Standard voter check-in',mapped);
 
-    // Activation-card preload has its own broad Training Tracker topic.
     const preload=new Set(lessonStatuses('checkin:preload'));
     const preloadMapped=[];
     if(preload.has('explained'))preloadMapped.push('covered');
@@ -60,14 +54,13 @@
     saveState();
   }
 
-  // Keep a durable return context when Procedures deliberately opens shared Guide material.
   function rememberProcedureOrigin(){
     if(state.route!=='procedures')return;
     const card=document.querySelector('.field-procedure');
     const id=state.procedureTarget||card?.dataset.fieldProcedure;
     if(id){
       sessionStorage.setItem('mpwReturnProcedure',id);
-      sessionStorage.setItem('mpwReturnProcedureScroll',String(window.scrollY||0));
+      sessionStorage.setItem('mpwReturnProcedureScroll',String(document.getElementById('mainContent')?.scrollTop||0));
     }
   }
   function installFloatingReturn(){
@@ -94,7 +87,6 @@
       saveState();render();
       requestAnimationFrame(()=>document.getElementById(`field-${targetId}`)?.scrollIntoView({block:'start',behavior:'auto'}));
     };
-    // Supersede the earlier full-width return banner with the compact contextual control.
     document.querySelectorAll('.return-to-procedure').forEach(x=>x.style.display='none');
   }
 
@@ -105,7 +97,6 @@
     installFloatingReturn();
   }
 
-  // Status buttons in review-pass intentionally avoid a full render. Sync immediately after taps.
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-lesson-status]');
     if(b)setTimeout(syncGuideTraining,0);
