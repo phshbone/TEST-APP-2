@@ -4,10 +4,10 @@ body{padding:0!important}
 #app.app-shell{
   position:fixed!important;
   inset:0!important;
-  width:100%!important;
-  height:100dvh!important;
+  width:auto!important;
+  height:auto!important;
   min-height:0!important;
-  max-height:100dvh!important;
+  max-height:none!important;
   display:grid!important;
   grid-template-rows:auto auto minmax(0,1fr) auto!important;
   overflow:hidden!important;
@@ -53,6 +53,8 @@ body{padding:0!important}
   position:fixed!important;
   bottom:calc(82px + env(safe-area-inset-bottom))!important;
 }
+.home-meter-head{gap:12px}
+.home-meter-head strong{margin-left:auto;white-space:nowrap}
 @media(max-width:560px){
   #mainContent{padding-top:12px!important}
   #app>.bottom-nav{min-height:70px}
