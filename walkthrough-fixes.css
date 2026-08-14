@@ -1,0 +1,24 @@
+/* Phone walkthrough fixes — TEST-APP-2 only. */
+:root{--mpw-topbar-h:86px;--mpw-mode-h:76px}
+html{scroll-padding-top:calc(var(--mpw-topbar-h) + var(--mpw-mode-h) + 14px);overflow-x:hidden}
+body{min-height:100dvh;overflow-x:hidden}
+.app-shell{min-height:100dvh}
+.topbar{top:0!important}
+.mode-strip{top:var(--mpw-topbar-h)!important}
+.bottom-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;margin:0!important;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
+.bottom-nav::after{content:"";position:absolute;left:0;right:0;top:100%;height:96px;background:var(--navy-2);pointer-events:none}
+.field-procedure,.guide-section-card,.lesson-card,.category-grid{scroll-margin-top:calc(var(--mpw-topbar-h) + var(--mpw-mode-h) + 14px)}
+.procedure-top-control{display:flex;justify-content:center;margin:18px 0 24px}
+.procedure-top-control button{min-height:48px;border:1px solid #aabbd0;border-radius:13px;background:#fff;color:var(--navy);font-weight:900;padding:0 18px;box-shadow:var(--shadow)}
+.status-button.multi-active{box-shadow:inset 0 0 0 2px rgba(18,58,109,.22)}
+.status-button.multi-active[data-status="covered"],.status-button.multi-active[data-status="explained"]{background:var(--green-bg);color:var(--green);border-color:#8fceb0}
+.status-button.multi-active[data-status="live"]{background:#e9f2ff;color:#175c9b;border-color:#8bb6df}
+.status-button.multi-active[data-status="review"]{background:var(--amber-bg);color:var(--amber);border-color:#dfc36f}
+.status-button.multi-active[data-status="notReached"]{background:#f1f3f6;color:#5a6575;border-color:#c8d0db}
+.training-topic-copy small{line-height:1.35}
+@media(max-width:560px){
+  .bottom-nav{min-height:78px}
+  .nav-button{min-height:60px!important}
+  .nav-button small{font-size:.64rem!important}
+  .procedure-top-control{margin-bottom:18px}
+}
