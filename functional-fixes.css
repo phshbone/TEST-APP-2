@@ -1,0 +1,29 @@
+/* Functional phone fixes — TEST-APP-2 only. */
+html,body{min-height:100%;overflow-x:hidden}
+body{padding-bottom:calc(var(--mpw-nav-height,88px) + env(safe-area-inset-bottom))!important}
+.bottom-nav{
+  position:fixed!important;
+  left:0!important;right:0!important;bottom:0!important;
+  top:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  transform:none!important;
+  -webkit-transform:none!important;
+  z-index:2147483000!important;
+  isolation:isolate;
+  padding-bottom:max(8px,env(safe-area-inset-bottom))!important;
+}
+.bottom-nav *{pointer-events:auto}
+#mainContent{padding-bottom:calc(var(--mpw-nav-height,88px) + 24px)!important}
+.floating-procedure-return{
+  position:fixed;left:18px;bottom:calc(var(--mpw-nav-height,88px) + 22px);
+  width:54px;height:54px;border-radius:999px;border:1px solid #aabbd0;
+  background:#fff;color:#123a6d;font-size:30px;font-weight:900;line-height:1;
+  box-shadow:0 10px 28px rgba(18,58,109,.18);z-index:2147482990;
+  display:none;align-items:center;justify-content:center;
+}
+.floating-procedure-return.visible{display:flex}
+/* If both contextual return and back-to-top are present, keep them from overlapping. */
+.floating-procedure-return.visible~.floating-top-button{left:82px}
+.return-to-procedure{display:none!important}
