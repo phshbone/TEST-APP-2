@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#123a6d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Master Poll Worker Guide — Test Build</title>
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/assets/icon-192.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/reconciliation.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/procedure-styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/mobile-qa.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <img class="brand-logo" src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/assets/icon-192.png" alt="MPW Trainer" />
+        <div class="brand-copy">
+          <p class="eyebrow">Poll Worker Training Tool</p>
+          <h1 id="sectionTitle">Master Poll Worker Guide</h1>
+        </div>
+      </div>
+      <button id="menuButton" class="icon-button" aria-label="Open menu">☰</button>
+    </header>
+    <section class="mode-strip" aria-label="Election mode">
+      <button class="mode-button active" data-mode="early">Early Voting</button>
+      <button class="mode-button" data-mode="election">Election Day</button>
+    </section>
+    <main id="mainContent" tabindex="-1"></main>
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button data-route="home" class="nav-button active"><span>⌂</span><small>Home</small></button>
+      <button data-route="guide" class="nav-button"><span>☑</span><small>Guide</small></button>
+      <button data-route="procedures" class="nav-button"><span>≡</span><small>Procedures</small></button>
+      <button data-route="lookup" class="nav-button"><span>⌕</span><small>Lookup</small></button>
+      <button data-route="training" class="nav-button"><span>★</span><small>Training</small></button>
+      <button data-route="report" class="nav-button"><span>▤</span><small>Report</small></button>
+    </nav>
+  </div>
+  <dialog id="sideMenu" class="side-menu">
+    <div class="menu-header"><h2>More</h2><button id="closeMenu" class="icon-button" aria-label="Close menu">×</button></div>
+    <button data-route="dosdonts">Official Do’s & Don’ts</button>
+    <button data-route="board">Board Questions</button>
+    <button data-route="current">Important Dates & Rules</button>
+    <button data-route="settings">Settings & Backup</button>
+  </dialog>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/data.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/lookup-enhancements.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/procedures-reconciliation.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/correction-record-update.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/source-reconciliation.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/master-reference.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/master-pin.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/important-dates.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/home-report-reconciliation.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/phshbone/Master-PW-Training-@reconciliation-demo/qa-fixes.js"></script>
+</body>
+</html>
