@@ -189,6 +189,7 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   line-height:1!important;
   padding:6px 10px!important;
   margin:0!important;
+  transform:translateY(-5px)!important;
 }
 .home-status-head .tracker-pill,
 .home-status-head .tracker-pill.mode-early{background:#e6e0ec!important;color:#665779!important;border-color:#c7bbd2!important}
@@ -230,6 +231,6 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   .guide-section-training .status-button,.lesson-status .status-button{font-size:.82rem!important;padding:8px 8px!important}
   .critical-command{font-size:1.18rem!important}
   .critical-explanation{font-size:.98rem!important}
-  .home-status-head{align-items:flex-end!important}
+  .home-status-head{align-items:center!important}
   #mainContent .controls a.secondary{width:100%!important}
 }
