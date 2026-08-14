@@ -47,6 +47,26 @@
     });
   }
 
+  function classifyBadges(){
+    document.querySelectorAll('.badge').forEach(b=>{
+      b.classList.remove('badge-official','badge-morris','badge-same','badge-early','badge-election','badge-critical','badge-master');
+      const t=(b.textContent||'').trim().toLowerCase();
+      if(t.includes('official'))b.classList.add('badge-official');
+      else if(t.includes('morris'))b.classList.add('badge-morris');
+      else if(t.includes('same for both'))b.classList.add('badge-same');
+      else if(t.includes('early voting')&&!t.includes('election day'))b.classList.add('badge-early');
+      else if(t.includes('election day')&&!t.includes('early voting'))b.classList.add('badge-election');
+      else if(t.includes('critical'))b.classList.add('badge-critical');
+      else if(t.includes('master worker'))b.classList.add('badge-master');
+    });
+    document.querySelectorAll('.home-status-head .tracker-pill').forEach(p=>{
+      p.classList.remove('mode-early','mode-election');
+      const t=(p.textContent||'').trim().toLowerCase();
+      if(t.includes('early'))p.classList.add('mode-early');
+      if(t.includes('election'))p.classList.add('mode-election');
+    });
+  }
+
   function wireTopButton(){
     const b=document.getElementById('floatingTopButton');
     if(!b||!main)return;
@@ -58,8 +78,6 @@
     sync();
   }
 
-  // Opening a Standard Voter Check-In lesson must leave the TOP of that lesson visible.
-  // The old body-scroll compensation became wrong after the center pane became the only scroller.
   document.addEventListener('click',e=>{
     const lessonButton=e.target.closest('[data-open-lesson]');
     if(lessonButton&&main){
@@ -72,8 +90,6 @@
       }));
     }
 
-    // A deliberate tap on the Guide bottom-nav starts a fresh Guide visit.
-    // Do not carry a Procedure-return arrow from a previous cross-link into that visit.
     const navGuide=e.target.closest('.bottom-nav [data-route="guide"]');
     if(navGuide){
       sessionStorage.removeItem('mpwReturnProcedure');
@@ -89,6 +105,7 @@
     measureNav();
     removeDuplicateWarnings();
     formatCriticalWarnings();
+    classifyBadges();
     wireTopButton();
   }
 
