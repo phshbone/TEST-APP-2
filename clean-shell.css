@@ -52,10 +52,11 @@ body{
 #app>.topbar{z-index:30!important}
 #app>.mode-strip{z-index:29!important}
 
-/* Visually trim the baked-in white outer rim without changing the source icon file. */
+/* Visually trim the baked-in white outer rim without changing the source icon file.
+   The bottom is trimmed one extra pixel to correct the slight bottom-heavy appearance. */
 .brand-logo{
   border:0!important;
-  clip-path:inset(2px round 10px)!important;
+  clip-path:inset(2px 2px 3px 2px round 10px)!important;
   background:var(--navy,#123a6d)!important;
 }
 
@@ -98,6 +99,7 @@ body{
 }
 .bottom-nav::after{display:none!important;content:none!important}
 .bottom-nav .nav-button{pointer-events:auto!important;touch-action:manipulation!important;min-height:58px!important}
+.bottom-nav .nav-button small{font-weight:800!important;letter-spacing:.005em!important}
 
 .field-procedure,.procedure-card,.lesson-card,.guide-section-card,.category-grid{scroll-margin-top:16px!important}
 
@@ -145,25 +147,31 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
 }
 .field-procedure [data-open-guide]{display:none!important}
 
-/* Critical command stays readable; if it cannot fit, it wraps as a phrase rather than shrinking to tiny type. */
+/* Critical cards: large centered command across the card; explanation remains readable beneath it. */
 .warning-box,.procedure-critical{white-space:normal!important}
 .critical-command{
   display:block!important;
+  width:100%!important;
   white-space:normal!important;
+  text-align:center!important;
   font-family:"Arial Narrow",Impact,sans-serif!important;
   font-weight:1000!important;
   letter-spacing:.005em!important;
-  font-size:1.02rem!important;
-  line-height:1.15!important;
-  margin-bottom:8px!important;
+  font-size:1.22rem!important;
+  line-height:1.12!important;
+  margin:0 auto 10px!important;
 }
-.critical-explanation{display:block!important;line-height:1.35!important}
+.critical-explanation{
+  display:block!important;
+  line-height:1.35!important;
+  text-align:left!important;
+}
 
-/* Semantic badge families. */
+/* Semantic badge families. Mode badges get their own visual family. */
 .badge.badge-official{background:#e8f2ff!important;color:#15558f!important;border:1px solid #b7d5f3!important}
 .badge.badge-morris{background:#e8f6ef!important;color:#236b45!important;border:1px solid #b9ddc9!important}
 .badge.badge-same{background:#eef1f5!important;color:#566273!important;border:1px solid #d6dde6!important}
-.badge.badge-early{background:#fff3cf!important;color:#8b6500!important;border:1px solid #e8cc6d!important}
+.badge.badge-early{background:#f0e9ff!important;color:#5c36a3!important;border:1px solid #cbb7ef!important}
 .badge.badge-election{background:#fde9e7!important;color:#96372d!important;border:1px solid #e7b8b2!important}
 .badge.badge-critical{background:#ffe8e5!important;color:#9f2318!important;border:1px solid #e6aaa4!important}
 .badge.badge-master{background:#fff0d8!important;color:#8d5900!important;border:1px solid #e4c183!important}
@@ -178,14 +186,15 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   padding:6px 10px!important;
   margin:0!important;
 }
-.home-status-head .tracker-pill.mode-early{background:#fff3cf!important;color:#8b6500!important;border-color:#e8cc6d!important}
+.home-status-head .tracker-pill,
+.home-status-head .tracker-pill.mode-early{background:#f0e9ff!important;color:#5c36a3!important;border-color:#cbb7ef!important}
 .home-status-head .tracker-pill.mode-election{background:#fde9e7!important;color:#96372d!important;border-color:#e7b8b2!important}
 
 @media(max-width:560px){
   #mainContent{padding:14px 12px 30px!important}
-  .bottom-nav .nav-button small{font-size:.62rem!important;line-height:1.05!important}
+  .bottom-nav .nav-button small{font-size:.67rem!important;line-height:1.05!important;font-weight:800!important}
   .bottom-nav .nav-button span{font-size:1.08rem!important}
   .guide-section-training .status-button,.lesson-status .status-button{font-size:.82rem!important;padding:8px 8px!important}
-  .critical-command{font-size:.96rem!important}
+  .critical-command{font-size:1.08rem!important}
   .home-status-head{align-items:flex-end!important}
 }
