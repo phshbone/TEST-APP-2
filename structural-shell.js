@@ -4,6 +4,15 @@
   const main=document.getElementById('mainContent');
   if(!app||!main)return;
   let repairing=false;
+
+  function syncViewport(){
+    const vv=window.visualViewport;
+    const top=vv?Math.max(0,Math.round(vv.offsetTop)):0;
+    const height=vv?Math.round(vv.height):window.innerHeight;
+    document.documentElement.style.setProperty('--mpw-vv-top',`${top}px`);
+    document.documentElement.style.setProperty('--mpw-vv-height',`${height}px`);
+  }
+
   function repair(){
     if(repairing)return; repairing=true;
     const top=document.querySelector('.topbar');
@@ -13,15 +22,24 @@
     if(mode&&mode.parentElement!==app)app.insertBefore(mode,main);
     if(nav&&nav.parentElement!==app)app.appendChild(nav);
     [top,mode,nav].filter(Boolean).forEach(el=>{
-      ['top','right','bottom','left','position','transform'].forEach(p=>el.style.removeProperty(p));
+      ['top','right','bottom','left','position','transform','height'].forEach(p=>el.style.removeProperty(p));
     });
-    document.documentElement.scrollTop=0;document.body.scrollTop=0;
+    syncViewport();
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
     repairing=false;
   }
-  const obs=new MutationObserver(()=>requestAnimationFrame(repair));
+
+  const schedule=()=>requestAnimationFrame(repair);
+  const obs=new MutationObserver(schedule);
   obs.observe(document.body,{childList:true,subtree:false});
-  addEventListener('resize',()=>requestAnimationFrame(repair),{passive:true});
+  addEventListener('resize',schedule,{passive:true});
   addEventListener('orientationchange',()=>setTimeout(repair,100),{passive:true});
+  if(window.visualViewport){
+    visualViewport.addEventListener('resize',schedule,{passive:true});
+    visualViewport.addEventListener('scroll',schedule,{passive:true});
+  }
+
   const prior=window.render;
   if(typeof prior==='function')window.render=function(){prior();requestAnimationFrame(repair);};
   repair();
