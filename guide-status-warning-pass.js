@@ -1,20 +1,28 @@
-// Explicit Guide training-status controls for checklist sections + concise critical warning headings.
+// Explicit Guide training-status controls for every standard checklist section + concise critical warnings.
 (function(){
-  const MAP={
+  const TOPIC_MAP={
     opening:['Opening and worker orientation','Numbered station setup'],
-    mailin:['Mail-In Ballot'],notfound:['Voter Not Found'],provisional:['Provisional ballots'],reprint:['Reprint'],spoil:['Spoil']
+    morning:[],
+    shutdown:[],
+    mailin:['Mail-In Ballot'],
+    notfound:['Voter Not Found'],
+    provisional:['Provisional ballots'],
+    reprint:['Reprint'],
+    spoil:['Spoil']
   };
+  // Every non-teaching Guide procedure receives its own evaluation block.
+  const SECTION_IDS=new Set((data.procedures||[]).filter(p=>p.type!=='teaching').map(p=>p.id));
   const choices=[['covered','Covered'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
   state.guideSectionTraining=state.guideSectionTraining||{};
   function vals(id){const o=state.guideSectionTraining[id]||{};return Array.isArray(o.statuses)?o.statuses:(o.status?[o.status]:[])}
   function canonical(a){return a.includes('live')?'live':a.includes('covered')?'covered':a.includes('review')?'review':a.includes('notReached')?'notReached':''}
   function controls(id){
-    if(!MAP[id])return '';
+    if(!SECTION_IDS.has(id))return '';
     const a=vals(id);
     return `<section class="guide-section-training"><p class="section-label">Training status</p><div class="status-grid compact">${choices.map(([k,l])=>`<button type="button" class="status-button ${a.includes(k)?'multi-active':''}" data-guide-section-status="${id}" data-status="${k}" aria-pressed="${a.includes(k)}">${l}</button>`).join('')}</div></section>`;
   }
   function sync(id){
-    const a=vals(id);(MAP[id]||[]).forEach(topic=>{
+    const a=vals(id);(TOPIC_MAP[id]||[]).forEach(topic=>{
       const i=data.trainingTopics.indexOf(topic);if(i<0)return;
       state.training[i]=state.training[i]||{};
       const manual=(Array.isArray(state.training[i].statuses)?state.training[i].statuses:[]).filter(x=>!(state.training[i].__sectionStatuses||[]).includes(x));
@@ -22,19 +30,21 @@
       state.training[i].__sectionStatuses=[...a];state.training[i].statuses=merged;state.training[i].status=canonical(merged);
     });
   }
-  Object.keys(MAP).forEach(sync);
+  SECTION_IDS.forEach(sync);
 
   if(typeof standardProcedureMarkup==='function'){
     const base=standardProcedureMarkup;
     standardProcedureMarkup=function(p,expanded=false){
       let html=base(p,expanded);
       const c=controls(p.id);
-      if(c)html=html.replace('</div></section>',`${c}</div></section>`);
+      if(c&&!html.includes(`data-guide-section-status="${p.id}"`)){
+        const close=html.lastIndexOf('</div></section>');
+        if(close>=0)html=`${html.slice(0,close)}${c}${html.slice(close)}`;
+      }
       return html;
     };
   }
 
-  // Convert the highest-risk warnings into short starred commands plus explanatory text.
   const warningMap={
     shutdown:['★ DO NOT SELECT CLOSE POLL ★','During an ordinary intermediate Early Voting night, follow the nightly shutdown procedure instead.'],
     notfound:['★ DO NOT SELECT VOTER NOT FOUND ★','Do not select it unless the Board of Elections expressly directs you to do so.'],
@@ -57,6 +67,6 @@
     });
   },true);
 
-  const prior=render;render=function(){Object.keys(MAP).forEach(sync);prior();};
+  const prior=render;render=function(){SECTION_IDS.forEach(sync);prior();};
   saveState();render();
 })();
