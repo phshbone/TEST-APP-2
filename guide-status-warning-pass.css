@@ -1,0 +1,5 @@
+/* Guide checklist training evidence + standardized warning hierarchy. */
+.guide-section-training{margin-top:18px;padding-top:16px;border-top:1px solid #d6e0eb}
+.guide-section-training .section-label{margin:0 0 10px}
+.warning-box,.procedure-critical{white-space:pre-line}
+.warning-box::first-line,.procedure-critical::first-line{font-weight:1000;letter-spacing:.01em}
