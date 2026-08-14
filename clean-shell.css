@@ -19,7 +19,6 @@ body{
   background:var(--light,#f4f7fb)!important;
 }
 
-/* One app frame. The center pane is the only scrolling surface. */
 #app.app-shell{
   position:relative!important;
   inset:auto!important;
@@ -70,7 +69,6 @@ body{
   scroll-padding-top:16px!important;
 }
 
-/* Structural bottom row: never fixed, never detached from the app frame. */
 #app>.bottom-nav,
 .bottom-nav{
   position:relative!important;
@@ -96,7 +94,6 @@ body{
 
 .field-procedure,.procedure-card,.lesson-card,.guide-section-card,.category-grid{scroll-margin-top:16px!important}
 
-/* Floating context controls sit just above the structural nav. */
 .floating-top-button,
 .floating-procedure-return,
 .floating-internal-procedure-return{
@@ -113,7 +110,6 @@ body:has(.floating-procedure-return.visible) .floating-top-button,
 body:has(.floating-internal-procedure-return.visible) .floating-top-button{display:none!important}
 .return-to-procedure{display:none!important}
 
-/* Multi-status behavior. */
 .status-button.multi-active,.status-button.multipick-active{box-shadow:inset 0 0 0 2px rgba(18,58,109,.22)}
 .status-button.multi-active[data-status="covered"],.status-button.multi-active[data-status="explained"],.status-button.multipick-active[data-status="covered"],.status-button.multipick-active[data-status="explained"]{background:var(--green-bg);color:var(--green);border-color:#8fceb0}
 .status-button.multi-active[data-status="live"],.status-button.multipick-active[data-status="live"]{background:#e9f2ff;color:#175c9b;border-color:#8bb6df}
@@ -122,22 +118,38 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
 .training-topic-copy small{line-height:1.35}
 .guide-section-training{margin-top:18px;padding-top:16px;border-top:1px solid #d6e0eb}
 .guide-section-training .section-label{margin:0 0 10px}
+.guide-section-training .status-grid.compact{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.guide-section-training .status-button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  min-width:0!important;
+  min-height:48px!important;
+  padding:8px 10px!important;
+  font-size:.82rem!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+}
 .field-procedure [data-open-guide]{display:none!important}
 
-/* Critical warnings: command is one compact non-wrapping line; explanation sits below it. */
 .warning-box,.procedure-critical{white-space:normal!important}
 .critical-command{
   display:block!important;
   white-space:nowrap!important;
+  font-family:"Arial Narrow",Impact,sans-serif!important;
   font-weight:1000!important;
-  letter-spacing:.01em!important;
-  font-size:clamp(.88rem,3.75vw,1.18rem)!important;
-  line-height:1.15!important;
+  letter-spacing:0!important;
+  font-size:clamp(.76rem,3.05vw,.98rem)!important;
+  line-height:1.1!important;
   margin-bottom:8px!important;
 }
 .critical-explanation{display:block!important;line-height:1.35!important}
 
-/* Home summary alignment. */
 .home-meter-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important}
 .home-meter-head strong{margin-left:auto!important;white-space:nowrap!important}
 
@@ -145,5 +157,6 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   #mainContent{padding:14px 12px 30px!important}
   .bottom-nav .nav-button small{font-size:.62rem!important;line-height:1.05!important}
   .bottom-nav .nav-button span{font-size:1.08rem!important}
-  .critical-command{font-size:clamp(.82rem,3.55vw,1rem)!important}
+  .guide-section-training .status-button{font-size:.76rem!important;padding:7px 6px!important}
+  .critical-command{font-size:clamp(.7rem,2.9vw,.9rem)!important}
 }
