@@ -65,6 +65,28 @@
     });
   }
 
+  // The Procedures landing/category view has no previous page to return to.
+  // Remove its orphan Back control so the real Procedures content moves up naturally.
+  function removeOrphanProcedureBack(){
+    if(!main||state.route!=='procedures')return;
+    const hasTarget=!!state.procedureTarget;
+    const hasHistory=Array.isArray(state.procedureHistory)&&state.procedureHistory.length>0;
+    if(hasTarget||hasHistory)return;
+
+    const candidates=main.querySelectorAll('button,a,[role="button"]');
+    candidates.forEach(el=>{
+      const text=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+      const aria=(el.getAttribute('aria-label')||'').trim().toLowerCase();
+      const cls=String(el.className||'').toLowerCase();
+      const dataBack=el.hasAttribute('data-procedure-back')||el.hasAttribute('data-back');
+      const looksLikeBack=dataBack||/procedure.*back|back.*procedure/.test(cls)||text==='back'||text==='← back'||text==='back to procedures'||text==='back to procedure categories'||text==='back to categories'||aria==='back';
+      if(!looksLikeBack)return;
+      const parent=el.parentElement;
+      el.remove();
+      if(parent&&parent!==main&&!parent.children.length&&!(parent.textContent||'').trim())parent.remove();
+    });
+  }
+
   function classifyBadges(){
     document.querySelectorAll('.badge').forEach(b=>{
       b.classList.remove('badge-official','badge-morris','badge-same','badge-early','badge-election','badge-critical','badge-master');
@@ -123,6 +145,7 @@
     measureNav();
     removeDuplicateWarnings();
     removeObsoleteSwipeHint();
+    removeOrphanProcedureBack();
     formatCriticalWarnings();
     classifyBadges();
     wireTopButton();
