@@ -189,8 +189,8 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   font-size:.72rem!important;
   line-height:1!important;
   padding:6px 10px!important;
-  margin:0 0 3px!important;
-  transform:none!important;
+  margin:0 0 8px!important;
+  transform:translateY(-8px)!important;
 }
 .home-status-head .tracker-pill,
 .home-status-head .tracker-pill.mode-early{background:#e6e0ec!important;color:#665779!important;border-color:#c7bbd2!important}
