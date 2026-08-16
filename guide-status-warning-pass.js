@@ -33,10 +33,12 @@
   SECTION_IDS.forEach(sync);
 
   function pilotCopilotBlock(id){
-    if(id!=='opening'&&id!=='shutdown')return '';
-    const phase=id==='opening'?'setup and opening':'shutdown and closing';
+    if(!['opening','morning','shutdown'].includes(id))return '';
+    const phase=id==='opening'?'setup and opening':id==='morning'?'start-of-day reopening':'shutdown and closing';
+    const action=id==='opening'?'open and set up the equipment':id==='morning'?'reopen and ready the equipment':'shut down or close the equipment';
     return `<section class="teaching-block official pilot-copilot-block">
       <h5>PILOT / CO-PILOT METHOD</h5>
+      <p><strong>Use the Pilot / Co-Pilot method to ${action}.</strong></p>
       <p><strong>Morris County Training — foundational operating method</strong></p>
       <p>For ${phase}, one poll worker acts as the <strong>Pilot</strong> and reads each instruction aloud, in order. The other poll workers act as <strong>Co-Pilots</strong>: they follow along and perform the matching step on the ePollbooks, printers, voting machines, seals, and other equipment.</p>
       <ul>
@@ -72,7 +74,7 @@
   // Keep the same principle visible in the fast pre-opening reminder.
   if(data.dosDonts?.dos&&!data.dosDonts.dos.some(x=>/pilot\s*\/\s*co-pilot/i.test(x.text||''))){
     data.dosDonts.dos.unshift({
-      text:'Use the Pilot / Co-Pilot method for setup, opening, shutdown, and closing.',
+      text:'Use the Pilot / Co-Pilot method for setup, opening, start-of-day reopening, shutdown, and closing.',
       detail:'One poll worker reads each instruction aloud. Everyone else performs the matching step and waits for the group before advancing.',
       tags:['Current Morris Guidance','Opening / Closing']
     });
