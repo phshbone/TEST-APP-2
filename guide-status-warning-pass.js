@@ -32,10 +32,34 @@
   }
   SECTION_IDS.forEach(sync);
 
+  function pilotCopilotBlock(id){
+    if(id!=='opening'&&id!=='shutdown')return '';
+    const phase=id==='opening'?'setup and opening':'shutdown and closing';
+    return `<section class="teaching-block official pilot-copilot-block">
+      <h5>PILOT / CO-PILOT METHOD</h5>
+      <p><strong>Morris County Training — foundational operating method</strong></p>
+      <p>For ${phase}, one poll worker acts as the <strong>Pilot</strong> and reads each instruction aloud, in order. The other poll workers act as <strong>Co-Pilots</strong>: they follow along and perform the matching step on the ePollbooks, printers, voting machines, seals, and other equipment.</p>
+      <ul>
+        <li>One person reads; everyone follows the same instruction before moving on.</li>
+        <li>Workers may divide the physical tasks, but nobody advances ahead of the reader.</li>
+        <li>A second worker may collect used seals or materials while the group stays on the same sequence.</li>
+        <li>If a screen, seal, number, report, or setup does not match the instruction, stop and resolve it before continuing.</li>
+      </ul>
+    </section>`;
+  }
+
   if(typeof standardProcedureMarkup==='function'){
     const base=standardProcedureMarkup;
     standardProcedureMarkup=function(p,expanded=false){
       let html=base(p,expanded);
+      const pilot=pilotCopilotBlock(p.id);
+      if(pilot&&!html.includes('pilot-copilot-block')){
+        const detail=html.indexOf('<div class="procedure-detail">');
+        if(detail>=0){
+          const at=detail+'<div class="procedure-detail">'.length;
+          html=`${html.slice(0,at)}${pilot}${html.slice(at)}`;
+        }
+      }
       const c=controls(p.id);
       if(c&&!html.includes(`data-guide-section-status="${p.id}"`)){
         const close=html.lastIndexOf('</div></section>');
@@ -43,6 +67,15 @@
       }
       return html;
     };
+  }
+
+  // Keep the same principle visible in the fast pre-opening reminder.
+  if(data.dosDonts?.dos&&!data.dosDonts.dos.some(x=>/pilot\s*\/\s*co-pilot/i.test(x.text||''))){
+    data.dosDonts.dos.unshift({
+      text:'Use the Pilot / Co-Pilot method for setup, opening, shutdown, and closing.',
+      detail:'One poll worker reads each instruction aloud. Everyone else performs the matching step and waits for the group before advancing.',
+      tags:['Current Morris Guidance','Opening / Closing']
+    });
   }
 
   const warningMap={
