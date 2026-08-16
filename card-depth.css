@@ -1,0 +1,62 @@
+/* Subtle raised-card treatment — TEST-APP-2 visual polish only. */
+:root{
+  --card-depth-shadow:0 10px 20px rgba(18,58,109,.12),0 2px 5px rgba(18,58,109,.08);
+  --card-depth-shadow-pressed:0 4px 9px rgba(18,58,109,.11),0 1px 2px rgba(18,58,109,.08);
+  --card-depth-highlight:inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(18,58,109,.035);
+}
+
+/* Main cards across Home, Guide, Procedures, Lookup, Training and Report. */
+.card,
+.category-card,
+.lookup-result-card,
+.lesson-card,
+.rule-card{
+  border-color:#cfdae7!important;
+  box-shadow:var(--card-depth-highlight),var(--card-depth-shadow)!important;
+}
+
+/* Interactive cards read as physical controls without looking heavily beveled. */
+button.card,
+.category-card,
+.lookup-result-card,
+.quick-card,
+.rule-toggle,
+.lesson-toggle{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .10s ease,box-shadow .10s ease,border-color .12s ease,background-color .12s ease!important;
+}
+
+button.card:active,
+.category-card:active,
+.lookup-result-card:active,
+.quick-card:active{
+  transform:translateY(2px)!important;
+  box-shadow:var(--card-depth-highlight),var(--card-depth-shadow-pressed)!important;
+}
+
+/* Keep selected procedure category clearly distinct while using the same raised surface. */
+.category-card.active{
+  border:2px solid var(--navy,#123a6d)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 9px 20px rgba(18,58,109,.16),0 2px 5px rgba(18,58,109,.10)!important;
+}
+
+/* Expanded/active Guide cards get a restrained lifted state, not an extra-bright effect. */
+.procedure-card.expanded,
+.lesson-card.active{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 11px 24px rgba(18,58,109,.15),0 2px 5px rgba(18,58,109,.09)!important;
+}
+
+/* Preserve semantic warning/info blocks as flat content panels. */
+.warning-box,
+.procedure-critical,
+.teaching-block,
+.source-panel,
+.outcome-box,
+.decision-choice,
+.step-item{
+  box-shadow:none!important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  button.card,.category-card,.lookup-result-card,.quick-card,.rule-toggle,.lesson-toggle{transition:none!important}
+}
