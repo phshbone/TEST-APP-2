@@ -1,0 +1,37 @@
+/* Compact Home dashboard — TEST-APP-2 only. */
+.home-glance{padding:0!important;overflow:hidden}
+.home-glance-toggle{width:100%;border:0;background:transparent;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;color:inherit}
+.home-glance-title{min-width:0}
+.home-glance-title .section-label{margin:0 0 3px!important}
+.home-glance-title h3{margin:0!important}
+.home-glance-summary{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.home-glance-summary .tracker-pill{margin:0!important;transform:none!important;align-self:auto!important}
+.home-glance-counts{font-weight:900;color:var(--navy,#123a6d);font-size:.8rem;white-space:nowrap}
+.home-glance-chevron{font-size:1.1rem;color:var(--navy,#123a6d);transition:transform .16s ease}
+.home-glance.is-open .home-glance-chevron{transform:rotate(180deg)}
+.home-glance-detail{padding:0 16px 16px;display:block}
+.home-glance.is-collapsed .home-glance-detail{display:none}
+.home-glance.is-collapsed .home-glance-toggle{padding-top:13px;padding-bottom:13px}
+
+.home-dashboard-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;margin-bottom:14px}
+.home-dashboard-tile{margin:0!important;min-height:118px!important;padding:14px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+.home-dashboard-tile strong{font-size:1rem!important;line-height:1.12!important;margin-bottom:6px!important}
+.home-dashboard-tile span{font-size:.82rem!important;line-height:1.3!important}
+.home-dashboard-tile.home-last-used{border:2px solid var(--navy,#123a6d)!important;background:#f6f9fd!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 12px 24px rgba(18,58,109,.18),0 3px 7px rgba(18,58,109,.11)!important}
+
+/* Make procedure category cards read more clearly as pressable tiles. */
+.category-card{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 12px 24px rgba(18,58,109,.16),0 3px 7px rgba(18,58,109,.10)!important;
+  border-color:#c8d5e4!important;
+}
+.category-card:active{transform:translateY(2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 5px 10px rgba(18,58,109,.12),0 1px 3px rgba(18,58,109,.08)!important}
+.category-card.active{box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 13px 26px rgba(18,58,109,.20),0 3px 7px rgba(18,58,109,.12)!important}
+
+@media(max-width:560px){
+  .home-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .home-dashboard-tile{min-height:104px!important;padding:12px!important}
+  .home-dashboard-tile strong{font-size:.94rem!important}
+  .home-dashboard-tile span{font-size:.77rem!important}
+  .home-glance-toggle{padding-left:13px;padding-right:13px}
+  .home-glance-detail{padding-left:13px;padding-right:13px}
+}
