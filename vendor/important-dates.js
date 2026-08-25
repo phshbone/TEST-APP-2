@@ -44,7 +44,5 @@
       <section class="card"><h3>Official verification</h3><p class="small">Regular dates may be calculated in advance, but once the NJ Division of Elections or Morris County publishes the official calendar, those published dates control.</p><div class="controls"><a class="secondary" href="https://www.nj.gov/state/elections/" target="_blank" rel="noopener">NJ Elections</a><a class="secondary" href="https://www.morriscountynj.gov/Government/Voting-and-Elections" target="_blank" rel="noopener">Morris County Elections</a></div></section>`;
   };
 
-  const oldBind=bindDynamic;
-  bindDynamic=function(){oldBind();};
   render();
 })();
