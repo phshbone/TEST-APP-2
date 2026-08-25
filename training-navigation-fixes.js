@@ -1,4 +1,5 @@
 // Full Guide-to-Training synchronization and internal Procedure return navigation — TEST-APP-2 only.
+// FOUNDATION v3: this is the single local owner of the global render lifecycle.
 (function(){
   const COMPLETE_STATUSES=new Set(['covered','live']);
 
@@ -49,7 +50,6 @@
   function syncAllGuideTraining(){
     if(!window.state||!window.data)return;
 
-    // Standard checkbox Guide sections map to their corresponding broad Training subjects.
     const sectionMap={
       opening:['Opening and worker orientation','Numbered station setup'],
       mailin:['Mail-In Ballot'],
@@ -63,7 +63,6 @@
       topics.forEach(topic=>mergeCovered(topic,complete));
     });
 
-    // Standard Voter Check-In carries its richer multi-status training evidence.
     const all=lessonUnion('checkin');
     const mapped=[];
     if(all.has('explained'))mapped.push('covered');
@@ -83,8 +82,6 @@
     saveState();
   }
 
-  // Remove the redundant Changed Residence -> Correction of Record jump because the destination
-  // is already the next card in that category.
   try{
     const changed=fieldData.items.find(x=>x.id==='record-changed-residence');
     if(changed?.procedureLinks) changed.procedureLinks=changed.procedureLinks.filter(x=>x.id!=='record-correction');
@@ -138,7 +135,6 @@
     if(top)top.classList.toggle('suppressed-by-return',!!show||document.getElementById('floatingProcedureReturn')?.classList.contains('visible'));
   }
 
-  // Capture internal Procedure cross-link origins before the existing handler runs.
   document.addEventListener('click',e=>{
     const jump=e.target.closest('[data-procedure-jump]');
     if(jump)rememberInternalOrigin(jump);
@@ -159,9 +155,13 @@
       const external=document.getElementById('floatingProcedureReturn');
       const top=document.getElementById('floatingTopButton');
       if(top)top.classList.toggle('suppressed-by-return',external?.classList.contains('visible')||document.getElementById('floatingInternalProcedureReturn')?.classList.contains('visible'));
+      document.dispatchEvent(new CustomEvent('mpw:rendered',{detail:{route:state.route}}));
     });
   };
 
   syncAllGuideTraining();
-  requestAnimationFrame(installInternalReturn);
+  requestAnimationFrame(()=>{
+    installInternalReturn();
+    document.dispatchEvent(new CustomEvent('mpw:rendered',{detail:{route:state.route}}));
+  });
 })();
