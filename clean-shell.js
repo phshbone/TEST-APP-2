@@ -1,4 +1,5 @@
 // Structural-shell helpers only: no viewport sizing and no fixed-nav positioning.
+// FOUNDATION v3: observes the single render lifecycle rather than wrapping render itself.
 (function(){
   const main=document.getElementById('mainContent');
 
@@ -65,8 +66,6 @@
     });
   }
 
-  // The Procedures landing/category view has no previous page to return to.
-  // Remove its orphan Back control so the real Procedures content moves up naturally.
   function removeOrphanProcedureBack(){
     if(!main||state.route!=='procedures')return;
     const hasTarget=!!state.procedureTarget;
@@ -159,7 +158,6 @@
     const nav=document.querySelector('.bottom-nav');
     if(nav)ro.observe(nav);
   }
-  const prior=window.render;
-  if(typeof prior==='function')window.render=function(){prior();requestAnimationFrame(post);};
+  document.addEventListener('mpw:rendered',schedule);
   post();
 })();
