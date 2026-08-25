@@ -1,0 +1,141 @@
+name: Foundation v3 behavior smoke
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          echo $! > /tmp/mpw-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Run behavior smoke tests
+        run: |
+          cat > /tmp/foundation-smoke.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+
+          test.beforeEach(async ({page}) => {
+            await page.goto(BASE);
+            await page.evaluate(()=>localStorage.clear());
+            await page.reload();
+          });
+
+          test('loads without application page errors', async ({page}) => {
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.reload();
+            await expect(page.locator('#mainContent')).toBeVisible();
+            await expect(page.locator('.bottom-nav')).toBeVisible();
+            expect(errors).toEqual([]);
+          });
+
+          test('primary routes render', async ({page}) => {
+            const checks=[
+              ['home','Master Poll Worker'],
+              ['guide','Trainer Checklist'],
+              ['procedures','Procedures'],
+              ['lookup','Quick Lookup'],
+              ['training','Training Tracker'],
+              ['report','Daily Report']
+            ];
+            for (const [route,text] of checks){
+              await page.locator(`.nav-button[data-route="${route}"]`).click();
+              await expect(page.locator('#mainContent')).toContainText(text);
+              await expect(page.locator(`.nav-button[data-route="${route}"]`)).toHaveClass(/active/);
+            }
+          });
+
+          test('mode switching persists', async ({page}) => {
+            await page.locator('.mode-button[data-mode="election"]').click();
+            await expect(page.locator('.mode-button[data-mode="election"]')).toHaveClass(/active/);
+            await page.reload();
+            await expect(page.locator('.mode-button[data-mode="election"]')).toHaveClass(/active/);
+          });
+
+          test('guide status persists and training opens', async ({page}) => {
+            await page.locator('.nav-button[data-route="guide"]').click();
+            const lesson=page.locator('[data-open-lesson]').first();
+            await lesson.click();
+            const status=page.locator('[data-lesson-status]').first();
+            await expect(status).toBeVisible();
+            await status.click();
+            const cls=await status.getAttribute('class');
+            expect(cls||'').toContain('active');
+            await page.reload();
+            await page.locator('.nav-button[data-route="guide"]').click();
+            await expect(page.locator('[data-lesson-status]').first()).toHaveClass(/active/);
+            await page.locator('.nav-button[data-route="training"]').click();
+            await expect(page.locator('#mainContent')).toContainText('Training Tracker');
+          });
+
+          test('procedures categories and cross-link navigation work', async ({page}) => {
+            await page.locator('.nav-button[data-route="procedures"]').click();
+            await expect(page.locator('[data-procedure-category]').first()).toBeVisible();
+            const cats=page.locator('[data-procedure-category]');
+            if(await cats.count()>1) await cats.nth(1).click();
+            await expect(page.locator('#mainContent')).toContainText('Field Procedures');
+            const jump=page.locator('[data-procedure-jump]').first();
+            if(await jump.count()){
+              await jump.click();
+              await expect(page.locator('[data-procedure-back]')).toBeVisible();
+              await page.locator('[data-procedure-back]').click();
+              await expect(page.locator('#mainContent')).toContainText('Field Procedures');
+            }
+          });
+
+          test('lookup returns navigable results', async ({page}) => {
+            await page.locator('.nav-button[data-route="lookup"]').click();
+            const input=page.locator('#lookupInput');
+            await input.fill('provisional');
+            await expect(page.locator('[data-lookup-procedure], [data-lookup-guide]').first()).toBeVisible();
+            const proc=page.locator('[data-lookup-procedure]').first();
+            if(await proc.count()){
+              await proc.click();
+              await expect(page.locator('#mainContent')).toContainText('Procedures');
+            }
+          });
+
+          test('training status and notes persist', async ({page}) => {
+            await page.locator('.nav-button[data-route="training"]').click();
+            const card=page.locator('.training-card').first();
+            const button=card.locator('.status-button').first();
+            await button.click();
+            const note=card.locator('[data-topic-note]');
+            await note.fill('smoke-test-note');
+            await page.reload();
+            await page.locator('.nav-button[data-route="training"]').click();
+            await expect(page.locator('.training-card').first().locator('.status-button').first()).toHaveClass(/active|multipick-active/);
+            await expect(page.locator('.training-card').first().locator('[data-topic-note]')).toHaveValue('smoke-test-note');
+          });
+
+          test('report and menu routes render', async ({page}) => {
+            await page.locator('.nav-button[data-route="report"]').click();
+            await expect(page.locator('#mainContent')).toContainText('Daily Report');
+            await page.locator('#menuButton').click();
+            await expect(page.locator('#sideMenu')).toBeVisible();
+            await page.locator('#sideMenu [data-route="settings"]').click();
+            await expect(page.locator('#mainContent')).toContainText('Settings & Backup');
+          });
+          EOF
+          npx playwright test /tmp/foundation-smoke.spec.js --reporter=line
