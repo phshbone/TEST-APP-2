@@ -1,9 +1,29 @@
-/* Targeted typography prototype — rounder header hierarchy without changing body copy. */
-.topbar h1,
+/* App-wide typography polish — rounder, clearer heading system while preserving body layout. */
+:root {
+  --mpw-display-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Use the approved rounder face for the app's heading hierarchy everywhere. */
+#app h1,
+#app h2,
+#app h3,
+#app h4,
+#app h5,
+#app h6,
+.side-menu h1,
+.side-menu h2,
+.side-menu h3,
+.side-menu h4,
+.side-menu h5,
+.side-menu h6,
 .page-heading h2,
 .procedure-card h3,
-.rules-section > h3 {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+.rules-section > h3,
+.lesson-title-wrap strong,
+.quick-card strong,
+.category-card strong,
+.decision-choice strong {
+  font-family: var(--mpw-display-font);
   font-stretch: normal;
   letter-spacing: 0;
 }
@@ -15,6 +35,12 @@
   font-weight: 900;
 }
 
+/* Main page headings keep strong hierarchy without oversized spacing. */
+.page-heading h2 {
+  font-weight: 900;
+  line-height: 1.08;
+}
+
 /* Guide/procedure card titles: stronger than body copy, but still compact. */
 .procedure-card h3 {
   font-size: 1.18rem;
@@ -22,9 +48,16 @@
   font-weight: 900;
 }
 
+.lesson-title-wrap strong,
+.quick-card strong,
+.category-card strong,
+.decision-choice strong {
+  font-weight: 900;
+}
+
 /* Teaching-block labels must read as headers rather than captions. */
 .teaching-block h5 {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--mpw-display-font);
   font-size: 1rem;
   line-height: 1.2;
   font-weight: 900;
@@ -34,7 +67,7 @@
 
 /* Pilot / Co-Pilot is a primary teaching header, not a small eyebrow label. */
 #mainContent .pilot-copilot-block > h5 {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-family: var(--mpw-display-font) !important;
   font-size: 1.16rem !important;
   line-height: 1.18 !important;
   font-weight: 900 !important;
