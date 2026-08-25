@@ -129,9 +129,15 @@
     return card.querySelector('.cross-links')||card;
   }
   function restoreOriginPosition(o){
-    // Restore the saved scroll position immediately so Back feels instant and
-    // automated checks see the correct view before the next paint.
+    // Restore both the saved scroll and exact control position synchronously.
+    // This keeps Back precise before the next paint; later frames only refine
+    // if fonts or post-render cleanup shift the layout.
     main.scrollTop=o.scrollTop||0;
+    const immediate=findOriginElement(o);
+    if(immediate&&Number.isFinite(o.viewportTop)){
+      const delta=immediate.getBoundingClientRect().top-o.viewportTop;
+      if(Math.abs(delta)>1)main.scrollTop+=delta;
+    }
     let attempts=0;
     const settle=()=>{
       const target=findOriginElement(o);
