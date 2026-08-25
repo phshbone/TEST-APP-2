@@ -104,7 +104,7 @@
     sessionStorage.setItem(key,JSON.stringify({
       id:sourceId,
       category:state.procedureCategory||'',
-      scrollY:window.scrollY||0,
+      scrollTop:main?.scrollTop||0,
       linkType:link.type,
       linkTarget:link.target||'',
       viewportTop:button.getBoundingClientRect().top
@@ -132,11 +132,11 @@
       const target=findOriginElement(o);
       if(target&&Number.isFinite(o.viewportTop)){
         const delta=target.getBoundingClientRect().top-o.viewportTop;
-        if(Math.abs(delta)>1)window.scrollBy(0,delta);
+        if(Math.abs(delta)>1)main.scrollTop+=delta;
       }else if(target){
         target.scrollIntoView({block:'center',behavior:'auto'});
       }else{
-        window.scrollTo(0,o.scrollY||0);
+        main.scrollTop=o.scrollTop||0;
       }
     });
   }
