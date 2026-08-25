@@ -20,7 +20,7 @@ function loadState(){
   } catch { return {...defaultState}; }
 }
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function esc(v=''){ return String(v).replace(/[&<>'\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c])); }
+function esc(v=''){ return String(v).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function setRoute(route){ state.route=route; saveState(); render(); sideMenu.close(); window.scrollTo({top:0,behavior:'smooth'}); }
 function modeLabel(){ return state.mode === 'early' ? 'Early Voting' : 'Election Day'; }
 function filteredProcedures(){ return data.procedures.filter(p=>p.modes.includes(state.mode)); }
