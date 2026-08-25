@@ -10,7 +10,6 @@
     reprint:['Reprint'],
     spoil:['Spoil']
   };
-  // Every non-teaching Guide procedure receives its own evaluation block.
   const SECTION_IDS=new Set((data.procedures||[]).filter(p=>p.type!=='teaching').map(p=>p.id));
   const choices=[['covered','Covered'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
   state.guideSectionTraining=state.guideSectionTraining||{};
@@ -71,7 +70,6 @@
     };
   }
 
-  // Keep the same principle visible in the fast pre-opening reminder.
   if(data.dosDonts?.dos&&!data.dosDonts.dos.some(x=>/pilot\s*\/\s*co-pilot/i.test(x.text||''))){
     data.dosDonts.dos.unshift({
       text:'Use the Pilot / Co-Pilot method for setup, opening, start-of-day reopening, shutdown, and closing.',
@@ -102,6 +100,7 @@
     });
   },true);
 
-  const prior=render;render=function(){SECTION_IDS.forEach(sync);prior();};
-  saveState();render();
+  // Section status changes are event-owned above; no global render wrapper is required.
+  saveState();
+  render();
 })();
