@@ -1,0 +1,28 @@
+/* Mobile QA polish for the reconciliation demo. */
+.field-procedure,.procedure-card,.lesson-card{scroll-margin-top:154px}
+.bottom-nav{gap:2px}
+.nav-button{touch-action:manipulation}
+.home-action-grid .quick-card{min-height:108px}
+.side-menu{padding-bottom:calc(18px + env(safe-area-inset-bottom));padding-top:max(18px,env(safe-area-inset-top))}
+
+@media (max-width:560px){
+  main{padding:14px 12px 18px}
+  .page-heading h2{font-size:1.5rem}
+  .category-card{min-height:82px;padding:12px}
+  .bottom-nav{padding-top:6px}
+  .bottom-nav .nav-button{min-height:58px}
+  .bottom-nav .nav-button small{font-size:.62rem;line-height:1.05}
+  .nav-button span{font-size:1.08rem}
+  .guide-overview-head,.guide-section-head,.tracker-overview-head,.tracker-section-head,.home-status-head{flex-wrap:wrap}
+  .guide-progress-pill,.tracker-pill{max-width:100%}
+  .cross-link{min-height:44px}
+  .procedure-back{min-height:44px}
+}
+
+@media (max-width:390px){
+  .brand-copy .eyebrow{letter-spacing:.12em}
+  .bottom-nav .nav-button small{font-size:.6rem}
+  .guide-section-head,.tracker-section-head{align-items:flex-start}
+  .guide-progress-pill,.tracker-pill{white-space:normal;text-align:center}
+  .status-grid.compact,.tracker-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
