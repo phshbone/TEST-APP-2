@@ -88,19 +88,59 @@
   }catch(e){}
 
   const ORIGIN_KEY='mpwProcedureInternalOrigin';
-  function rememberInternalOrigin(button){
+  const EXTERNAL_ORIGIN_KEY='mpwProcedureExternalOrigin';
+
+  function linkDescriptor(button){
+    if(button.hasAttribute('data-procedure-jump'))return {type:'procedure-jump',target:button.dataset.procedureJump};
+    if(button.hasAttribute('data-open-guide'))return {type:'open-guide',target:button.dataset.openGuide};
+    if(button.hasAttribute('data-open-shared'))return {type:'open-shared',target:button.dataset.openShared};
+    return null;
+  }
+  function rememberOrigin(button,key){
     const source=button.closest('.field-procedure');
     const sourceId=source?.dataset.fieldProcedure;
-    if(!sourceId)return;
-    sessionStorage.setItem(ORIGIN_KEY,JSON.stringify({
+    const link=linkDescriptor(button);
+    if(!sourceId||!link)return;
+    sessionStorage.setItem(key,JSON.stringify({
       id:sourceId,
       category:state.procedureCategory||'',
-      scrollY:window.scrollY||0
+      scrollY:window.scrollY||0,
+      linkType:link.type,
+      linkTarget:link.target||'',
+      viewportTop:button.getBoundingClientRect().top
     }));
   }
-  function originData(){
-    try{return JSON.parse(sessionStorage.getItem(ORIGIN_KEY)||'null');}catch(e){return null;}
+  function originData(key=ORIGIN_KEY){
+    try{return JSON.parse(sessionStorage.getItem(key)||'null');}catch(e){return null;}
   }
+  function findOriginElement(o){
+    const card=document.getElementById(`field-${o.id}`);
+    if(!card)return null;
+    let attr='';
+    if(o.linkType==='procedure-jump')attr='data-procedure-jump';
+    if(o.linkType==='open-guide')attr='data-open-guide';
+    if(o.linkType==='open-shared')attr='data-open-shared';
+    if(attr){
+      const buttons=[...card.querySelectorAll(`[${attr}]`)];
+      const match=buttons.find(x=>(x.getAttribute(attr)||'')===(o.linkTarget||''));
+      if(match)return match;
+    }
+    return card.querySelector('.cross-links')||card;
+  }
+  function restoreOriginPosition(o){
+    requestAnimationFrame(()=>{
+      const target=findOriginElement(o);
+      if(target&&Number.isFinite(o.viewportTop)){
+        const delta=target.getBoundingClientRect().top-o.viewportTop;
+        if(Math.abs(delta)>1)window.scrollBy(0,delta);
+      }else if(target){
+        target.scrollIntoView({block:'center',behavior:'auto'});
+      }else{
+        window.scrollTo(0,o.scrollY||0);
+      }
+    });
+  }
+
   function installInternalReturn(){
     let b=document.getElementById('floatingInternalProcedureReturn');
     const origin=originData();
@@ -124,20 +164,38 @@
       state.procedureTarget=o.id;
       sessionStorage.removeItem(ORIGIN_KEY);
       saveState(); render();
-      requestAnimationFrame(()=>{
-        const target=document.getElementById(`field-${o.id}`);
-        if(target)target.scrollIntoView({block:'start',behavior:'auto'});
-        else window.scrollTo(0,o.scrollY||0);
-      });
+      restoreOriginPosition(o);
     };
 
+    // functional-fixes.js owns creation of the Procedure -> Guide return arrow.
+    // Once it exists, enhance only its return target so a deep link near Source/
+    // related links comes back to the exact originating control, not card top.
+    const external=document.getElementById('floatingProcedureReturn');
+    const externalOrigin=originData(EXTERNAL_ORIGIN_KEY);
+    if(external&&externalOrigin&&state.route==='guide'){
+      external.onclick=()=>{
+        const o=originData(EXTERNAL_ORIGIN_KEY); if(!o)return;
+        const item=fieldData.items.find(x=>x.id===o.id);
+        state.route='procedures';
+        state.procedureCategory=item?.category||o.category||state.procedureCategory;
+        state.procedureTarget=o.id;
+        sessionStorage.removeItem(EXTERNAL_ORIGIN_KEY);
+        sessionStorage.removeItem('mpwReturnProcedure');
+        sessionStorage.removeItem('mpwReturnProcedureScroll');
+        saveState(); render();
+        restoreOriginPosition(o);
+      };
+    }
+
     const top=document.getElementById('floatingTopButton');
-    if(top)top.classList.toggle('suppressed-by-return',!!show||document.getElementById('floatingProcedureReturn')?.classList.contains('visible'));
+    if(top)top.classList.toggle('suppressed-by-return',!!show||external?.classList.contains('visible'));
   }
 
   document.addEventListener('click',e=>{
-    const jump=e.target.closest('[data-procedure-jump]');
-    if(jump)rememberInternalOrigin(jump);
+    const internal=e.target.closest('[data-procedure-jump]');
+    if(internal)rememberOrigin(internal,ORIGIN_KEY);
+    const external=e.target.closest('[data-open-guide],[data-open-shared]');
+    if(external)rememberOrigin(external,EXTERNAL_ORIGIN_KEY);
     if(e.target.closest('[data-check],[data-action-check],[data-lesson-status]')) setTimeout(()=>{syncAllGuideTraining();refreshTrainingIfVisible();},0);
   },true);
 
