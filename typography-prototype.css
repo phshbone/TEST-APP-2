@@ -1,0 +1,40 @@
+/* Targeted typography prototype — rounder header hierarchy without changing body copy. */
+.topbar h1,
+.page-heading h2,
+.procedure-card h3,
+.rules-section > h3 {
+  font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-stretch: normal;
+  letter-spacing: 0;
+}
+
+/* Keep the compact app header footprint while softening the display face. */
+.topbar h1 {
+  font-size: 1.35rem;
+  line-height: 1.08;
+  font-weight: 900;
+}
+
+/* Guide/procedure card titles: stronger than body copy, but still compact. */
+.procedure-card h3 {
+  font-size: 1.18rem;
+  line-height: 1.16;
+  font-weight: 900;
+}
+
+/* Teaching-block labels must read as headers rather than captions. */
+.teaching-block h5,
+.pilot-copilot-block h5 {
+  font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .procedure-card h3 { font-size: 1.16rem; }
+  .teaching-block h5,
+  .pilot-copilot-block h5 { font-size: .98rem; }
+}
