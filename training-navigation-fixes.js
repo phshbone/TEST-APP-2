@@ -129,6 +129,9 @@
     return card.querySelector('.cross-links')||card;
   }
   function restoreOriginPosition(o){
+    // Restore the saved scroll position immediately so Back feels instant and
+    // automated checks see the correct view before the next paint.
+    main.scrollTop=o.scrollTop||0;
     let attempts=0;
     const settle=()=>{
       const target=findOriginElement(o);
@@ -147,9 +150,7 @@
         target.scrollIntoView({block:'center',behavior:'auto'});
       }
     };
-    // Allow the render lifecycle and post-render shell cleanup to settle first,
-    // then verify the anchor for a few frames in case typography changes layout height.
-    requestAnimationFrame(()=>requestAnimationFrame(settle));
+    requestAnimationFrame(settle);
   }
 
   function installInternalReturn(){
@@ -178,9 +179,6 @@
       restoreOriginPosition(o);
     };
 
-    // functional-fixes.js owns creation of the Procedure -> Guide return arrow.
-    // Once it exists, enhance only its return target so a deep link near Source/
-    // related links comes back to the exact originating control, not card top.
     const external=document.getElementById('floatingProcedureReturn');
     const externalOrigin=originData(EXTERNAL_ORIGIN_KEY);
     if(external&&externalOrigin&&state.route==='guide'){
