@@ -104,6 +104,7 @@
     sessionStorage.setItem(key,JSON.stringify({
       id:sourceId,
       category:state.procedureCategory||'',
+      procedureTarget:state.procedureTarget||null,
       scrollTop:main?.scrollTop||0,
       linkType:link.type,
       linkTarget:link.target||'',
@@ -128,17 +129,27 @@
     return card.querySelector('.cross-links')||card;
   }
   function restoreOriginPosition(o){
-    requestAnimationFrame(()=>{
+    let attempts=0;
+    const settle=()=>{
       const target=findOriginElement(o);
-      if(target&&Number.isFinite(o.viewportTop)){
+      if(!target){
+        main.scrollTop=o.scrollTop||0;
+        return;
+      }
+      if(Number.isFinite(o.viewportTop)){
         const delta=target.getBoundingClientRect().top-o.viewportTop;
         if(Math.abs(delta)>1)main.scrollTop+=delta;
-      }else if(target){
-        target.scrollIntoView({block:'center',behavior:'auto'});
+        attempts+=1;
+        if(attempts<4&&Math.abs(target.getBoundingClientRect().top-o.viewportTop)>2){
+          requestAnimationFrame(settle);
+        }
       }else{
-        main.scrollTop=o.scrollTop||0;
+        target.scrollIntoView({block:'center',behavior:'auto'});
       }
-    });
+    };
+    // Allow the render lifecycle and post-render shell cleanup to settle first,
+    // then verify the anchor for a few frames in case typography changes layout height.
+    requestAnimationFrame(()=>requestAnimationFrame(settle));
   }
 
   function installInternalReturn(){
@@ -161,7 +172,7 @@
       const item=fieldData.items.find(x=>x.id===o.id);
       state.route='procedures';
       state.procedureCategory=item?.category||o.category||state.procedureCategory;
-      state.procedureTarget=o.id;
+      state.procedureTarget=Object.prototype.hasOwnProperty.call(o,'procedureTarget')?o.procedureTarget:o.id;
       sessionStorage.removeItem(ORIGIN_KEY);
       saveState(); render();
       restoreOriginPosition(o);
@@ -178,7 +189,7 @@
         const item=fieldData.items.find(x=>x.id===o.id);
         state.route='procedures';
         state.procedureCategory=item?.category||o.category||state.procedureCategory;
-        state.procedureTarget=o.id;
+        state.procedureTarget=Object.prototype.hasOwnProperty.call(o,'procedureTarget')?o.procedureTarget:o.id;
         sessionStorage.removeItem(EXTERNAL_ORIGIN_KEY);
         sessionStorage.removeItem('mpwReturnProcedure');
         sessionStorage.removeItem('mpwReturnProcedureScroll');
