@@ -112,8 +112,11 @@ jobs:
             let link=null;
             for(let i=0;i<await cats.count();i++){
               await cats.nth(i).click();
-              const candidate=page.locator('[data-open-guide],[data-open-shared]').first();
-              if(await candidate.count()){link=candidate;break;}
+              const candidates=page.locator('[data-open-guide],[data-open-shared]');
+              for(let j=0;j<await candidates.count();j++){
+                if(await candidates.nth(j).isVisible()){link=candidates.nth(j);break;}
+              }
+              if(link)break;
             }
             expect(link).not.toBeNull();
             await link.scrollIntoViewIfNeeded();
