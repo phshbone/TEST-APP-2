@@ -1,0 +1,49 @@
+name: Midweek label regression
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  midweek-labels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Verify Midweek labels render
+        run: |
+          mkdir -p tests
+          cat > tests/midweek.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+          test.use({ viewport:{width:390,height:844}, hasTouch:true, isMobile:true });
+          test('Midweek Early Voting labels replace Intermediate wording', async ({page}) => {
+            await page.goto(BASE);
+            await page.evaluate(()=>localStorage.clear());
+            await page.reload();
+            await page.locator('.nav-button[data-route="guide"]').click();
+            await expect(page.locator('#mainContent')).toContainText('Midweek Morning Opening');
+            await expect(page.locator('#mainContent')).toContainText('Midweek Nightly Shutdown');
+            await expect(page.locator('#mainContent')).not.toContainText('Intermediate Morning Opening');
+            await expect(page.locator('#mainContent')).not.toContainText('Intermediate Nightly Shutdown');
+          });
+          EOF
+          npx playwright test tests/midweek.spec.js --reporter=line
