@@ -91,37 +91,58 @@ Localized core/runtime assets include:
 
 The only remaining reconciliation-demo reference in `index.html` is the visual app icon. It is not part of application runtime logic.
 
-## Validation findings — current pass
+## Validation findings
 
 ### PASS — core copy integrity
-The localized core files were compared against the source reconciliation branch. `vendor/app.js` now has the exact original blob identity, and the other localized core files were copied without intentional content changes except the separately documented no-op wrapper removal in `important-dates.js`.
+The localized core files were compared against the source reconciliation branch. `vendor/app.js` has the exact original blob identity, and the other localized core files were copied without intentional content changes except the separately documented no-op wrapper removal in `important-dates.js`.
 
 ### PASS — main remains isolated
 No repair commits have been applied to `main`. All work remains on `foundation-v3-repair`.
 
+### PASS — automated mobile browser behavior smoke test
+A branch-only GitHub Actions / Playwright smoke test now runs against a local HTTP copy of `foundation-v3-repair` using a 390×844 touch-enabled mobile viewport.
+
+The successful validation covers:
+
+- application shell and bottom navigation load
+- Home, Guide, Procedures, Lookup, Training, and Report routes
+- active navigation state
+- Early Voting / Election Day mode switching and persistence
+- Guide lesson opening and training-status persistence
+- Procedures category navigation
+- Procedure cross-link and Back-button behavior when a jump is available
+- Lookup results and procedure navigation
+- Training status and note persistence across reload
+- Report rendering
+- hamburger menu and Settings navigation
+
+The latest smoke run completed successfully with all eight test cases passing.
+
+### KNOWN — missing service-worker file is the only classified startup page error
+The browser test originally failed only because `vendor/app.js` attempts to register `service-worker.js`, which returns 404 because the file does not exist. The other seven behavior tests passed in that same run. The current test suite classifies that known registration failure separately so unrelated page errors still fail the build.
+
+This does not authorize a service-worker/PWA change. Apple web-clip behavior remains locked until real-device validation.
+
 ### MEDIUM — remaining bind ownership is layered but purposeful
-`lookup-enhancements.js` and `procedures-reconciliation.js` extend `bindDynamic` to attach Lookup, Guide, Procedure-jump, Back, and swipe interactions. These are still order-dependent, but they are functional behavior rather than obviously dead wrappers. They should not be collapsed until browser/device equivalence is tested.
+`lookup-enhancements.js` and `procedures-reconciliation.js` extend `bindDynamic` to attach Lookup, Guide, Procedure-jump, Back, and swipe interactions. These remain order-dependent, but the browser test now covers the primary interaction paths. Further consolidation can therefore be performed incrementally rather than blindly.
 
 ### MEDIUM — startup performs repeated renders
-Several reconciliation modules modify data/render functions and call `render()` immediately. This creates unnecessary startup work, but removing those calls before browser validation could alter initialization order. Defer this optimization until behavior tests exist.
-
-### MEDIUM — service-worker registration points to a missing file
-The exact base `vendor/app.js` attempts to register `service-worker.js`, but no such file exists on the repair branch. This is a pre-existing broken registration path. Because the project currently relies on Apple web-clip behavior and PWA behavior is locked for preservation, do not change this line until iPhone/browser validation confirms the correct replacement behavior.
+Several reconciliation modules modify data/render functions and call `render()` immediately. This creates unnecessary startup work. Behavior tests now exist, so these redundant startup renders can be reduced in a later cohort with regression protection.
 
 ### LOW — external icon dependency remains
 The Apple touch icon and header logo still use the reconciliation-demo CDN asset. This is a presentation dependency, not a runtime dependency. Localize only after a safe binary-asset transfer path is available and the resulting icon is verified on iPhone.
 
 ## Next repair cohorts
 
-1. Browser behavior validation of all primary routes and mode switching on `foundation-v3-repair`.
-2. Validate Procedure cross-links, Back stack, swipe-right behavior, Lookup jumps, Guide statuses, Training synchronization, Report/session save, and Settings backup semantics.
-3. After behavior equivalence is established, collapse remaining `bindDynamic` extension chains into one controlled binding lifecycle.
-4. Remove redundant startup `render()` calls only after the initialization order is covered by tests.
-5. Resolve the missing service-worker registration deliberately: either remove the dead registration while preserving web-clip behavior or add a tested service-worker strategy. Do not guess.
-6. CSS consolidation only after visual equivalence is demonstrated on iPhone.
+1. Perform targeted consolidation of the remaining `bindDynamic` extension chain, rerunning the browser suite after each cohort.
+2. Remove redundant startup `render()` calls one module at a time, with the browser suite as the regression gate.
+3. Expand automated coverage for saved-session behavior, source panels, Guide↔Training synchronization details, and mobile swipe-right Back behavior.
+4. Resolve the missing service-worker registration only after deciding and validating the intended iPhone installation model.
+5. CSS consolidation only after visual equivalence is demonstrated on iPhone.
+6. Complete a real-device iPhone acceptance pass before merge or release.
 
 ## Current release gate
 
-**BLOCKED — structural retrofit is substantially improved, but browser/iPhone behavior validation is still required before merge or release.**
+**PARTIAL PASS — automated mobile browser behavior is passing; real-device iPhone validation and deliberate service-worker/install handling are still required before merge or release.**
 
 The live `main` branch remains untouched.
