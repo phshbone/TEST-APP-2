@@ -106,6 +106,33 @@ jobs:
             }
           });
 
+          test('deep procedure link returns to the originating control', async ({page}) => {
+            await page.locator('.nav-button[data-route="procedures"]').click();
+            const cats=page.locator('[data-procedure-category]');
+            let link=null;
+            for(let i=0;i<await cats.count();i++){
+              await cats.nth(i).click();
+              const candidate=page.locator('[data-open-guide],[data-open-shared]').first();
+              if(await candidate.count()){link=candidate;break;}
+            }
+            expect(link).not.toBeNull();
+            await link.scrollIntoViewIfNeeded();
+            const before=await link.boundingBox();
+            const sourceId=await link.locator('xpath=ancestor::*[@data-field-procedure][1]').getAttribute('data-field-procedure');
+            const kind=await link.getAttribute('data-open-guide')!==null?'data-open-guide':'data-open-shared';
+            const target=await link.getAttribute(kind);
+            await link.click();
+            const back=page.locator('#floatingProcedureReturn');
+            await expect(back).toBeVisible();
+            await back.click();
+            const returned=page.locator(`[data-field-procedure="${sourceId}"] [${kind}="${target}"]`).first();
+            await expect(returned).toBeVisible();
+            const after=await returned.boundingBox();
+            expect(before).not.toBeNull();
+            expect(after).not.toBeNull();
+            expect(Math.abs(after.y-before.y)).toBeLessThan(14);
+          });
+
           test('lookup returns navigable results', async ({page}) => {
             await page.locator('.nav-button[data-route="lookup"]').click();
             const input=page.locator('#lookupInput');
