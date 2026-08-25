@@ -31,7 +31,8 @@ jobs:
           exit 1
       - name: Run behavior smoke tests
         run: |
-          cat > /tmp/foundation-smoke.spec.js <<'EOF'
+          mkdir -p tests
+          cat > tests/foundation-smoke.spec.js <<'EOF'
           const { test, expect } = require('@playwright/test');
           const BASE='http://127.0.0.1:4173/index.html';
 
@@ -80,11 +81,10 @@ jobs:
             const status=page.locator('[data-lesson-status]').first();
             await expect(status).toBeVisible();
             await status.click();
-            const cls=await status.getAttribute('class');
-            expect(cls||'').toContain('active');
+            await expect(page.locator('[data-lesson-status]').first()).toHaveClass(/active|multipick-active/);
             await page.reload();
             await page.locator('.nav-button[data-route="guide"]').click();
-            await expect(page.locator('[data-lesson-status]').first()).toHaveClass(/active/);
+            await expect(page.locator('[data-lesson-status]').first()).toHaveClass(/active|multipick-active/);
             await page.locator('.nav-button[data-route="training"]').click();
             await expect(page.locator('#mainContent')).toContainText('Training Tracker');
           });
@@ -138,4 +138,4 @@ jobs:
             await expect(page.locator('#mainContent')).toContainText('Settings & Backup');
           });
           EOF
-          npx playwright test /tmp/foundation-smoke.spec.js --reporter=line
+          npx playwright test tests/foundation-smoke.spec.js --reporter=line
