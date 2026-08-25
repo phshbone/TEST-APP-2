@@ -55,13 +55,35 @@
   font-weight: 900;
 }
 
-/* Teaching-block labels must read as headers rather than captions. */
-.teaching-block h5 {
-  font-family: var(--mpw-display-font);
-  font-size: 1rem;
-  line-height: 1.2;
-  font-weight: 900;
-  letter-spacing: .025em;
+/* Secondary instructional headers use the same face at a smaller tier. */
+#mainContent .field-section h4,
+#mainContent .teaching-block h5,
+#mainContent .section-label,
+#mainContent .procedure-tip > strong,
+#mainContent .procedure-note > strong {
+  font-family: var(--mpw-display-font) !important;
+  font-stretch: normal !important;
+  font-weight: 900 !important;
+  letter-spacing: .02em !important;
+}
+
+#mainContent .field-section h4 {
+  font-size: .98rem !important;
+  line-height: 1.18 !important;
+  text-transform: uppercase;
+}
+
+#mainContent .teaching-block h5 {
+  font-size: 1rem !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+
+#mainContent .section-label,
+#mainContent .procedure-tip > strong,
+#mainContent .procedure-note > strong {
+  font-size: .9rem !important;
+  line-height: 1.2 !important;
   text-transform: uppercase;
 }
 
@@ -78,6 +100,10 @@
 
 @media (max-width: 560px) {
   .procedure-card h3 { font-size: 1.16rem; }
-  .teaching-block h5 { font-size: .98rem; }
+  #mainContent .field-section h4 { font-size: .95rem !important; }
+  #mainContent .teaching-block h5 { font-size: .98rem !important; }
+  #mainContent .section-label,
+  #mainContent .procedure-tip > strong,
+  #mainContent .procedure-note > strong { font-size: .88rem !important; }
   #mainContent .pilot-copilot-block > h5 { font-size: 1.12rem !important; }
 }
