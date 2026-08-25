@@ -3,7 +3,7 @@
 .page-heading h2,
 .procedure-card h3,
 .rules-section > h3 {
-  font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-stretch: normal;
   letter-spacing: 0;
 }
@@ -23,9 +23,8 @@
 }
 
 /* Teaching-block labels must read as headers rather than captions. */
-.teaching-block h5,
-.pilot-copilot-block h5 {
-  font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+.teaching-block h5 {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 1rem;
   line-height: 1.2;
   font-weight: 900;
@@ -33,8 +32,19 @@
   text-transform: uppercase;
 }
 
+/* Pilot / Co-Pilot is a primary teaching header, not a small eyebrow label. */
+#mainContent .pilot-copilot-block > h5 {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 1.16rem !important;
+  line-height: 1.18 !important;
+  font-weight: 900 !important;
+  letter-spacing: .015em !important;
+  text-transform: uppercase;
+  margin-bottom: .65rem;
+}
+
 @media (max-width: 560px) {
   .procedure-card h3 { font-size: 1.16rem; }
-  .teaching-block h5,
-  .pilot-copilot-block h5 { font-size: .98rem; }
+  .teaching-block h5 { font-size: .98rem; }
+  #mainContent .pilot-copilot-block > h5 { font-size: 1.12rem !important; }
 }
