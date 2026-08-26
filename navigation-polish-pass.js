@@ -1,4 +1,4 @@
-// Contextual Home return, reliable scroll-to-top, and clearer Guide expansion affordances.
+// Contextual Home return and reliable scroll-to-top controls.
 (function(){
   const main=document.getElementById('mainContent');
   const HOME_ORIGIN_KEY='mpwHomeCardOrigin';
@@ -43,19 +43,9 @@
     };
   }
 
-  function decorateGuideExpanders(){
-    document.querySelectorAll('.guide-section-toggle').forEach(button=>{
-      const hint=button.querySelector('.open-hint');
-      if(!hint)return;
-      const open=button.getAttribute('aria-expanded')==='true'||button.closest('.procedure-card')?.classList.contains('expanded');
-      hint.textContent=open?'− Hide topics':'+ Show topics';
-    });
-  }
-
   function post(){
     ensureTopButton();
     ensureHomeReturn();
-    decorateGuideExpanders();
   }
 
   document.addEventListener('click',e=>{
@@ -64,9 +54,6 @@
 
     const primaryNav=e.target.closest('.bottom-nav [data-route]');
     if(primaryNav)sessionStorage.removeItem(HOME_ORIGIN_KEY);
-
-    const guideToggle=e.target.closest('.guide-section-toggle');
-    if(guideToggle)requestAnimationFrame(decorateGuideExpanders);
   },true);
 
   document.addEventListener('mpw:rendered',()=>requestAnimationFrame(post));
