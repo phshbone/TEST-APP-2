@@ -1,0 +1,68 @@
+/* App-wide typography system — one rounder family, scaled by hierarchy. */
+:root{
+  --mpw-display-font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+/* Primary heading family. */
+#app h1,#app h2,#app h3,#app h4,#app h5,#app h6,
+.side-menu h1,.side-menu h2,.side-menu h3,.side-menu h4,.side-menu h5,.side-menu h6,
+.page-heading h2,.procedure-card h3,.rules-section>h3,
+.lesson-title-wrap strong,.quick-card strong,.category-card strong,.decision-choice strong{
+  font-family:var(--mpw-display-font)!important;
+  font-stretch:normal!important;
+}
+
+.topbar h1{font-size:1.35rem!important;line-height:1.08!important;font-weight:900!important;letter-spacing:0!important}
+.page-heading h2{font-weight:900!important;line-height:1.08!important;letter-spacing:0!important}
+.procedure-card h3,.field-procedure>h3{font-family:var(--mpw-display-font)!important;font-size:1.18rem!important;line-height:1.16!important;font-weight:900!important;letter-spacing:0!important}
+.lesson-title-wrap strong,.quick-card strong,.category-card strong,.decision-choice strong{font-weight:900!important}
+
+/* Secondary card subheads: same family, smaller tier. */
+#mainContent .field-section>h4,
+#mainContent .field-section h4,
+#mainContent .teaching-block>h5,
+#mainContent .teaching-block h5,
+#mainContent .section-label,
+#mainContent .procedure-tip>strong,
+#mainContent .procedure-note>strong,
+#mainContent .board-confirm>h4{
+  font-family:var(--mpw-display-font)!important;
+  font-stretch:normal!important;
+  font-weight:900!important;
+  letter-spacing:.015em!important;
+  text-transform:uppercase!important;
+}
+
+#mainContent .field-section>h4,
+#mainContent .field-section h4,
+#mainContent .board-confirm>h4{
+  font-size:.98rem!important;
+  line-height:1.18!important;
+}
+#mainContent .teaching-block>h5,#mainContent .teaching-block h5{
+  font-size:1rem!important;
+  line-height:1.2!important;
+}
+#mainContent .section-label,#mainContent .procedure-tip>strong,#mainContent .procedure-note>strong{
+  font-size:.9rem!important;
+  line-height:1.2!important;
+}
+
+/* Pilot / Co-Pilot remains a stronger secondary teaching header. */
+#mainContent .pilot-copilot-block>h5{
+  font-family:var(--mpw-display-font)!important;
+  font-size:1.16rem!important;
+  line-height:1.18!important;
+  font-weight:900!important;
+  letter-spacing:.015em!important;
+  text-transform:uppercase!important;
+  margin-bottom:.65rem!important;
+}
+
+@media(max-width:560px){
+  .procedure-card h3,.field-procedure>h3{font-size:1.16rem!important}
+  #mainContent .field-section>h4,#mainContent .field-section h4,#mainContent .board-confirm>h4{font-size:.95rem!important}
+  #mainContent .teaching-block>h5,#mainContent .teaching-block h5{font-size:.98rem!important}
+  #mainContent .section-label,#mainContent .procedure-tip>strong,#mainContent .procedure-note>strong{font-size:.88rem!important}
+  #mainContent .pilot-copilot-block>h5{font-size:1.12rem!important}
+}
