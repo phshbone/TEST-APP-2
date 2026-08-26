@@ -64,11 +64,11 @@ jobs:
             const toggle=page.locator('.guide-section-toggle').first();
             await expect(toggle).toBeVisible();
             const hint=toggle.locator('.open-hint');
-            const before=(await hint.textContent())||'';
+            const before=await hint.evaluate(el=>getComputedStyle(el,'::before').content);
             expect(before.includes('+')||before.includes('−')).toBeTruthy();
             await toggle.click();
             await page.waitForTimeout(50);
-            const after=(await hint.textContent())||'';
+            const after=await hint.evaluate(el=>getComputedStyle(el,'::before').content);
             expect(after.includes('+')||after.includes('−')).toBeTruthy();
             expect(after).not.toBe(before);
           });
