@@ -31,3 +31,6 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button.visib
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:900;
 }
+.guide-section-toggle .open-hint::before{content:'+ ';font-weight:1000}
+.procedure-card.expanded .guide-section-toggle .open-hint::before,
+.guide-section-toggle[aria-expanded="true"] .open-hint::before{content:'− '}
