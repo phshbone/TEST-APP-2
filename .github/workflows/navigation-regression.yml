@@ -1,0 +1,76 @@
+name: Navigation polish regression
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Run navigation regression
+        run: |
+          mkdir -p tests
+          cat > tests/navigation-regression.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+          test.use({ viewport:{width:390,height:844}, hasTouch:true, isMobile:true });
+
+          test.beforeEach(async ({page})=>{
+            await page.goto(BASE);
+            await page.evaluate(()=>{localStorage.clear();sessionStorage.clear();});
+            await page.reload();
+          });
+
+          test('Home dashboard destination has contextual return home', async ({page})=>{
+            await page.locator('.home-dashboard-tile[data-go="guide"]').click();
+            await expect(page.locator('[data-home-return]')).toBeVisible();
+            await expect(page.locator('#mainContent')).toContainText('Trainer Checklist');
+            await page.locator('[data-home-return]').click();
+            await expect(page.locator('#mainContent')).toContainText('Master Poll Worker Guide');
+            await expect(page.locator('.home-dashboard-tile[data-go="guide"]')).toBeVisible();
+          });
+
+          test('long Guide view exposes Back to Top control', async ({page})=>{
+            await page.locator('.nav-button[data-route="guide"]').click();
+            await page.locator('#mainContent').evaluate(el=>{el.scrollTop=900;el.dispatchEvent(new Event('scroll'));});
+            await expect(page.locator('#floatingTopButton')).toBeVisible();
+            await page.locator('#floatingTopButton').click();
+            await expect.poll(()=>page.locator('#mainContent').evaluate(el=>el.scrollTop)).toBeLessThan(50);
+          });
+
+          test('Guide section expansion uses plus and minus cues', async ({page})=>{
+            await page.locator('.nav-button[data-route="guide"]').click();
+            const toggle=page.locator('.guide-section-toggle').first();
+            await expect(toggle).toBeVisible();
+            const hint=toggle.locator('.open-hint');
+            const before=(await hint.textContent())||'';
+            expect(before.includes('+')||before.includes('−')).toBeTruthy();
+            await toggle.click();
+            await page.waitForTimeout(50);
+            const after=(await hint.textContent())||'';
+            expect(after.includes('+')||after.includes('−')).toBeTruthy();
+            expect(after).not.toBe(before);
+          });
+          EOF
+          npx playwright test tests/navigation-regression.spec.js --reporter=line
