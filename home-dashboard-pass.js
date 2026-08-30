@@ -31,15 +31,19 @@
   function tile(route,titleText,copy){
     return `<button class="card quick-card home-dashboard-tile ${activeRoute()===route?'home-last-used':''}" data-go="${route}"><strong>${esc(titleText)}</strong><span>${esc(copy)}</span></button>`;
   }
+  function electionDisplay(){
+    if(typeof window.MPW_ELECTION_DISPLAY==='function')return window.MPW_ELECTION_DISPLAY(state.mode);
+    return modeLabel();
+  }
 
   renderHome=function(){
     title.textContent='Master Poll Worker Guide';
     const g=guideStats(),t=trainingStats(),open=!!state.homeGlanceOpen;
-    return `${pageHeading('Master Poll Worker Guide',`${modeLabel()} • ${state.reportDate}`)}
+    return `${pageHeading('Master Poll Worker Guide',electionDisplay())}
       <section class="card home-status-card home-glance ${open?'is-open':'is-collapsed'}">
         <button type="button" class="home-glance-toggle" data-home-glance-toggle aria-expanded="${open}">
           <div class="home-glance-title"><p class="section-label">Today at a glance</p><h3>Training and field reference</h3></div>
-          <div class="home-glance-summary"><span class="tracker-pill">${esc(modeLabel())}</span><span class="home-glance-counts">${g.done}/${g.total} · ${t.complete}/${t.total}</span><span class="home-glance-chevron">⌄</span></div>
+          <div class="home-glance-summary"><span class="tracker-pill">${esc(modeLabel())}</span><span class="home-glance-counts">${g.done}/${g.total} · ${t.complete}/${t.total}</span><span class="home-glance-chevron" aria-hidden="true">${open?'−':'+'}</span></div>
         </button>
         <div class="home-glance-detail">
           ${meter('Trainer Checklist',g.done,g.total)}
