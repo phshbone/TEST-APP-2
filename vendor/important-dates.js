@@ -63,7 +63,11 @@
       return 'Early Voting • Official Morris County range pending';
     }
     const official=nextOfficialElection();
-    const election=official?official.date:nextRegularElection().date;
+    if(official){
+      const specialLabel=official.special?` (${official.kind||'Special Election'})`:'';
+      return `Election Day • ${fmtShort(official.date)}${specialLabel}`;
+    }
+    const election=nextRegularElection().date;
     return `Election Day • ${fmtShort(election)}`;
   };
 
