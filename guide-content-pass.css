@@ -6,3 +6,6 @@
 .shutdown-warning-title{font-size:1.12rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
 .shutdown-warning-line{font-size:1rem;font-weight:700;line-height:1.35;margin-top:8px}
 .shutdown-warning-note{font-size:.78rem;font-weight:600;line-height:1.35;margin-top:12px;opacity:.82;text-align:left}
+[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title)){font-size:0}
+[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::before{content:'★ DO NOT SELECT CLOSE POLL ★';display:block;font-size:1.12rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
+[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::after{content:'During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.\A\A DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.\A\A * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';display:block;white-space:pre-line;font-size:.95rem;font-weight:700;line-height:1.35}
