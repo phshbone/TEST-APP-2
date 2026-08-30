@@ -45,7 +45,7 @@ jobs:
             await expect(logo).toBeVisible();
             await expect.poll(()=>logo.evaluate(img=>img.complete&&img.naturalWidth>0)).toBeTruthy();
           });
-          test('Home uses Morris County official Early Voting range and next Election Day', async ({page})=>{
+          test('Home uses Morris County official Early Voting range and labels special Election Day', async ({page})=>{
             const heading=page.locator('.page-heading').first();
             await expect(heading).toContainText('Early Voting');
             await expect(heading).toContainText('Oct 24, 2026');
@@ -54,6 +54,7 @@ jobs:
             const electionHeading=page.locator('.page-heading').first();
             await expect(electionHeading).toContainText('Election Day');
             await expect(electionHeading).toContainText('Sep 15, 2026');
+            await expect(electionHeading).toContainText('(Special School Election)');
           });
           test('Important Dates includes published Morris County special and general election data', async ({page})=>{
             await page.locator('#menuButton').click();
