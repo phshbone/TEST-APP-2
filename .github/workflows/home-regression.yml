@@ -45,12 +45,26 @@ jobs:
             await expect(logo).toBeVisible();
             await expect.poll(()=>logo.evaluate(img=>img.complete&&img.naturalWidth>0)).toBeTruthy();
           });
-          test('Home uses shared election display rather than report date', async ({page})=>{
+          test('Home uses Morris County official Early Voting range and next Election Day', async ({page})=>{
             const heading=page.locator('.page-heading').first();
             await expect(heading).toContainText('Early Voting');
-            await expect(heading).not.toContainText('2026-08-17');
+            await expect(heading).toContainText('Oct 24, 2026');
+            await expect(heading).toContainText('Nov 1, 2026');
             await page.locator('.mode-button[data-mode="election"]').click();
-            await expect(page.locator('.page-heading').first()).toContainText('Election Day');
+            const electionHeading=page.locator('.page-heading').first();
+            await expect(electionHeading).toContainText('Election Day');
+            await expect(electionHeading).toContainText('Sep 15, 2026');
+          });
+          test('Important Dates includes published Morris County special and general election data', async ({page})=>{
+            await page.locator('#menuButton').click();
+            await page.locator('#sideMenu [data-route="current"]').click();
+            const main=page.locator('#mainContent');
+            await expect(main).toContainText('Published Morris County Calendar');
+            await expect(main).toContainText('Special School Election');
+            await expect(main).toContainText('September 15, 2026');
+            await expect(main).toContainText('General Election');
+            await expect(main).toContainText('Oct 24, 2026');
+            await expect(main).toContainText('Nov 1, 2026');
           });
           test('Today at a glance uses plus and minus cues', async ({page})=>{
             const toggle=page.locator('[data-home-glance-toggle]');
