@@ -6,14 +6,26 @@
   const morning=byId('morning');
   if(morning){
     morning.title='Midweek Morning Opening';
-    morning.steps=(morning.steps||[]).map(step=>step==='Place the report into the correct daily black pouch.'?'Place the report into the correct daily black pencil pouch.':step);
+    morning.steps=[
+      'Gather the current binder and morning opening materials. Retrieve the individual replacement seals from the manila envelope so they are ready for the applicable seal steps.',
+      'At each seal step, match the seal number to the seal log and initial after physical verification.',
+      'Compare the numbered string seal with the carried-forward value.',
+      'Initial the seal log after physical verification.',
+      'Cut the seal and place it in the green used-seal bag.',
+      'Open the media-access door with the barrel key.',
+      'Power on, close the door, remove the key, and return it to the red pouch.',
+      'Print the System Readiness Report.',
+      'Have two workers from different parties review and initial the report.',
+      'Place the report into the correct daily black pencil pouch.',
+      'Confirm power, status light, locked wheels, curtains, rods, and accessible setup.'
+    ];
   }
 
   const shutdown=byId('shutdown');
   if(shutdown){
     shutdown.title='Midweek Nightly Shutdown';
     shutdown.summary='Verify the machine count, print the System Readiness Report, power down, complete seal and canister work, then close the ePollbooks after reconciliation.';
-    shutdown.warning='★ DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. ★ Do not shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';
+    shutdown.warning='DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';
     shutdown.steps=[
       'Gather the current binder and nightly closing materials. Retrieve the individual replacement seals from the manila envelope so they are ready for the applicable seal steps.',
       'At each replacement-seal step, match the seal number to the seal log and initial after physical verification.',
@@ -55,9 +67,9 @@
       preload.lead='Before starting the next check-in, physically confirm that one blank activation card is loaded in the ExpressVote printer.';
       preload.official=[
         'Confirm one blank activation card is loaded before beginning every voter check-in.',
-        'If the completed check-in screen still offers Reprint, use that on-screen Reprint immediately when a card was not preloaded.',
-        'If that screen has already been left, use Reprint from the hamburger menu.',
-        'Do not check the voter in again.'
+        'If the pending check-in screen still offers Reprint before advancing to the Authority Slip screen, use that on-screen Reprint immediately when a card was not preloaded.',
+        'If you have already advanced to the Authority Slip screen, use Reprint from the hamburger menu.',
+        'DO NOT check the voter in again.'
       ];
       preload.why='A missed preload interrupts voter flow and creates a recovery situation that must be handled with Reprint, not a second check-in.';
       preload.tips=[
@@ -76,14 +88,15 @@
     if(search){
       search.lead='Use the correct search method for the current mode and keep searching before escalating.';
       search.official=[
+        'Early Voting: use the 4+4 search method with the countywide voter list.',
         'Use the voter information provided to locate the correct record.',
         'Review the result list carefully before selecting a voter.'
       ];
       search.tips=[
-        'Early Voting: use the 4+4 search method and remember that the voter list is countywide, so search broadly and carefully.',
+        'Early Voting reminder: use 4+4. The voter list is countywide, so search broadly and carefully.',
         'Use alternate search methods when spelling, spacing, or a compound surname may affect the result.',
         'If a voter presents a scannable sample ballot, use the available sample-ballot scan function when appropriate.',
-        'If a voter presents a driver’s license for scanning, use the available driver’s-license scan function when appropriate. Do not turn this into a request for ID.'
+        'If a voter presents a driver’s license for scanning, use the available driver’s-license scan function when appropriate. DO NOT turn this into a request for ID.'
       ];
     }
 
@@ -110,7 +123,7 @@
 
     const complete=lesson('complete');
     if(complete){
-      complete.lead='Finish the current voter once, organize the printed materials, preload the next blank activation card, and return the ePollbook to Process Next Voter.';
+      complete.lead='Complete the current voter check-in once, organize the printed materials, preload the next blank activation card, and return the ePollbook to Process Next Voter.';
       complete.official=[
         'Complete check-in only after the voter record, flags, signature, worker initials, and activation-card preload have been confirmed.',
         'Place the printed activation card into the Activation Card Sleeve to protect it from bending.',
@@ -145,10 +158,10 @@
     mailin.steps=[
       'Confirm the Mail-In Ballot flag.',
       'Explain that the voter cannot receive a regular machine ballot.',
-      'Explain the voter’s two practical choices: locate and return the mail-in ballot, or vote provisionally in person.',
+      'Explain the voter’s two practical choices: locate the mail-in ballot and return it to an authorized ballot drop box, or vote provisionally in person.',
       'If the voter chooses to vote in person, process the voter provisionally.',
       'Use Box 13 on the provisional envelope for mail-in opt-out when requested.',
-      'Direct a returned mail-in ballot to an authorized ballot drop box or the Morris County Board of Elections in Morristown. Do not accept the completed mail-in ballot at the polling location.'
+      'Direct a returned mail-in ballot to an authorized ballot drop box or the Morris County Board of Elections in Morristown. DO NOT accept the completed mail-in ballot at the polling location.'
     ];
   }
 
@@ -160,7 +173,7 @@
       'Use alternate search methods.',
       'Use address or district lookup.',
       'Contact the Master Poll Worker or Board of Elections.',
-      'Do not begin a new check-in unless directed.'
+      'DO NOT begin a new check-in unless directed.'
     ];
   }
 
@@ -170,10 +183,10 @@
       'Confirm that provisional voting is the correct remedy.',
       'Complete the ePollbook provisional process.',
       'Confirm a blank activation card is loaded before printing.',
-      'Complete the affirmation envelope based on the applicable voter flag and required information.',
+      'Have the voter complete the affirmation envelope based on the applicable voter flag and required information.',
       'Have the voter vote on the machine using the provisional activation card.',
-      'Have the voter return the completed provisional materials to the poll worker and seal the completed activation card inside the affirmation envelope.',
-      'Place the sealed envelope in the orange provisional bag.',
+      'Have the voter place the completed activation card inside the affirmation envelope, seal the envelope, and hand the sealed envelope to the poll worker.',
+      'The poll worker places the sealed envelope in the orange provisional bag.',
       'Add one tally mark to the reconciliation sheet.',
       'At closing, physically count the provisional envelopes and compare the count with the tally sheet.',
       'Obtain required signatures and seal the orange provisional bag through both the grommet and zipper hole.'
@@ -182,21 +195,22 @@
 
   const reprint=byId('reprint');
   if(reprint){
-    reprint.summary='Replace a missing, damaged, or unprinted item from an already completed check-in without checking the voter in again.';
+    reprint.summary='Replace a missing, misprinted, or unprinted item from an already completed check-in without checking the voter in again.';
     reprint.steps=[
       'Confirm that the voter check-in is already complete.',
-      'Identify the missing, damaged, or unprinted item.',
+      'Identify the missing, misprinted, or unprinted item.',
       'If the completed check-in screen still offers Reprint, use that on-screen Reprint first.',
-      'If the completed screen has already been left, open the hamburger menu and use the appropriate Reprint option.',
+      'If the completed check-in screen has already advanced, open the hamburger menu and select the appropriate Reprint option.',
       'Use Reprint for the activation card, authority slip, assistance form, or a printer-jam recovery as applicable.',
       'Confirm the correct printer is connected.',
       'After the replacement prints, return the ePollbook to the next voter check-in.',
-      'Do not check the voter in again.'
+      'DO NOT check the voter in again.'
     ];
   }
 
   const spoil=byId('spoil');
   if(spoil){
+    spoil.summary='Cancel the printed, uncast ballot, eject the card, process the spoil, and decide whether to reissue.';
     spoil.steps=[
       'At the voting machine, have the voter select Cancel.',
       'Send two workers from different parties to the machine.',
@@ -206,7 +220,7 @@
       'On Election Day, return the voter to the assigned district table.',
       'Ask whether the voter wants another ballot now.',
       'For reissue, preload a blank activation card before printing the replacement.',
-      'For no reissue, do not create another check-in.',
+      'For no reissue, DO NOT create another check-in.',
       'Mark the large barcode with one clear vertical pen line through one of its vertical bars so the spoiled card cannot be read again; complete the remaining SPOILED-card handling required by the current procedure.'
     ];
   }
@@ -240,7 +254,38 @@
     });
   }
 
+  function applyGuidePresentation(){
+    const shutdownCard=main.querySelector('[data-procedure="shutdown"]');
+    const warning=shutdownCard?.querySelector('.warning-box');
+    if(warning && !warning.dataset.guideHierarchy){
+      warning.dataset.guideHierarchy='1';
+      warning.innerHTML='<div class="shutdown-warning-title">★ DO NOT SELECT CLOSE POLL ★</div><div class="shutdown-warning-line">During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.</div><div class="shutdown-warning-line"><strong>DO NOT</strong> shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.</div><div class="shutdown-warning-note">* Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.</div>';
+    }
+
+    const root=main.querySelector('[data-procedure="checkin"]')?.parentElement||main;
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const targets=[];
+    while(walker.nextNode()){
+      const node=walker.currentNode;
+      if(node.parentElement?.closest('strong,.shutdown-warning-title')) continue;
+      if(node.nodeValue?.includes('DO NOT')) targets.push(node);
+    }
+    targets.forEach(node=>{
+      const parts=node.nodeValue.split('DO NOT');
+      const frag=document.createDocumentFragment();
+      parts.forEach((part,i)=>{
+        if(i) { const strong=document.createElement('strong'); strong.className='critical-do-not'; strong.textContent='DO NOT'; frag.appendChild(strong); }
+        if(part) frag.appendChild(document.createTextNode(part));
+      });
+      node.replaceWith(frag);
+    });
+  }
+
+  const guideObserver=new MutationObserver(()=>applyGuidePresentation());
+  guideObserver.observe(main,{childList:true,subtree:true});
+
   preserveGuideTopicOnModeSwitch();
   render();
   preserveGuideTopicOnModeSwitch();
+  applyGuidePresentation();
 })();
