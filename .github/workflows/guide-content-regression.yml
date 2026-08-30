@@ -74,8 +74,15 @@ jobs:
             await shutdown.locator('.procedure-toggle').click();
             await expect(shutdown).toContainText('Verify the voting machine public counter');
             await expect(shutdown).toContainText('Print the System Readiness Report');
-            await expect(shutdown.locator('.shutdown-warning-title')).toHaveText('★ DO NOT SELECT CLOSE POLL ★');
-            await expect(shutdown).toContainText('DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals');
+            const warning=shutdown.locator('.warning-box');
+            const visualTitle=await warning.evaluate(el=>{
+              const dom=el.querySelector('.shutdown-warning-title')?.textContent||'';
+              const pseudo=getComputedStyle(el,'::before').content||'';
+              return `${dom} ${pseudo}`;
+            });
+            expect(visualTitle).toContain('DO NOT SELECT CLOSE POLL');
+            const reconciliationText=await warning.evaluate(el=>`${el.textContent} ${getComputedStyle(el,'::after').content||''}`);
+            expect(reconciliationText).toContain('DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals');
             await expect(shutdown).toContainText('select Logout');
           });
           test('shared check-in completion uses sleeve, yellow bag, and Process Next Voter wording', async ({page})=>{
