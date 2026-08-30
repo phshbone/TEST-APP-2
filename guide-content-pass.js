@@ -7,9 +7,8 @@
   if(morning){
     morning.title='Midweek Morning Opening';
     morning.steps=[
-      'Gather the current binder and morning opening materials. Retrieve the individual replacement seals from the manila envelope so they are ready for the applicable seal steps.',
-      'At each seal step, match the seal number to the seal log and initial after physical verification.',
-      'Compare the numbered string seal with the carried-forward value.',
+      'Gather the current numbered binder and opening materials: seal log, barrel key, small manila envelope, pen, and scissors.',
+      'Compare the numbered string seal with the carried-forward value on the seal log.',
       'Initial the seal log after physical verification.',
       'Cut the seal and place it in the green used-seal bag.',
       'Open the media-access door with the barrel key.',
@@ -27,7 +26,7 @@
     shutdown.summary='Verify the machine count, print the System Readiness Report, power down, complete seal and canister work, then close the ePollbooks after reconciliation.';
     shutdown.warning='DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';
     shutdown.steps=[
-      'Gather the current binder and nightly closing materials. Retrieve the individual replacement seals from the manila envelope so they are ready for the applicable seal steps.',
+      'Gather the current binder and nightly closing materials. Retrieve the individual replacement seals from the small manila envelope so they are ready for the applicable seal steps.',
       'At each replacement-seal step, match the seal number to the seal log and initial after physical verification.',
       'Verify the voting machine public counter.',
       'Press Mode, enter the required password/passcode, and open the Reports menu.',
@@ -50,9 +49,9 @@
       'The worker must be logged in to log out. If needed, log back in, open the hamburger menu, and select Logout.',
       'Use the Early Voting close-for-day command*, enter the required password/passcode, and confirm the close-for-day prompt.',
       'Allow synchronization to complete. If transactions remain pending, use the resync control* and verify that syncing completes.',
-      'Close the ePollbook app using the device app switcher, then power off the iPad/device completely.',
+      'Use the device app switcher and swipe the ePollbook app closed, then power off the iPad/device completely.',
       'Fold the ePollbook and move it to the secured Early Voting cage/storage area.',
-      'Keep the router powered until ePollbook synchronization is complete; power the router down last.'
+      'Keep the router powered until all ePollbooks have finished synchronizing. Power the router down last, then return it to the secured cage/storage area.'
     ];
   }
 
@@ -158,10 +157,10 @@
     mailin.steps=[
       'Confirm the Mail-In Ballot flag.',
       'Explain that the voter cannot receive a regular machine ballot.',
-      'Explain the voter’s two practical choices: locate the mail-in ballot and return it to an authorized ballot drop box, or vote provisionally in person.',
+      'Explain the voter’s two practical choices: locate the mail-in ballot and return it to an authorized ballot drop box or the Morris County Board of Elections in Morristown, or vote provisionally in person.',
       'If the voter chooses to vote in person, process the voter provisionally.',
       'Use Box 13 on the provisional envelope for mail-in opt-out when requested.',
-      'Direct a returned mail-in ballot to an authorized ballot drop box or the Morris County Board of Elections in Morristown. DO NOT accept the completed mail-in ballot at the polling location.'
+      'DO NOT accept the completed mail-in ballot at the polling location.'
     ];
   }
 
