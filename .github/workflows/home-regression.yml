@@ -1,0 +1,63 @@
+name: Home page regression
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  home:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Run Home regression
+        run: |
+          mkdir -p tests
+          cat > tests/home-regression.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+          test.use({ viewport:{width:390,height:844}, hasTouch:true, isMobile:true });
+          test.beforeEach(async ({page})=>{
+            await page.goto(BASE);
+            await page.evaluate(()=>{localStorage.clear();sessionStorage.clear();});
+            await page.reload();
+          });
+          test('brand logo loads', async ({page})=>{
+            const logo=page.locator('.brand-logo');
+            await expect(logo).toBeVisible();
+            await expect.poll(()=>logo.evaluate(img=>img.complete&&img.naturalWidth>0)).toBeTruthy();
+          });
+          test('Home uses shared election display rather than report date', async ({page})=>{
+            const heading=page.locator('.page-heading').first();
+            await expect(heading).toContainText('Early Voting');
+            await expect(heading).not.toContainText('2026-08-17');
+            await page.locator('.mode-button[data-mode="election"]').click();
+            await expect(page.locator('.page-heading').first()).toContainText('Election Day');
+          });
+          test('Today at a glance uses plus and minus cues', async ({page})=>{
+            const toggle=page.locator('[data-home-glance-toggle]');
+            const cue=toggle.locator('.home-glance-chevron');
+            await expect(cue).toHaveText('+');
+            await toggle.click();
+            await expect(cue).toHaveText('−');
+          });
+          EOF
+          npx playwright test tests/home-regression.spec.js --reporter=line
