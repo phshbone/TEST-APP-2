@@ -1,0 +1,86 @@
+name: Guide content regression
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  guide-content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Run guide content regression
+        run: |
+          mkdir -p tests
+          cat > tests/guide-content-regression.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+          test.use({ viewport:{width:390,height:844}, hasTouch:true, isMobile:true });
+          test.beforeEach(async ({page})=>{
+            await page.goto(BASE);
+            await page.evaluate(()=>{localStorage.clear();sessionStorage.clear();});
+            await page.reload();
+            await page.locator('[data-route="guide"]').click();
+          });
+          test('check-in starts with activation-card preload and uses EV 4+4 language', async ({page})=>{
+            const checkin=page.locator('[data-procedure="checkin"]');
+            await expect(checkin.locator('.lesson-card').first()).toContainText('Confirm the activation card is preloaded');
+            const search=checkin.locator('[data-lesson-card="checkin:search"]');
+            await search.locator('[data-open-lesson="checkin:search"]').click();
+            await expect(search).toContainText('4+4 search method');
+            await expect(search).toContainText('Do not turn this into a request for ID');
+          });
+          test('midweek shutdown includes machine-first order and ePollbook reconciliation warning', async ({page})=>{
+            const shutdown=page.locator('[data-procedure="shutdown"]');
+            await expect(shutdown).toContainText('Midweek Nightly Shutdown');
+            await shutdown.locator('.procedure-toggle').click();
+            await expect(shutdown).toContainText('Verify the voting machine public counter');
+            await expect(shutdown).toContainText('Print the System Readiness Report');
+            await expect(shutdown).toContainText('Do not shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals');
+            await expect(shutdown).toContainText('select Logout');
+          });
+          test('shared check-in completion uses sleeve, yellow bag, and Process Next Voter wording', async ({page})=>{
+            const complete=page.locator('[data-lesson-card="checkin:complete"]');
+            await complete.locator('[data-open-lesson="checkin:complete"]').click();
+            await expect(complete).toContainText('Activation Card Sleeve');
+            await expect(complete).toContainText('Yellow Signed Authority Slip Bag');
+            await expect(complete).toContainText('ePollbook returned to Process Next Voter');
+            await expect(complete).not.toContainText('Station returned to Process Next Voter');
+          });
+          test('mode switch keeps the corresponding guide topic in view', async ({page})=>{
+            const checkin=page.locator('[data-procedure="checkin"]');
+            await checkin.scrollIntoViewIfNeeded();
+            await page.evaluate(()=>document.querySelector('[data-procedure="checkin"]').scrollIntoView());
+            await page.locator('.mode-button[data-mode="election"]').click();
+            await expect(page.locator('[data-procedure="checkin"]')).toBeVisible();
+            const delta=await page.locator('[data-procedure="checkin"]').evaluate(el=>Math.abs(el.getBoundingClientRect().top-document.querySelector('#mainContent').getBoundingClientRect().top));
+            expect(delta).toBeLessThan(220);
+          });
+          test('mail-in, voter-not-found, provisional, reprint and spoil corrections render', async ({page})=>{
+            await expect(page.locator('[data-procedure="mailin"]')).toContainText('Morris County Board of Elections in Morristown');
+            await expect(page.locator('[data-procedure="notfound"]')).toContainText('Master Poll Worker or Board of Elections');
+            await expect(page.locator('[data-procedure="provisional"]')).toContainText('orange provisional bag');
+            await expect(page.locator('[data-procedure="reprint"]')).toContainText('hamburger menu');
+            await expect(page.locator('[data-procedure="spoil"]')).toContainText('one clear vertical pen line');
+          });
+          EOF
+          npx playwright test tests/guide-content-regression.spec.js --reporter=line
