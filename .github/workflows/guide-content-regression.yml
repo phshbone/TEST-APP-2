@@ -41,21 +41,41 @@ jobs:
             await page.reload();
             await page.locator('[data-route="guide"]').click();
           });
-          test('check-in starts with activation-card preload and uses EV 4+4 language', async ({page})=>{
+          test('check-in starts with activation-card preload and uses official EV 4+4 language', async ({page})=>{
             const checkin=page.locator('[data-procedure="checkin"]');
             await expect(checkin.locator('.lesson-card').first()).toContainText('Confirm the activation card is preloaded');
+            const preload=checkin.locator('[data-lesson-card="checkin:preload"]');
+            await preload.locator('[data-open-lesson="checkin:preload"]').click();
+            await expect(preload).toContainText('pending check-in screen');
+            await expect(preload).toContainText('Authority Slip screen');
             const search=checkin.locator('[data-lesson-card="checkin:search"]');
             await search.locator('[data-open-lesson="checkin:search"]').click();
-            await expect(search).toContainText('4+4 search method');
-            await expect(search).toContainText('Do not turn this into a request for ID');
+            await expect(search.locator('.official')).toContainText('4+4 search method');
+            await expect(search).toContainText('DO NOT turn this into a request for ID');
           });
-          test('midweek shutdown includes machine-first order and ePollbook reconciliation warning', async ({page})=>{
+          test('lesson controls use plus and minus rather than carets', async ({page})=>{
+            const toggle=page.locator('[data-open-lesson="checkin:search"]');
+            const before=await toggle.locator('.chevron').evaluate(el=>getComputedStyle(el,'::after').content);
+            expect(before).toContain('+');
+            await toggle.click();
+            const after=await toggle.locator('.chevron').evaluate(el=>getComputedStyle(el,'::after').content);
+            expect(after).toContain('−');
+          });
+          test('midweek morning includes binder and seal preparation', async ({page})=>{
+            const morning=page.locator('[data-procedure="morning"]');
+            await morning.locator('.procedure-toggle').click();
+            await expect(morning).toContainText('Gather the current binder and morning opening materials');
+            await expect(morning).toContainText('match the seal number to the seal log');
+            await expect(morning).toContainText('daily black pencil pouch');
+          });
+          test('midweek shutdown includes machine-first order, compact warning hierarchy, and reconciliation rule', async ({page})=>{
             const shutdown=page.locator('[data-procedure="shutdown"]');
             await expect(shutdown).toContainText('Midweek Nightly Shutdown');
             await shutdown.locator('.procedure-toggle').click();
             await expect(shutdown).toContainText('Verify the voting machine public counter');
             await expect(shutdown).toContainText('Print the System Readiness Report');
-            await expect(shutdown).toContainText('Do not shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals');
+            await expect(shutdown.locator('.shutdown-warning-title')).toHaveText('★ DO NOT SELECT CLOSE POLL ★');
+            await expect(shutdown).toContainText('DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals');
             await expect(shutdown).toContainText('select Logout');
           });
           test('shared check-in completion uses sleeve, yellow bag, and Process Next Voter wording', async ({page})=>{
@@ -75,11 +95,13 @@ jobs:
             const delta=await page.locator('[data-procedure="checkin"]').evaluate(el=>Math.abs(el.getBoundingClientRect().top-document.querySelector('#mainContent').getBoundingClientRect().top));
             expect(delta).toBeLessThan(220);
           });
-          test('mail-in, voter-not-found, provisional, reprint and spoil corrections render', async ({page})=>{
-            await expect(page.locator('[data-procedure="mailin"]')).toContainText('Morris County Board of Elections in Morristown');
+          test('mail-in, voter-not-found, provisional, reprint and spoil cleanup renders', async ({page})=>{
+            await expect(page.locator('[data-procedure="mailin"]')).toContainText('return it to an authorized ballot drop box');
             await expect(page.locator('[data-procedure="notfound"]')).toContainText('Master Poll Worker or Board of Elections');
-            await expect(page.locator('[data-procedure="provisional"]')).toContainText('orange provisional bag');
-            await expect(page.locator('[data-procedure="reprint"]')).toContainText('hamburger menu');
+            await expect(page.locator('[data-procedure="provisional"]')).toContainText('The poll worker places the sealed envelope in the orange provisional bag');
+            await expect(page.locator('[data-procedure="reprint"]')).toContainText('missing, misprinted, or unprinted item');
+            await expect(page.locator('[data-procedure="reprint"]')).toContainText('screen has already advanced');
+            await expect(page.locator('[data-procedure="spoil"]')).toContainText('printed, uncast ballot');
             await expect(page.locator('[data-procedure="spoil"]')).toContainText('one clear vertical pen line');
           });
           EOF
