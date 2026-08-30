@@ -1,0 +1,8 @@
+.lesson-toggle .chevron{font-size:0;line-height:1;min-width:1.25rem;text-align:center}
+.lesson-toggle .chevron::after{content:'+';font-size:1.55rem;font-weight:800;line-height:1;color:#123f77}
+.lesson-toggle[aria-expanded='true'] .chevron::after{content:'−'}
+.critical-do-not{font-weight:900}
+[data-procedure='shutdown'] .warning-box{padding:18px 20px;text-align:center}
+.shutdown-warning-title{font-size:1.12rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
+.shutdown-warning-line{font-size:1rem;font-weight:700;line-height:1.35;margin-top:8px}
+.shutdown-warning-note{font-size:.78rem;font-weight:600;line-height:1.35;margin-top:12px;opacity:.82;text-align:left}
