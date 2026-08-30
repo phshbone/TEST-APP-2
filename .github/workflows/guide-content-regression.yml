@@ -61,19 +61,28 @@ jobs:
             const after=await toggle.locator('.chevron').evaluate(el=>getComputedStyle(el,'::after').content);
             expect(after).toContain('−');
           });
-          test('midweek morning includes binder and seal preparation', async ({page})=>{
+          test('midweek morning starts with explicit binder opening kit', async ({page})=>{
             const morning=page.locator('[data-procedure="morning"]');
             await morning.locator('.procedure-toggle').click();
-            await expect(morning).toContainText('Gather the current binder and morning opening materials');
-            await expect(morning).toContainText('match the seal number to the seal log');
+            await expect(morning).toContainText('Gather the current numbered binder and opening materials');
+            await expect(morning).toContainText('seal log');
+            await expect(morning).toContainText('barrel key');
+            await expect(morning).toContainText('small manila envelope');
+            await expect(morning).toContainText('pen');
+            await expect(morning).toContainText('scissors');
+            await expect(morning).toContainText('carried-forward value on the seal log');
             await expect(morning).toContainText('daily black pencil pouch');
           });
-          test('midweek shutdown includes machine-first order, compact warning hierarchy, and reconciliation rule', async ({page})=>{
+          test('midweek shutdown uses small seal envelope, machine-first order, and full closing finish', async ({page})=>{
             const shutdown=page.locator('[data-procedure="shutdown"]');
             await expect(shutdown).toContainText('Midweek Nightly Shutdown');
             await shutdown.locator('.procedure-toggle').click();
+            await expect(shutdown).toContainText('small manila envelope');
             await expect(shutdown).toContainText('Verify the voting machine public counter');
             await expect(shutdown).toContainText('Print the System Readiness Report');
+            await expect(shutdown).toContainText('swipe the ePollbook app closed');
+            await expect(shutdown).toContainText('Power the router down last');
+            await expect(shutdown).toContainText('return it to the secured cage/storage area');
             const warning=shutdown.locator('.warning-box');
             const visualTitle=await warning.evaluate(el=>{
               const dom=el.querySelector('.shutdown-warning-title')?.textContent||'';
@@ -103,7 +112,10 @@ jobs:
             expect(delta).toBeLessThan(220);
           });
           test('mail-in, voter-not-found, provisional, reprint and spoil cleanup renders', async ({page})=>{
-            await expect(page.locator('[data-procedure="mailin"]')).toContainText('return it to an authorized ballot drop box');
+            const mailin=page.locator('[data-procedure="mailin"]');
+            await expect(mailin).toContainText('authorized ballot drop box');
+            await expect(mailin).toContainText('Morris County Board of Elections in Morristown');
+            await expect(mailin).toContainText('DO NOT accept the completed mail-in ballot at the polling location');
             await expect(page.locator('[data-procedure="notfound"]')).toContainText('Master Poll Worker or Board of Elections');
             await expect(page.locator('[data-procedure="provisional"]')).toContainText('The poll worker places the sealed envelope in the orange provisional bag');
             await expect(page.locator('[data-procedure="reprint"]')).toContainText('missing, misprinted, or unprinted item');
