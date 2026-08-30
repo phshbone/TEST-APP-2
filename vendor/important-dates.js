@@ -10,6 +10,7 @@
   function generalDate(year){return firstTuesdayAfterFirstMonday(year,10);}
   function minusDays(date,days){const d=new Date(date);d.setDate(d.getDate()-days);return d;}
   function fmt(date){return date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+  function fmtShort(date){return date.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
   function nextRegularElection(){
     const now=new Date();
     const y=now.getFullYear(), p=primaryDate(y), g=generalDate(y);
@@ -22,6 +23,23 @@
     return current.kind==='Primary Election'?{kind:'General Election',date:generalDate(y)}:{kind:'Primary Election',date:primaryDate(y+1)};
   }
   function ruleCard(title,body,source){return `<article class="card"><h3>${esc(title)}</h3><p>${esc(body)}</p>${source?`<p class="small"><strong>Source:</strong> ${esc(source)}</p>`:''}</article>`;}
+
+  // Shared display source for Home and Important Dates. Official calendar values,
+  // when supplied, take precedence over calculated regular-election values.
+  window.MPW_ELECTION_DISPLAY=function(mode){
+    const current=nextRegularElection();
+    const official=window.MPW_OFFICIAL_ELECTION_CALENDAR||{};
+    if(mode==='early'){
+      const start=official.earlyVotingStart?new Date(`${official.earlyVotingStart}T12:00:00`):null;
+      const end=official.earlyVotingEnd?new Date(`${official.earlyVotingEnd}T12:00:00`):null;
+      if(start&&end&&!Number.isNaN(start.getTime())&&!Number.isNaN(end.getTime())){
+        return `Early Voting • ${fmtShort(start)} – ${fmtShort(end)}`;
+      }
+      return 'Early Voting • Official range pending';
+    }
+    const election=official.electionDay?new Date(`${official.electionDay}T12:00:00`):current.date;
+    return `Election Day • ${fmtShort(election)}`;
+  };
 
   renderCurrent=function(){
     title.textContent='Important Dates & Rules';
