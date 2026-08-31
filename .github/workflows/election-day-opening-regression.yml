@@ -42,19 +42,33 @@ jobs:
             await page.locator('.mode-button[data-mode="election"]').click();
             await page.locator('[data-route="guide"]').click();
           });
-          test('Election Day opening is distinct from Early Voting binder opening', async ({page})=>{
+          test('Election Day opening is distinct and room flow is conditional', async ({page})=>{
             const opening=page.locator('[data-procedure="opening"]');
             await expect(opening).toContainText('Election Day Opening');
             await expect(opening).not.toContainText('Same for Both');
             await expect(opening).not.toContainText('secured binder sequence');
-            await expect(opening).toContainText('Room layout and traffic flow');
-            await expect(opening).toContainText('Identify machines and retrieve the correct keys');
+            const room=page.locator('[data-lesson-card="opening:room-flow"]');
+            await room.locator('[data-open-lesson="opening:room-flow"]').click();
+            await expect(room).toContainText('When the room allows');
           });
           test('manual and direct-wall warnings are prominent', async ({page})=>{
             const opening=page.locator('[data-procedure="opening"]');
-            await expect(opening.locator('.election-manual-callout')).toContainText('KEEP THE MANUALS AT THE TABLE');
+            await expect(opening.locator('.election-manual-callout')).toContainText('★ KEEP THE MANUALS AT THE TABLE ★');
             await expect(opening.locator('.election-power-warning')).toContainText('DO NOT plug a voting machine');
             await expect(opening.locator('.election-power-warning')).toContainText('working wall outlet');
+          });
+          test('machine identity and seals are separate checks and Red Bag is in Maroon Bag', async ({page})=>{
+            const lesson=page.locator('[data-lesson-card="opening:identify-machines"]');
+            await lesson.locator('[data-open-lesson="opening:identify-machines"]').click();
+            await expect(lesson).toContainText('machine number on the Key Envelope matches the number on the voting machine');
+            await expect(lesson).toContainText('Separately inspect the voting-machine seals');
+            await expect(lesson).toContainText('Red Bag is in the Maroon Bag');
+          });
+          test('keys return to Red Bag after machine setup', async ({page})=>{
+            const lesson=page.locator('[data-lesson-card="opening:machine-physical"]');
+            await lesson.locator('[data-open-lesson="opening:machine-physical"]').click();
+            await expect(lesson).toContainText('return the barrel keys and Key Envelopes to the Red Bag');
+            await expect(lesson).toContainText('Do not leave machine keys');
           });
           test('router and machine setup follow Election Day source language', async ({page})=>{
             const lesson=page.locator('[data-lesson-card="opening:router-power"]');
@@ -64,15 +78,15 @@ jobs:
             await expect(lesson).toContainText('working wall outlet');
             await expect(lesson).toContainText('daisy-chained');
           });
-          test('ePollbook physical setup is wire-first with no power', async ({page})=>{
+          test('ePollbook wiring stays on poll-worker side and is wire-first', async ({page})=>{
             const lesson=page.locator('[data-lesson-card="opening:epb-layout"]');
             await lesson.locator('[data-open-lesson="opening:epb-layout"]').click();
+            await expect(lesson).toContainText('poll-worker side of the table, not the voter side');
             await expect(lesson).toContainText('color-coded');
             await expect(lesson).toContainText('DO NOT power the station yet');
             await expect(lesson).toContainText('power-strip connection is the final connection step');
-            await expect(lesson).toContainText('Touchpad/ePollbook number matches both printer numbers');
           });
-          test('ePollbook configuration is one station at a time and tests through interface', async ({page})=>{
+          test('ePollbook configuration is one station at a time', async ({page})=>{
             const lesson=page.locator('[data-lesson-card="opening:epb-configure"]');
             await lesson.locator('[data-open-lesson="opening:epb-configure"]').click();
             await expect(lesson).toContainText('one ePollbook station at a time');
@@ -81,15 +95,37 @@ jobs:
             await expect(lesson).toContainText('Save');
             await expect(lesson).toContainText('blank Activation Card');
           });
-          test('Pilot Co-Pilot and manual reference remain explicit', async ({page})=>{
+          test('zero reports, oath form, official clock, and poll opening reports are explicit', async ({page})=>{
             const machine=page.locator('[data-lesson-card="opening:machine-open"]');
             await machine.locator('[data-open-lesson="opening:machine-open"]').click();
-            await expect(machine).toContainText('Pilot / Co-Pilot');
-            await expect(machine).toContainText('Voting Machine Manual');
+            await expect(machine).toContainText('every number on both reports is ZERO (0)');
+            await expect(machine).toContainText('opposing parties sign both reports');
             const admin=page.locator('[data-lesson-card="opening:manuals-admin"]');
             await admin.locator('[data-open-lesson="opening:manuals-admin"]').click();
-            await expect(admin).toContainText('Oath of Office');
-            await expect(admin).toContainText('New Jersey State');
+            await expect(admin).toContainText('Complete and sign the Oath of Office');
+            await expect(admin).toContainText('official clock');
+            await expect(admin).toContainText('Poll Opening Report');
+          });
+          test('Election Day search uses 3+3 and Primary lesson preserves party rules', async ({page})=>{
+            const search=page.locator('[data-lesson-card="checkin:search"]');
+            await search.locator('[data-open-lesson="checkin:search"]').click();
+            await expect(search).toContainText('Election Day: use the 3+3 search method');
+            const primary=page.locator('[data-lesson-card="checkin:primary-party"]');
+            await primary.locator('[data-open-lesson="checkin:primary-party"]').click();
+            await expect(primary).toContainText('unaffiliated voter may declare');
+            await expect(primary).toContainText('55 days before the Primary Election');
+          });
+          test('Election Day challengers are included with formal challenge boundaries', async ({page})=>{
+            const challenger=page.locator('[data-procedure="challengers"]');
+            await expect(challenger).toContainText('Election Day Challengers');
+            const basics=page.locator('[data-lesson-card="challengers:challenger-basics"]');
+            await basics.locator('[data-open-lesson="challengers:challenger-basics"]').click();
+            await expect(basics).toContainText('may not speak directly to voters');
+            await expect(basics).toContainText('may not handle election documents');
+            const formal=page.locator('[data-lesson-card="challengers:formal-challenge"]');
+            await formal.locator('[data-open-lesson="challengers:formal-challenge"]').click();
+            await expect(formal).toContainText('Challenger Affidavit');
+            await expect(formal).toContainText('tie vote is resolved in the voter’s favor');
           });
           EOF
           npx playwright test tests/election-day-opening.spec.js --reporter=line
