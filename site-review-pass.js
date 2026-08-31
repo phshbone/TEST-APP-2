@@ -1,4 +1,4 @@
-// Site-wide review pass: mode-specific Do/Don'ts, navigation cleanup, Election Day opening cross-link, and escalation routing.
+// Site-wide review pass: mode-specific Do/Don'ts, Election Day opening cross-link, and escalation routing.
 (function(){
   const app=window.APP_DATA;
   const field=window.FIELD_PROCEDURES;
@@ -33,7 +33,6 @@
     ]
   };
 
-  // Election Day machine keys are not optional or uncertain.
   const edOpening=app.procedures.find(p=>p.id==='opening' && p.modes?.includes('election'));
   const identify=edOpening?.lessons?.find(l=>l.id==='identify-machines');
   if(identify?.tips){
@@ -42,7 +41,6 @@
       : t);
   }
 
-  // Keep the existing Early Voting opening cross-link, but give Election Day its own field card.
   const openingField=field.items.find(i=>i.category==='openclose' && i.sharedProcedure==='opening');
   if(openingField){
     openingField.modes=['early'];
@@ -59,7 +57,6 @@
     }
   }
 
-  // Put the confirmed escalation routing where workers look for troubleshooting help.
   if(!field.items.some(i=>i.id==='who-to-call-routing')){
     const firstEquipment=field.items.findIndex(i=>i.category==='equipment');
     const routing={
@@ -73,7 +70,6 @@
     field.items.splice(firstEquipment>=0?firstEquipment:field.items.length,0,routing);
   }
 
-  // Mode-specific Do/Don't rendering.
   window.renderDosDonts=function(){
     title.textContent='Official Do’s & Don’ts';
     const mode=state.mode;
@@ -87,16 +83,7 @@
       <section class="card rules-section"><h3 class="dont-heading">DON’T</h3>${renderItems(app.dosDonts.donts,'dont')}</section>`;
   };
 
-  // Replace Lookup in the bottom dock with Do/Don'ts; keep Lookup as the last item in More.
-  const bottomLookup=document.querySelector('.bottom-nav [data-route="lookup"]');
-  if(bottomLookup){
-    bottomLookup.dataset.route='dosdonts';
-    const icon=bottomLookup.querySelector('span');
-    const label=bottomLookup.querySelector('small');
-    if(icon) icon.textContent='✓';
-    if(label) label.textContent='Do / Don’t';
-  }
-
+  // Do/Don'ts stays in More; Quick Lookup is the final More item. The bottom dock remains the five core routes.
   const menu=document.getElementById('sideMenu');
   if(menu && !menu.querySelector('[data-route="lookup"]')){
     const lookup=document.createElement('button');
@@ -107,6 +94,5 @@
     menu.appendChild(lookup);
   }
 
-  // Re-render the current view so the mode-specific rules and field cards are live immediately.
   render();
 })();
