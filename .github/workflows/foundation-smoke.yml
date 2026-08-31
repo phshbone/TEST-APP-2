@@ -58,7 +58,7 @@ jobs:
               ['home','Master Poll Worker'],
               ['guide','Trainer Checklist'],
               ['procedures','Procedures'],
-              ['lookup','Quick Lookup'],
+              ['dosdonts','Official Do’s & Don’ts'],
               ['training','Training Tracker'],
               ['report','Daily Report']
             ];
@@ -136,8 +136,9 @@ jobs:
             expect(Math.abs(after.y-before.y)).toBeLessThan(14);
           });
 
-          test('lookup returns navigable results', async ({page}) => {
-            await page.locator('.nav-button[data-route="lookup"]').click();
+          test('lookup returns navigable results from More menu', async ({page}) => {
+            await page.locator('#menuButton').click();
+            await page.locator('#sideMenu [data-route="lookup"]').click();
             const input=page.locator('#lookupInput');
             await input.fill('provisional');
             await expect(page.locator('[data-lookup-procedure], [data-lookup-guide]').first()).toBeVisible();
