@@ -1,0 +1,95 @@
+name: Election Day opening regression
+
+on:
+  push:
+    branches: [foundation-v3-repair]
+  workflow_dispatch:
+
+jobs:
+  election-day-opening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 >/tmp/mpw-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mpw-http.log
+          exit 1
+      - name: Run Election Day opening regression
+        run: |
+          mkdir -p tests
+          cat > tests/election-day-opening.spec.js <<'EOF'
+          const { test, expect } = require('@playwright/test');
+          const BASE='http://127.0.0.1:4173/index.html';
+          test.use({ viewport:{width:390,height:844}, hasTouch:true, isMobile:true });
+          test.beforeEach(async ({page})=>{
+            await page.goto(BASE);
+            await page.evaluate(()=>{localStorage.clear();sessionStorage.clear();});
+            await page.reload();
+            await page.locator('.mode-button[data-mode="election"]').click();
+            await page.locator('[data-route="guide"]').click();
+          });
+          test('Election Day opening is distinct from Early Voting binder opening', async ({page})=>{
+            const opening=page.locator('[data-procedure="opening"]');
+            await expect(opening).toContainText('Election Day Opening');
+            await expect(opening).not.toContainText('Same for Both');
+            await expect(opening).not.toContainText('secured binder sequence');
+            await expect(opening).toContainText('Room layout and traffic flow');
+            await expect(opening).toContainText('Identify machines and retrieve the correct keys');
+          });
+          test('manual and direct-wall warnings are prominent', async ({page})=>{
+            const opening=page.locator('[data-procedure="opening"]');
+            await expect(opening.locator('.election-manual-callout')).toContainText('KEEP THE MANUALS AT THE TABLE');
+            await expect(opening.locator('.election-power-warning')).toContainText('DO NOT plug a voting machine');
+            await expect(opening.locator('.election-power-warning')).toContainText('working wall outlet');
+          });
+          test('router and machine setup follow Election Day source language', async ({page})=>{
+            const lesson=page.locator('[data-lesson-card="opening:router-power"]');
+            await lesson.locator('[data-open-lesson="opening:router-power"]').click();
+            await expect(lesson).toContainText('bubble-wrapped router');
+            await expect(lesson).toContainText('yellow extension reel');
+            await expect(lesson).toContainText('working wall outlet');
+            await expect(lesson).toContainText('daisy-chained');
+          });
+          test('ePollbook physical setup is wire-first with no power', async ({page})=>{
+            const lesson=page.locator('[data-lesson-card="opening:epb-layout"]');
+            await lesson.locator('[data-open-lesson="opening:epb-layout"]').click();
+            await expect(lesson).toContainText('color-coded');
+            await expect(lesson).toContainText('DO NOT power the station yet');
+            await expect(lesson).toContainText('power-strip connection is the final connection step');
+            await expect(lesson).toContainText('Touchpad/ePollbook number matches both printer numbers');
+          });
+          test('ePollbook configuration is one station at a time and tests through interface', async ({page})=>{
+            const lesson=page.locator('[data-lesson-card="opening:epb-configure"]');
+            await lesson.locator('[data-open-lesson="opening:epb-configure"]').click();
+            await expect(lesson).toContainText('one ePollbook station at a time');
+            await expect(lesson).toContainText('Find/Select');
+            await expect(lesson).toContainText('Test');
+            await expect(lesson).toContainText('Save');
+            await expect(lesson).toContainText('blank Activation Card');
+          });
+          test('Pilot Co-Pilot and manual reference remain explicit', async ({page})=>{
+            const machine=page.locator('[data-lesson-card="opening:machine-open"]');
+            await machine.locator('[data-open-lesson="opening:machine-open"]').click();
+            await expect(machine).toContainText('Pilot / Co-Pilot');
+            await expect(machine).toContainText('Voting Machine Manual');
+            const admin=page.locator('[data-lesson-card="opening:manuals-admin"]');
+            await admin.locator('[data-open-lesson="opening:manuals-admin"]').click();
+            await expect(admin).toContainText('Oath of Office');
+            await expect(admin).toContainText('New Jersey State');
+          });
+          EOF
+          npx playwright test tests/election-day-opening.spec.js --reporter=line
