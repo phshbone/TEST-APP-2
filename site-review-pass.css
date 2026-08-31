@@ -3,6 +3,5 @@
 .rule-card.expanded .rule-plusminus::after{content:'−'}
 
 .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
-.bottom-nav .nav-button[data-route="dosdonts"] small{font-size:11px;line-height:1.05}
 
 .field-procedure .warning-box{font-weight:800}
