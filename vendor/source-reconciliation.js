@@ -6,6 +6,10 @@
   const stateSource=(section,pdfPage)=>({title:'2024 New Jersey District Board Member Training Manual',authority:'NJ Department of State, Division of Elections',section,url:pdfPage?`${STATE_MANUAL}#page=${pdfPage}`:STATE_MANUAL});
   const morrisSource=(section,pdfPage)=>({title:'Morris County Poll Worker Manual — Election Day',authority:'Morris County Board of Elections',section,date:'Last revised May 7, 2024',url:pdfPage?`${MORRIS_MANUAL}#page=${pdfPage}`:MORRIS_MANUAL});
 
+  // Exact-page source links use PDF page numbers, not the printed manual page number.
+  const affirm=get('flag-affirm-address');
+  if(affirm){affirm.source=morrisSource('ePollbook Manual, Affirm Address, p. 23',27);}
+
   const moved=get('record-changed-residence');
   if(moved){
     moved.statuses=['Official Procedure'];
@@ -19,8 +23,11 @@
     moved.notDo=['Do not treat every move as provisional.','Do not send a same-district mover away from the polling place when the state procedure allows the address change and regular machine vote there.'];
     moved.outcome='Same district → regular machine ballot. Different district within Morris County → provisional at the polling place for the new address. Out-of-county → outcome depends on whether the move occurred within or more than 21 days before Election Day.';
     moved.boardQuestion=null;
-    moved.source=stateSource('Voters Who Have Changed Their Residence, p. 20');
+    moved.source=stateSource('Voters Who Have Changed Their Residence, p. 20',23);
   }
+
+  const signature=get('flag-signature');
+  if(signature){signature.source=stateSource('Signature Required, p. 19',22);}
 
   const idreq=get('flag-id');
   if(idreq){
@@ -38,6 +45,18 @@
     idreq.boardQuestion=null;
     idreq.source=morrisSource('ePollbook Manual, ID Required p. 22; Provisional Ballot Procedures pp. 37–38',26);
   }
+
+  const mailin=get('flag-mailin');
+  if(mailin){mailin.source=morrisSource('ePollbook Manual, Mail-In Ballot, p. 21',25);}
+
+  const early=get('flag-early');
+  if(early){early.source=morrisSource('ePollbook Manual, Early Voted, p. 21',25);}
+
+  const already=get('flag-already');
+  if(already){already.source=morrisSource('ePollbook Manual, Already Voted, p. 22',26);}
+
+  const assistance=get('assistance-field');
+  if(assistance){assistance.source=morrisSource('ePollbook Manual, Processing Voter Assistance, pp. 17–20',21);}
 
   const primary=get('primary-field');
   if(primary){
@@ -64,18 +83,19 @@
     reprint.source=morrisSource('ePollbook Manual, Re-Printing a Ballot or Authority Slip, p. 25',29);
   }
 
-  const already=get('flag-already');
-  if(already){already.source=morrisSource('ePollbook Manual, Already Voted, p. 22',26);}
   const provisional=get('xref-provisional');
   if(provisional){
     provisional.source=morrisSource('Provisional Ballot Procedures, pp. 35–45',39);
     provisional.meaning='A provisional ballot is used only when the voter’s situation requires it. Morris specifically lists Mail-In Ballot, Early Voted, Already Voted, No ID Provided, Moved within Morris County, and No Signature on File among provisional reasons.';
   }
+
   const spoil=get('xref-spoil');
   if(spoil){spoil.source=morrisSource('Spoiling a Ballot Procedures, pp. 47–54',51);}
-  const equipment=get('equipment-escalation');
-  if(equipment){equipment.source=morrisSource('ePollbook Manual and Troubleshoot Guide',59);}
 
+  const equipment=get('equipment-escalation');
+  if(equipment){equipment.source=morrisSource('Troubleshoot Guide, p. 55 and following',59);}
+
+  // A source without a stable/public target remains text-only rather than pointing to the wrong document.
   // Questions that were previously open are now answered by the supplied official sources.
   fieldData.boardQueue=[];
   render();
