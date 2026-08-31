@@ -40,10 +40,13 @@ jobs:
             await page.reload();
           });
 
-          test('bottom dock has five core routes and More holds Do/Don’t, Admin, and Lookup', async ({page})=>{
-            await expect(page.locator('.bottom-nav .nav-button')).toHaveCount(5);
+          test('bottom dock has five equal core routes and More holds Do/Don’t, Admin, and Lookup', async ({page})=>{
+            const buttons=page.locator('.bottom-nav .nav-button');
+            await expect(buttons).toHaveCount(5);
             await expect(page.locator('.bottom-nav [data-route="dosdonts"]')).toHaveCount(0);
             await expect(page.locator('.bottom-nav [data-route="lookup"]')).toHaveCount(0);
+            const widths=await buttons.evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));
+            expect(Math.max(...widths)-Math.min(...widths)).toBeLessThan(2);
             await page.locator('#menuButton').click();
             const menuButtons=page.locator('#sideMenu > button');
             await expect(menuButtons.filter({hasText:'Official Do’s & Don’ts'})).toHaveCount(1);
@@ -51,7 +54,7 @@ jobs:
             await expect(menuButtons.last()).toHaveText('Quick Lookup');
           });
 
-          test('Admin accepts only the fixed code and does not create device-local credentials', async ({page})=>{
+          test('Admin accepts only the fixed code and shows the three manual references', async ({page})=>{
             const seen=[];
             page.on('dialog',async dialog=>{
               const message=dialog.message();
@@ -61,7 +64,6 @@ jobs:
                 return dialog.accept(attempts===1?'9999':'2840');
               }
               if(message.startsWith('Incorrect code')) return dialog.accept();
-              if(message.startsWith('ADMIN')) return dialog.accept();
               return dialog.dismiss();
             });
             await page.locator('#menuButton').click();
@@ -70,7 +72,14 @@ jobs:
             await expect(page.evaluate(()=>localStorage.getItem('mpw-master-local-code'))).resolves.toBeNull();
             await page.locator('#menuButton').click();
             await page.locator('#adminMenuButton').click();
-            await expect.poll(()=>seen.some(m=>m.startsWith('ADMIN'))).toBeTruthy();
+            const admin=page.locator('#adminReferenceOverlay');
+            await expect(admin).toBeVisible();
+            await expect(admin).toContainText('reference-blue.pdf');
+            await expect(admin).toContainText('reference-green.pdf');
+            await expect(admin).toContainText('reference-black.pdf');
+            await expect(admin).toContainText('Morris County Voting Machine Manual');
+            await expect(admin).toContainText('Morris County Poll Worker Manual');
+            await expect(admin).toContainText('New Jersey District Board Member Training Manual');
             expect(seen.some(m=>m.startsWith('Create an Admin PIN'))).toBeFalsy();
           });
 
