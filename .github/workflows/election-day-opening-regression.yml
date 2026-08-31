@@ -53,7 +53,11 @@ jobs:
           });
           test('manual and direct-wall warnings are prominent', async ({page})=>{
             const opening=page.locator('[data-procedure="opening"]');
-            await expect(opening.locator('.election-manual-callout')).toContainText('★ KEEP THE MANUALS AT THE TABLE ★');
+            const heading=opening.locator('.election-manual-heading');
+            await expect(heading.locator('> span')).toHaveCount(3);
+            await expect(heading.locator('> span').first()).toHaveText('★');
+            await expect(heading.locator('> span').nth(1)).toHaveText('KEEP THE MANUALS AT THE TABLE');
+            await expect(heading.locator('> span').last()).toHaveText('★');
             await expect(opening.locator('.election-power-warning')).toContainText('DO NOT plug a voting machine');
             await expect(opening.locator('.election-power-warning')).toContainText('working wall outlet');
           });
