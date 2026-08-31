@@ -51,22 +51,27 @@ jobs:
             await expect(menuButtons.last()).toHaveText('Quick Lookup');
           });
 
-          test('Admin creates and verifies a device-local code', async ({page})=>{
+          test('Admin accepts only the fixed code and does not create device-local credentials', async ({page})=>{
             const seen=[];
             page.on('dialog',async dialog=>{
               const message=dialog.message();
               seen.push(message);
-              if(message.startsWith('Create an Admin PIN')) return dialog.accept('2468');
-              if(message.startsWith('Enter the code again')) return dialog.accept('2468');
-              if(message.startsWith('Admin code saved')) return dialog.accept();
-              if(message.startsWith('Enter Admin code')) return dialog.accept('2468');
+              if(message.startsWith('Enter Admin code')){
+                const attempts=seen.filter(m=>m.startsWith('Enter Admin code')).length;
+                return dialog.accept(attempts===1?'9999':'2840');
+              }
+              if(message.startsWith('Incorrect code')) return dialog.accept();
               if(message.startsWith('ADMIN')) return dialog.accept();
               return dialog.dismiss();
             });
             await page.locator('#menuButton').click();
             await page.locator('#adminMenuButton').click();
-            await expect.poll(async()=>page.evaluate(()=>localStorage.getItem('mpw-master-local-code'))).toBe('2468');
+            await expect.poll(()=>seen.some(m=>m.startsWith('Incorrect code'))).toBeTruthy();
+            await expect(page.evaluate(()=>localStorage.getItem('mpw-master-local-code'))).resolves.toBeNull();
+            await page.locator('#menuButton').click();
+            await page.locator('#adminMenuButton').click();
             await expect.poll(()=>seen.some(m=>m.startsWith('ADMIN'))).toBeTruthy();
+            expect(seen.some(m=>m.startsWith('Create an Admin PIN'))).toBeFalsy();
           });
 
           test('Do/Don’t content changes by mode and uses plus/minus', async ({page})=>{
