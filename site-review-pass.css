@@ -1,0 +1,7 @@
+.rule-plusminus{font-size:0;min-width:28px;text-align:center;font-weight:900}
+.rule-plusminus::after{content:'+';font-size:28px;line-height:1;color:#173f73}
+.rule-card.expanded .rule-plusminus::after{content:'−'}
+
+.bottom-nav .nav-button[data-route="dosdonts"] small{font-size:11px;line-height:1.05}
+
+.field-procedure .warning-box{font-weight:800}
