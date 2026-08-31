@@ -1,8 +1,10 @@
 // Source-reconciliation pass: paraphrases official state/county rules into concise app language.
 (function(){
   const get=id=>fieldData.items.find(x=>x.id===id);
-  const stateSource=(section)=>({title:'2024 New Jersey District Board Member Training Manual',authority:'NJ Department of State, Division of Elections',section});
-  const morrisSource=(section)=>({title:'Morris County Poll Worker Manual — Election Day',authority:'Morris County Board of Elections',section,date:'Last revised May 7, 2024'});
+  const STATE_MANUAL='https://www.nj.gov/state/elections/assets/pdf/guidelines/2024/2024-1025-board-worker-training-manual.pdf';
+  const MORRIS_MANUAL='https://www.morriscountynj.gov/files/sharedassets/public/departments/elections/poll-worker-manual.pdf';
+  const stateSource=(section,pdfPage)=>({title:'2024 New Jersey District Board Member Training Manual',authority:'NJ Department of State, Division of Elections',section,url:pdfPage?`${STATE_MANUAL}#page=${pdfPage}`:STATE_MANUAL});
+  const morrisSource=(section,pdfPage)=>({title:'Morris County Poll Worker Manual — Election Day',authority:'Morris County Board of Elections',section,date:'Last revised May 7, 2024',url:pdfPage?`${MORRIS_MANUAL}#page=${pdfPage}`:MORRIS_MANUAL});
 
   const moved=get('record-changed-residence');
   if(moved){
@@ -34,7 +36,7 @@
     ];
     idreq.outcome='Acceptable ID provided and recorded → regular processing. No acceptable ID → provisional ballot.';
     idreq.boardQuestion=null;
-    idreq.source=morrisSource('ePollbook Manual, ID Required p. 22; Provisional Ballot Procedures pp. 37–38');
+    idreq.source=morrisSource('ePollbook Manual, ID Required p. 22; Provisional Ballot Procedures pp. 37–38',26);
   }
 
   const primary=get('primary-field');
@@ -59,20 +61,20 @@
     reprint.statuses=['Current Morris Guidance'];
     reprint.meaning='Use Re-Print after a check-in is complete when the ballot/activation card or authority slip needs to be printed again. Do not check the voter in a second time.';
     reprint.steps=['Return to the home screen with Process Next Voter.','Open the Launchpad Menu and choose Re-Print.','Search for the voter using the Morris 3 & 3 search method.','Select the correct voter, then tap the green Re-Print button.','Print only the replacement item needed and return to normal workflow.'];
-    reprint.source=morrisSource('ePollbook Manual, Re-Printing a Ballot or Authority Slip, p. 25');
+    reprint.source=morrisSource('ePollbook Manual, Re-Printing a Ballot or Authority Slip, p. 25',29);
   }
 
   const already=get('flag-already');
-  if(already){already.source=morrisSource('ePollbook Manual, Already Voted, p. 22');}
+  if(already){already.source=morrisSource('ePollbook Manual, Already Voted, p. 22',26);}
   const provisional=get('xref-provisional');
   if(provisional){
-    provisional.source=morrisSource('Provisional Ballot Procedures, pp. 35–45');
+    provisional.source=morrisSource('Provisional Ballot Procedures, pp. 35–45',39);
     provisional.meaning='A provisional ballot is used only when the voter’s situation requires it. Morris specifically lists Mail-In Ballot, Early Voted, Already Voted, No ID Provided, Moved within Morris County, and No Signature on File among provisional reasons.';
   }
   const spoil=get('xref-spoil');
-  if(spoil){spoil.source=morrisSource('Spoiling a Ballot Procedures, pp. 47–54');}
+  if(spoil){spoil.source=morrisSource('Spoiling a Ballot Procedures, pp. 47–54',51);}
   const equipment=get('equipment-escalation');
-  if(equipment){equipment.source=morrisSource('ePollbook Manual and Troubleshoot Guide');}
+  if(equipment){equipment.source=morrisSource('ePollbook Manual and Troubleshoot Guide',59);}
 
   // Questions that were previously open are now answered by the supplied official sources.
   fieldData.boardQueue=[];
