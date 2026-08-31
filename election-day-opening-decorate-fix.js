@@ -2,17 +2,14 @@
 (function(){
   function decorate(){
     const cards=[...document.querySelectorAll('[data-procedure="opening"]')];
-    const card=cards.find(el=>el.querySelector('.procedure-heading h3')?.textContent.trim()==='Election Day Opening');
+    const card=cards.find(el=>(el.textContent||'').includes('Election Day Opening'));
     if(!card || card.dataset.electionOpeningDecorated==='fixed') return;
-    card.dataset.electionOpeningDecorated='fixed';
-    const heading=card.querySelector('.procedure-heading');
-    if(!heading) return;
 
     if(!card.querySelector('.election-manual-callout')){
       const manual=document.createElement('div');
       manual.className='election-manual-callout';
       manual.innerHTML='<strong>KEEP THE MANUALS AT THE TABLE</strong><span>Use the Morris County Poll Worker Manual and the New Jersey State manual whenever a procedure, flag, remedy, or setup step is unclear.</span>';
-      heading.insertAdjacentElement('afterend',manual);
+      card.insertAdjacentElement('afterbegin',manual);
     }
 
     if(!card.querySelector('.election-power-warning')){
@@ -22,6 +19,8 @@
       power.innerHTML='<strong>DO NOT plug a voting machine into the yellow extension reel or an ePollbook power strip.</strong><span>Voting machines must use a working wall outlet.</span>';
       manual.insertAdjacentElement('afterend',power);
     }
+
+    card.dataset.electionOpeningDecorated='fixed';
   }
 
   const root=document.getElementById('mainContent');
