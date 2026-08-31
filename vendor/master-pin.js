@@ -9,7 +9,7 @@
       file:'reference-blue.pdf',
       title:'Morris County Voting Machine Manual — Election Day',
       note:'April 18, 2023',
-      url:null
+      url:'assets/docs/reference-blue.pdf'
     },
     {
       key:'green',
@@ -54,14 +54,8 @@
       const action=document.createElement('button');
       action.type='button';
       action.style.cssText='width:100%;min-height:44px;margin-top:10px;border-radius:10px;border:1px solid #aabbd0;background:#fff;color:#123a6d;font-weight:800';
-      if(m.url){
-        action.textContent='Open manual';
-        action.onclick=()=>window.open(m.url,'_blank','noopener');
-      }else{
-        action.textContent='Manual file pending local bundle';
-        action.disabled=true;
-        action.style.opacity='.58';
-      }
+      action.textContent='Open manual';
+      action.onclick=()=>window.open(m.url,'_blank','noopener');
       card.appendChild(action);
       panel.appendChild(card);
     });
