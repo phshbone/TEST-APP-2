@@ -58,7 +58,6 @@ jobs:
               ['home','Master Poll Worker'],
               ['guide','Trainer Checklist'],
               ['procedures','Procedures'],
-              ['dosdonts','Official Do’s & Don’ts'],
               ['training','Training Tracker'],
               ['report','Daily Report']
             ];
