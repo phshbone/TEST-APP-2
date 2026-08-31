@@ -1,8 +1,8 @@
 .election-manual-callout{margin:14px 0;padding:16px 18px;border:2px solid #2f7d32;border-radius:14px;background:#eef8ef;display:flex;flex-direction:column;gap:6px}
 .election-manual-callout strong{font-size:1rem;line-height:1.2;letter-spacing:.01em;color:#1f5d24}
-.election-manual-heading{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;text-align:center}
-.election-manual-heading>span:first-child,.election-manual-heading>span:last-child{display:block;line-height:1}
-.election-manual-heading>span:nth-child(2){display:block;min-width:0}
+.election-manual-heading{display:flex!important;align-items:center;justify-content:center;gap:10px;text-align:center;width:100%}
+.election-manual-heading>span:first-child,.election-manual-heading>span:last-child{display:block;line-height:1;flex:0 0 auto}
+.election-manual-heading>span:nth-child(2){display:block;min-width:0;flex:1 1 auto;text-align:center}
 .election-manual-callout>span{font-size:.94rem;line-height:1.4;font-weight:650;color:#1f4022}
 .election-power-warning{display:flex;flex-direction:column;gap:6px;margin:12px 0 16px}
 .election-power-warning strong{font-weight:900}
