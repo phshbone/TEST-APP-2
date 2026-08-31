@@ -8,7 +8,7 @@
     if(!card.querySelector('.election-manual-callout')){
       const manual=document.createElement('div');
       manual.className='election-manual-callout';
-      manual.innerHTML='<strong>KEEP THE MANUALS AT THE TABLE</strong><span>Use the Morris County Poll Worker Manual and the New Jersey State manual whenever a procedure, flag, remedy, or setup step is unclear.</span>';
+      manual.innerHTML='<strong>★ KEEP THE MANUALS AT THE TABLE ★</strong><span>Use the Morris County Poll Worker Manual and the New Jersey State manual whenever a procedure, flag, remedy, or setup step is unclear.</span>';
       card.insertAdjacentElement('afterbegin',manual);
     }
 
