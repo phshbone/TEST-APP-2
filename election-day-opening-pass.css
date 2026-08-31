@@ -1,0 +1,6 @@
+.election-manual-callout{margin:14px 0;padding:16px 18px;border:2px solid #2f7d32;border-radius:14px;background:#eef8ef;display:flex;flex-direction:column;gap:6px}
+.election-manual-callout strong{font-size:1rem;line-height:1.2;letter-spacing:.01em;color:#1f5d24}
+.election-manual-callout span{font-size:.94rem;line-height:1.4;font-weight:650;color:#1f4022}
+.election-power-warning{display:flex;flex-direction:column;gap:6px;margin:12px 0 16px}
+.election-power-warning strong{font-weight:900}
+.election-power-warning span{font-weight:700}
