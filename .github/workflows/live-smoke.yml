@@ -10,10 +10,6 @@ on:
   push:
     branches:
       - foundation-v3-repair
-    paths:
-      - '.github/workflows/live-smoke.yml'
-      - 'playwright.config.js'
-      - 'tests/live-smoke.spec.js'
 
 permissions:
   contents: read
