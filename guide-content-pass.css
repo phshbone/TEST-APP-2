@@ -2,10 +2,13 @@
 .lesson-toggle .chevron::after{content:'+';font-size:1.55rem;font-weight:800;line-height:1;color:#123f77}
 .lesson-toggle[aria-expanded='true'] .chevron::after{content:'−'}
 .critical-do-not{font-weight:900}
+.activation-one{font-weight:900}
 [data-procedure='shutdown'] .warning-box{padding:18px 20px;text-align:center}
-.shutdown-warning-title{font-size:1.12rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
+.shutdown-warning-title{display:flex;align-items:center;justify-content:center;gap:.35em;white-space:nowrap;font-size:1.08rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
+.shutdown-warning-title .warning-star{flex:0 0 auto;line-height:1}
 .shutdown-warning-line{font-size:1rem;font-weight:700;line-height:1.35;margin-top:8px}
 .shutdown-warning-note{font-size:.78rem;font-weight:600;line-height:1.35;margin-top:12px;opacity:.82;text-align:left}
 [data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title)){font-size:0}
-[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::before{content:'★ DO NOT SELECT CLOSE POLL ★';display:block;font-size:1.12rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
-[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::after{content:'During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.\A\A DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.\A\A * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';display:block;white-space:pre-line;font-size:.95rem;font-weight:700;line-height:1.35}
+[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::before{content:'★ DO NOT SELECT CLOSE POLL ★';display:block;white-space:nowrap;font-size:1.08rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
+[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::after{content:'During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.\A\A DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.\A\A * Exact Early Voting close-for-day screen labeling still requires confirmation.';display:block;white-space:pre-line;font-size:.95rem;font-weight:700;line-height:1.35}
+@media (max-width:420px){.shutdown-warning-title,[data-procedure='shutdown'] .warning-box:not(:has(.shutdown-warning-title))::before{font-size:.98rem;letter-spacing:0}}
