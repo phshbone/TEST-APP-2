@@ -65,28 +65,6 @@
     installFloatingReturn();
   }
 
-  // Checklist changes only need state persistence. Rebuilding the full page on
-  // every checkbox change causes a visible layout tremor on iPhone.
-  document.addEventListener('change',e=>{
-    const action=e.target?.closest?.('input[data-action-check]');
-    if(action){
-      const key=action.dataset.actionCheck;
-      state.procedureProgress[key]=state.procedureProgress[key]||{};
-      state.procedureProgress[key][action.dataset.index]=action.checked;
-      saveState();
-      e.stopPropagation();
-      return;
-    }
-    const check=e.target?.closest?.('input[data-check]');
-    if(check){
-      const key=check.dataset.check;
-      state.procedureProgress[key]=state.procedureProgress[key]||{};
-      state.procedureProgress[key][check.dataset.index]=check.checked;
-      saveState();
-      e.stopPropagation();
-    }
-  },true);
-
   // Guide -> Training synchronization is intentionally owned only by
   // training-navigation-fixes.js. This file previously duplicated the same
   // Standard Check-In / preload writes on every render, creating two writers
