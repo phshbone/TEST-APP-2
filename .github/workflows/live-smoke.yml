@@ -54,7 +54,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run deployed live smoke test
-        run: npx playwright test tests/live-smoke.spec.js
+        run: npx playwright test tests/live-smoke.spec.js tests/training-mode.spec.js
 
       - name: Upload Playwright report
         if: always()
