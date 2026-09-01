@@ -6,12 +6,13 @@
   const morning=byId('morning');
   if(morning){
     morning.title='Midweek Morning Opening';
+    morning.summary='Verify seals from the previous night, power on, print the System Readiness Report, and prepare the machine.';
     morning.steps=[
       'Gather the current numbered binder and opening materials: seal log, barrel key, small manila envelope, pen, and scissors.',
       'Compare the numbered string seal with the carried-forward value on the seal log.',
       'Initial the seal log after physical verification.',
       'Cut the seal and place it in the green used-seal bag.',
-      'Open the media-access door with the barrel key.',
+      'Open the media-access door with the barrel key and confirm the media-stick seal.',
       'Power on, close the door, remove the key, and return it to the red pouch.',
       'Print the System Readiness Report.',
       'Have two workers from different parties review and initial the report.',
@@ -24,32 +25,32 @@
   if(shutdown){
     shutdown.title='Midweek Nightly Shutdown';
     shutdown.summary='Verify the machine count, print the System Readiness Report, power down, complete seal and canister work, then close the ePollbooks after reconciliation.';
-    shutdown.warning='DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.';
+    shutdown.warning='DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day screen labeling still requires confirmation.';
     shutdown.steps=[
       'Gather the current binder and nightly closing materials. Retrieve the individual replacement seals from the small manila envelope so they are ready for the applicable seal steps.',
       'At each replacement-seal step, match the seal number to the seal log and initial after physical verification.',
-      'Verify the voting machine public counter.',
+      'Verify the voting machine public counter, then press the public counter to open the menu.',
       'Press Mode, enter the required password/passcode, and open the Reports menu.',
       'Print the System Readiness Report.',
-      'Use the upper-right power control to shut down the voting machine.*',
+      'Use the upper-right power button to shut down the voting machine.',
       'Close the machine cover, then move to the rear media-access area.',
       'Verify the carried-forward media-access seal information and install the applicable replacement string seal after matching it to the seal log.',
       'Move to the side access door; verify and remove the right-side red tape seal.',
       'Place the removed tape seal on the index card in the daily envelope.',
-      'Remove the outgoing canister.',
+      'Remove the departing canister.',
       'Verify the red front canister seal.',
-      'Apply and verify the outgoing blue transport seal.',
-      'Give the sealed outgoing canister to the runner.',
-      'Record the incoming canister and blue seal information.',
-      'Remove the incoming blue seal and place it in the green used-seal bag.',
+      'Apply and verify the departing blue transport seal.',
+      'Give the sealed departing canister to the runner.',
+      'Record the arriving canister and blue seal information.',
+      'Remove the arriving canister’s blue seal and place it in the green used-seal bag.',
       'Insert the replacement canister and lock it into place.',
       'Apply the new red tape panel seal across both surfaces and complete the applicable seal-log verification.',
       'Carry forward known information only after physical verification.',
       'After the Master Poll Worker has verified and reconciled the totals, unplug each ePollbook/iPad before beginning its shutdown.',
       'The worker must be logged in to log out. If needed, log back in, open the hamburger menu, and select Logout.',
       'Use the Early Voting close-for-day command*, enter the required password/passcode, and confirm the close-for-day prompt.',
-      'Allow synchronization to complete. If transactions remain pending, use the resync control* and verify that syncing completes.',
-      'Use the device app switcher and swipe the ePollbook app closed, then power off the iPad/device completely.',
+      'Allow synchronization to complete. If transactions remain pending, use the Resync button and verify that syncing completes.',
+      'Swipe the ePollbook app closed, then power off the iPad/device completely.',
       'Fold the ePollbook and move it to the secured Early Voting cage/storage area.',
       'Keep the router powered until all ePollbooks have finished synchronizing. Power the router down last, then return it to the secured cage/storage area.'
     ];
@@ -122,7 +123,7 @@
 
     const complete=lesson('complete');
     if(complete){
-      complete.lead='Complete the current voter check-in once, organize the printed materials, preload the next blank activation card, and return the ePollbook to Process Next Voter.';
+      complete.lead='Complete the current voter check-in once, place the signed authority slip in the Yellow Signed Authority Slip Bag, preload the next blank activation card, and return the ePollbook to Process Next Voter.';
       complete.official=[
         'Complete check-in only after the voter record, flags, signature, worker initials, and activation-card preload have been confirmed.',
         'Place the printed activation card into the Activation Card Sleeve to protect it from bending.',
@@ -178,6 +179,7 @@
 
   const provisional=byId('provisional');
   if(provisional){
+    provisional.summary='Complete the ePollbook process, instruct the voter on how to vote provisionally, secure the envelope after the vote, tally it, and reconcile the physical count.';
     provisional.steps=[
       'Confirm that provisional voting is the correct remedy.',
       'Complete the ePollbook provisional process.',
@@ -253,13 +255,45 @@
     });
   }
 
+  function emphasizeSingleActivationCard(){
+    const card=main.querySelector('[data-lesson-card="checkin:preload"]');
+    if(!card)return;
+    const walker=document.createTreeWalker(card,NodeFilter.SHOW_TEXT);
+    const targets=[];
+    while(walker.nextNode()){
+      const node=walker.currentNode;
+      if(node.parentElement?.closest('strong'))continue;
+      if(/one blank activation card/i.test(node.nodeValue||''))targets.push(node);
+    }
+    targets.forEach(node=>{
+      const text=node.nodeValue||'';
+      const match=text.match(/one blank activation card/i);
+      if(!match)return;
+      const start=match.index;
+      const phrase=match[0];
+      const one=phrase.slice(0,3);
+      const rest=phrase.slice(3);
+      const frag=document.createDocumentFragment();
+      if(start)frag.appendChild(document.createTextNode(text.slice(0,start)));
+      const strong=document.createElement('strong');
+      strong.className='activation-one';
+      strong.textContent=one;
+      frag.appendChild(strong);
+      frag.appendChild(document.createTextNode(rest));
+      frag.appendChild(document.createTextNode(text.slice(start+phrase.length)));
+      node.replaceWith(frag);
+    });
+  }
+
   function applyGuidePresentation(){
     const shutdownCard=main.querySelector('[data-procedure="shutdown"]');
     const warning=shutdownCard?.querySelector('.warning-box');
     if(warning && !warning.dataset.guideHierarchy){
       warning.dataset.guideHierarchy='1';
-      warning.innerHTML='<div class="shutdown-warning-title">★ DO NOT SELECT CLOSE POLL ★</div><div class="shutdown-warning-line">During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.</div><div class="shutdown-warning-line"><strong>DO NOT</strong> shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.</div><div class="shutdown-warning-note">* Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.</div>';
+      warning.innerHTML='<div class="shutdown-warning-title"><span class="warning-star">★</span><span>DO NOT SELECT CLOSE POLL</span><span class="warning-star">★</span></div><div class="shutdown-warning-line">During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.</div><div class="shutdown-warning-line"><strong>DO NOT</strong> shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.</div><div class="shutdown-warning-note">* Exact Early Voting close-for-day screen labeling still requires confirmation.</div>';
     }
+
+    emphasizeSingleActivationCard();
 
     const root=main.querySelector('[data-procedure="checkin"]')?.parentElement||main;
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
