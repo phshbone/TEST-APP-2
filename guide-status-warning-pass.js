@@ -1,4 +1,4 @@
-// Explicit Guide training-status controls for every standard checklist section + concise critical warnings.
+// Guide status controls, accordion positioning, and stable critical-warning ownership.
 (function(){
   const TOPIC_MAP={
     opening:['Opening and worker orientation','Numbered station setup'],
@@ -12,9 +12,20 @@
   };
   const SECTION_IDS=new Set((data.procedures||[]).filter(p=>p.type!=='teaching').map(p=>p.id));
   const choices=[['covered','Covered'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
+  const lessonChoices=[['explained','Explained'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
+  const main=document.getElementById('mainContent');
+
   state.guideSectionTraining=state.guideSectionTraining||{};
+  state.lessonStatus=state.lessonStatus||{};
+
   function vals(id){
     const o=state.guideSectionTraining[id]||{};
+    if(!Array.isArray(o.statuses))o.statuses=o.status?[o.status]:[];
+    return o.statuses;
+  }
+  function lessonVals(key){
+    state.lessonStatus[key]=state.lessonStatus[key]||{};
+    const o=state.lessonStatus[key];
     if(!Array.isArray(o.statuses))o.statuses=o.status?[o.status]:[];
     return o.statuses;
   }
@@ -35,17 +46,11 @@
   }
   SECTION_IDS.forEach(sync);
 
-  // Teaching-lesson status buttons are independent toggles, not a radio group.
-  // Migrate an older single-status save once, then use the statuses array as the only UI source.
-  const baseLessonStatusControls=typeof lessonStatusControls==='function'?lessonStatusControls:null;
-  if(baseLessonStatusControls){
+  // Teaching-lesson Training Status is intentionally multi-select and may be fully clear.
+  if(typeof lessonStatusControls==='function'){
     lessonStatusControls=function(procedureId,lesson){
       const key=`${procedureId}:${lesson.id}`;
-      state.lessonStatus[key]=state.lessonStatus[key]||{};
-      const saved=state.lessonStatus[key];
-      if(!Array.isArray(saved.statuses))saved.statuses=saved.status?[saved.status]:[];
-      const current=saved.statuses;
-      const lessonChoices=[['explained','Explained'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
+      const current=lessonVals(key);
       return `<div class="lesson-status"><p class="section-label">Training status</p><div class="status-grid compact">${lessonChoices.map(([k,l])=>`<button type="button" class="status-button ${current.includes(k)?'active':''}" data-lesson-status="${key}" data-status="${k}" aria-pressed="${current.includes(k)}">${l}</button>`).join('')}</div></div>`;
     };
   }
@@ -107,40 +112,89 @@
   const idreq=fieldData.items.find(x=>x.id==='flag-id');if(idreq)idreq.critical='★ DO NOT ASK EVERY VOTER FOR ID ★\nAsk only when the voter record specifically shows ID Required.';
   const nf=fieldData.items.find(x=>x.id==='flag-notfound');if(nf)nf.critical='★ DO NOT SELECT VOTER NOT FOUND ★\nDo not select it unless the Board of Elections expressly directs you to do so.';
 
+  function alignCard(card){
+    if(!main||!card)return;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(!card.isConnected)return;
+      const delta=card.getBoundingClientRect().top-main.getBoundingClientRect().top;
+      main.scrollTop+=delta-8;
+    }));
+  }
+
+  function stabilizeShutdownWarning(){
+    if(state.route!=='guide'||state.mode!=='early'||!main)return;
+    const warning=main.querySelector('[data-procedure="shutdown"] .warning-box');
+    if(!warning||warning.dataset.mpwStableShutdown==='1')return;
+    warning.dataset.guideHierarchy='1';
+    warning.dataset.criticalFormatted='1';
+    warning.dataset.mpwStableShutdown='1';
+    warning.innerHTML='<div class="shutdown-warning-title">★ DO NOT SELECT CLOSE POLL ★</div><div class="shutdown-warning-line">During an ordinary Midweek Early Voting night, use the nightly shutdown procedure.</div><div class="shutdown-warning-line"><strong>DO NOT</strong> shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals.</div><div class="shutdown-warning-note">* Exact Early Voting close-for-day/resync screen labels and the voting-machine power-control label still require confirmation.</div>';
+  }
+  function scheduleStabilize(){requestAnimationFrame(()=>requestAnimationFrame(stabilizeShutdownWarning));}
+
+  // One owner for Guide interactions that previously caused rerenders, jumps, or competing card states.
   document.addEventListener('click',e=>{
-    const lesson=e.target.closest('[data-lesson-status]');
-    if(lesson){
-      e.preventDefault();e.stopPropagation();
-      const key=lesson.dataset.lessonStatus,k=lesson.dataset.status;
-      state.lessonStatus[key]=state.lessonStatus[key]||{};
-      const saved=state.lessonStatus[key];
-      if(!Array.isArray(saved.statuses))saved.statuses=saved.status?[saved.status]:[];
-      const a=[...saved.statuses];
+    const lessonStatus=e.target.closest('[data-lesson-status]');
+    if(lessonStatus){
+      e.preventDefault();e.stopImmediatePropagation();
+      const key=lessonStatus.dataset.lessonStatus,k=lessonStatus.dataset.status;
+      const saved=state.lessonStatus[key]=state.lessonStatus[key]||{};
+      const a=[...lessonVals(key)];
       const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
-      saved.statuses=a;
-      // Legacy summary value may remain for older report code, but it never drives button state.
-      saved.status=a[0]||'';
-      saveState();
-      const group=lesson.closest('.lesson-status');
-      group?.querySelectorAll('[data-lesson-status]').forEach(x=>{
-        const on=a.includes(x.dataset.status);
-        x.classList.toggle('active',on);
-        x.setAttribute('aria-pressed',String(on));
+      saved.statuses=a;saved.status=a[0]||'';saveState();
+      lessonStatus.closest('.lesson-status')?.querySelectorAll('[data-lesson-status]').forEach(x=>{
+        const on=a.includes(x.dataset.status);x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on));
       });
       return;
     }
-    const b=e.target.closest('[data-guide-section-status]');if(!b)return;
-    e.preventDefault();e.stopPropagation();
-    const id=b.dataset.guideSectionStatus,k=b.dataset.status;
-    state.guideSectionTraining[id]=state.guideSectionTraining[id]||{};
-    const a=[...vals(id)];const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
-    state.guideSectionTraining[id].statuses=a;state.guideSectionTraining[id].status=canonical(a);sync(id);saveState();
-    document.querySelectorAll(`[data-guide-section-status="${CSS.escape(id)}"]`).forEach(x=>{
-      const on=a.includes(x.dataset.status);x.classList.toggle('multi-active',on);x.setAttribute('aria-pressed',String(on));
-    });
+
+    const sectionStatus=e.target.closest('[data-guide-section-status]');
+    if(sectionStatus){
+      e.preventDefault();e.stopImmediatePropagation();
+      const id=sectionStatus.dataset.guideSectionStatus,k=sectionStatus.dataset.status;
+      state.guideSectionTraining[id]=state.guideSectionTraining[id]||{};
+      const a=[...vals(id)];const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
+      state.guideSectionTraining[id].statuses=a;state.guideSectionTraining[id].status=canonical(a);sync(id);saveState();
+      document.querySelectorAll(`[data-guide-section-status="${CSS.escape(id)}"]`).forEach(x=>{
+        const on=a.includes(x.dataset.status);x.classList.toggle('multi-active',on);x.setAttribute('aria-pressed',String(on));
+      });
+      return;
+    }
+
+    const procedureToggle=e.target.closest('.procedure-toggle');
+    if(procedureToggle&&state.route==='guide'&&main){
+      e.preventDefault();e.stopImmediatePropagation();
+      const card=procedureToggle.closest('.procedure-card');
+      const wasOpen=card?.classList.contains('expanded');
+      main.querySelectorAll('.procedure-card.expanded').forEach(x=>x.classList.remove('expanded'));
+      if(card&&!wasOpen){card.classList.add('expanded');alignCard(card);}
+      return;
+    }
+
+    const lessonToggle=e.target.closest('[data-open-lesson]');
+    if(lessonToggle&&state.route==='guide'){
+      const key=lessonToggle.dataset.openLesson;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>alignCard(document.querySelector(`[data-lesson-card="${CSS.escape(key)}"]`))));
+    }
   },true);
 
-  // Status changes are event-owned above; no page rerender is required on click.
+  // Checklist checkboxes persist in place; block later bubbling handlers from rebuilding the Guide.
+  document.addEventListener('change',e=>{
+    const c=e.target.closest?.('input[data-action-check],input[data-check]');
+    if(!c||state.route!=='guide')return;
+    const id=c.dataset.actionCheck||c.dataset.check;
+    state.procedureProgress[id]=state.procedureProgress[id]||{};
+    state.procedureProgress[id][c.dataset.index]=c.checked;
+    saveState();
+    e.stopPropagation();
+  },true);
+
+  document.addEventListener('mpw:rendered',scheduleStabilize);
+  const observer=new MutationObserver(scheduleStabilize);
+  if(main)observer.observe(main,{childList:true,subtree:true});
+  addEventListener('load',scheduleStabilize,{once:true});
+
   saveState();
   render();
+  scheduleStabilize();
 })();
