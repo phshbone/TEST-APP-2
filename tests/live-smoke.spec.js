@@ -41,6 +41,12 @@ async function assertNoFatalDiagnostics(diagnostics) {
   expect(diagnostics.failedRequests, `critical failed requests: ${diagnostics.failedRequests.join('\n')}`).toEqual([]);
 }
 
+async function settleControlInView(locator) {
+  await locator.scrollIntoViewIfNeeded();
+  await locator.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' }));
+  await locator.page().waitForTimeout(50);
+}
+
 test.describe('deployed Poll Worker Training live smoke', () => {
   test('Early Voting Guide accordion, anchoring, warning, checks and statuses remain stable', async ({ page }, testInfo) => {
     const diagnostics = { pageErrors: [], consoleErrors: [], failedRequests: [] };
@@ -54,7 +60,8 @@ test.describe('deployed Poll Worker Training live smoke', () => {
     await expect(shutdown).toBeVisible();
 
     if (!(await shutdown.evaluate(el => el.classList.contains('expanded')))) {
-      await shutdown.locator('.procedure-toggle').click();
+      const toggle=shutdown.locator('.procedure-toggle,.guide-section-toggle').first();
+      await toggle.click();
     }
     await expect(shutdown).toHaveClass(/expanded/);
     await expect(page.locator('.procedure-card.expanded'), 'only one standard Guide card should remain expanded').toHaveCount(1);
@@ -70,7 +77,9 @@ test.describe('deployed Poll Worker Training live smoke', () => {
 
     const statusButtons = shutdown.locator('[data-guide-section-status="shutdown"]');
     await expect(statusButtons).toHaveCount(4);
+    await settleControlInView(statusButtons.nth(0));
     const beforeStatusScroll = await main.evaluate(el => el.scrollTop);
+    const beforeStatusBox = await statusButtons.nth(0).boundingBox();
     await statusButtons.nth(0).click();
     await statusButtons.nth(1).click();
     await expect(statusButtons.nth(0)).toHaveAttribute('aria-pressed', 'true');
@@ -79,17 +88,20 @@ test.describe('deployed Poll Worker Training live smoke', () => {
     await expect(statusButtons.nth(0)).toHaveAttribute('aria-pressed', 'false');
     await expect(statusButtons.nth(1)).toHaveAttribute('aria-pressed', 'true');
     const afterStatusScroll = await main.evaluate(el => el.scrollTop);
+    const afterStatusBox = await statusButtons.nth(0).boundingBox();
     expect(Math.abs(afterStatusScroll - beforeStatusScroll), 'Training Status clicks should not jump').toBeLessThanOrEqual(4);
+    if (beforeStatusBox && afterStatusBox) expect(Math.abs(afterStatusBox.y - beforeStatusBox.y), 'Training Status clicks should not visibly shift').toBeLessThanOrEqual(4);
 
     const firstCheck = shutdown.locator('input[data-check="shutdown"]').first();
     await expect(firstCheck).toBeVisible();
+    await settleControlInView(firstCheck);
     const beforeCheckScroll = await main.evaluate(el => el.scrollTop);
-    const beforeBox = await shutdown.boundingBox();
+    const beforeBox = await firstCheck.boundingBox();
     await firstCheck.check();
-    const afterBox = await shutdown.boundingBox();
+    const afterBox = await firstCheck.boundingBox();
     const afterCheckScroll = await main.evaluate(el => el.scrollTop);
     expect(Math.abs(afterCheckScroll - beforeCheckScroll), 'checklist checks should not move the scroll pane').toBeLessThanOrEqual(4);
-    if (beforeBox && afterBox) expect(Math.abs(afterBox.y - beforeBox.y), 'checklist checks should not shift the card').toBeLessThanOrEqual(4);
+    if (beforeBox && afterBox) expect(Math.abs(afterBox.y - beforeBox.y), 'checklist checks should not shift').toBeLessThanOrEqual(4);
 
     const checkin = page.locator('[data-procedure="checkin"]');
     const lessons = checkin.locator('[data-open-lesson]');
@@ -133,7 +145,9 @@ test.describe('deployed Poll Worker Training live smoke', () => {
     const buttons = group.locator('[data-status]');
     await expect(buttons).toHaveCount(4);
 
+    await settleControlInView(buttons.nth(0));
     const scrollBefore = await main.evaluate(el => el.scrollTop);
+    const beforeBox = await buttons.nth(0).boundingBox();
     await buttons.nth(0).click();
     await buttons.nth(1).click();
     await expect(buttons.nth(0)).toHaveAttribute('aria-pressed', 'true');
@@ -143,7 +157,9 @@ test.describe('deployed Poll Worker Training live smoke', () => {
     await expect(buttons.nth(0)).toHaveAttribute('aria-pressed', 'false');
     await expect(buttons.nth(1)).toHaveAttribute('aria-pressed', 'false');
     const scrollAfter = await main.evaluate(el => el.scrollTop);
+    const afterBox = await buttons.nth(0).boundingBox();
     expect(Math.abs(scrollAfter - scrollBefore), 'Election Day status toggles should not jump').toBeLessThanOrEqual(4);
+    if (beforeBox && afterBox) expect(Math.abs(afterBox.y - beforeBox.y), 'Election Day status toggles should not visibly shift').toBeLessThanOrEqual(4);
 
     await page.screenshot({ path: testInfo.outputPath('election-day-status.png'), fullPage: true });
     await assertNoFatalDiagnostics(diagnostics);
