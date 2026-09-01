@@ -22,6 +22,10 @@
   function summaryMeter(label,done,total){
     return `<div class="home-meter"><div class="home-meter-head"><span>${esc(label)}</span><strong>${done}/${total}</strong></div><div class="tracker-progress"><span style="width:${pct(done,total)}%"></span></div></div>`;
   }
+  function reportDateLabel(){
+    const d=new Date(`${state.reportDate}T12:00:00`);
+    return Number.isNaN(d.getTime())?state.reportDate:d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  }
 
   renderHome=function(){
     title.textContent='Master Poll Worker Guide';
@@ -53,7 +57,7 @@
       const done=typeof guideDoneCount==='function'?guideDoneCount(p):0;
       return total>0&&done<total;
     }).map(p=>p.title);
-    return `${pageHeading('Daily Report',`${state.reportDate} • ${modeLabel()}`)}
+    return `${pageHeading('Daily Report',`Report date: ${reportDateLabel()} • Mode: ${modeLabel()}`)}
       <section class="card report-overview">
         <p class="section-label">Trainer Checklist</p>
         <div class="tracker-overview-head"><h3>${g.done} of ${g.total} checklist topics complete</h3><span class="guide-progress-pill ${g.total&&g.done===g.total?'complete':''}">★ ${g.total&&g.done===g.total?'Complete':`${g.sectionsDone} of ${g.sections} sections`}</span></div>
