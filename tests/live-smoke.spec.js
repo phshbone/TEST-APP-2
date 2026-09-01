@@ -15,7 +15,9 @@ function installDiagnostics(page, bucket) {
 
 async function openApp(page, diagnostics) {
   installDiagnostics(page, diagnostics);
-  const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const target = process.env.LIVE_SMOKE_URL;
+  expect(target, 'LIVE_SMOKE_URL must be configured').toBeTruthy();
+  const response = await page.goto(target, { waitUntil: 'domcontentloaded' });
   expect(response, 'deployment should return a response').not.toBeNull();
   expect(response.status(), 'deployment should load successfully').toBeLessThan(400);
   await expect(page.locator('#mainContent')).toBeVisible();
