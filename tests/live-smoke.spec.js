@@ -20,6 +20,16 @@ async function openApp(page, diagnostics) {
   const response = await page.goto(target, { waitUntil: 'domcontentloaded' });
   expect(response, 'deployment should return a response').not.toBeNull();
   expect(response.status(), 'deployment should load successfully').toBeLessThan(400);
+
+  // RawGitHack may put automated/new browser sessions behind a one-time
+  // third-party-content confirmation page. Passing through that gateway is
+  // deployment setup, not an app interaction.
+  const gateway = page.getByRole('button', { name: /open the page/i });
+  if (await gateway.count()) {
+    await gateway.first().click();
+    await page.waitForLoadState('domcontentloaded');
+  }
+
   await expect(page.locator('#mainContent')).toBeVisible();
   await expect(page.locator('.bottom-nav')).toBeVisible();
 }
