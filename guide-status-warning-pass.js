@@ -13,7 +13,11 @@
   const SECTION_IDS=new Set((data.procedures||[]).filter(p=>p.type!=='teaching').map(p=>p.id));
   const choices=[['covered','Covered'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
   state.guideSectionTraining=state.guideSectionTraining||{};
-  function vals(id){const o=state.guideSectionTraining[id]||{};return Array.isArray(o.statuses)?o.statuses:(o.status?[o.status]:[])}
+  function vals(id){
+    const o=state.guideSectionTraining[id]||{};
+    if(!Array.isArray(o.statuses))o.statuses=o.status?[o.status]:[];
+    return o.statuses;
+  }
   function canonical(a){return a.includes('live')?'live':a.includes('covered')?'covered':a.includes('review')?'review':a.includes('notReached')?'notReached':''}
   function controls(id){
     if(!SECTION_IDS.has(id))return '';
@@ -32,13 +36,15 @@
   SECTION_IDS.forEach(sync);
 
   // Teaching-lesson status buttons are independent toggles, not a radio group.
-  // Preserve older single-status saves by treating `status` as a one-item fallback.
+  // Migrate an older single-status save once, then use the statuses array as the only UI source.
   const baseLessonStatusControls=typeof lessonStatusControls==='function'?lessonStatusControls:null;
   if(baseLessonStatusControls){
     lessonStatusControls=function(procedureId,lesson){
       const key=`${procedureId}:${lesson.id}`;
-      const saved=state.lessonStatus[key]||{};
-      const current=Array.isArray(saved.statuses)?saved.statuses:(saved.status?[saved.status]:[]);
+      state.lessonStatus[key]=state.lessonStatus[key]||{};
+      const saved=state.lessonStatus[key];
+      if(!Array.isArray(saved.statuses))saved.statuses=saved.status?[saved.status]:[];
+      const current=saved.statuses;
       const lessonChoices=[['explained','Explained'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
       return `<div class="lesson-status"><p class="section-label">Training status</p><div class="status-grid compact">${lessonChoices.map(([k,l])=>`<button type="button" class="status-button ${current.includes(k)?'active':''}" data-lesson-status="${key}" data-status="${k}" aria-pressed="${current.includes(k)}">${l}</button>`).join('')}</div></div>`;
     };
@@ -108,10 +114,11 @@
       const key=lesson.dataset.lessonStatus,k=lesson.dataset.status;
       state.lessonStatus[key]=state.lessonStatus[key]||{};
       const saved=state.lessonStatus[key];
-      const a=Array.isArray(saved.statuses)?[...saved.statuses]:(saved.status?[saved.status]:[]);
+      if(!Array.isArray(saved.statuses))saved.statuses=saved.status?[saved.status]:[];
+      const a=[...saved.statuses];
       const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
       saved.statuses=a;
-      // Keep a backward-compatible single value without making it control the UI.
+      // Legacy summary value may remain for older report code, but it never drives button state.
       saved.status=a[0]||'';
       saveState();
       const group=lesson.closest('.lesson-status');
@@ -126,7 +133,7 @@
     e.preventDefault();e.stopPropagation();
     const id=b.dataset.guideSectionStatus,k=b.dataset.status;
     state.guideSectionTraining[id]=state.guideSectionTraining[id]||{};
-    const a=vals(id);const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
+    const a=[...vals(id)];const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
     state.guideSectionTraining[id].statuses=a;state.guideSectionTraining[id].status=canonical(a);sync(id);saveState();
     document.querySelectorAll(`[data-guide-section-status="${CSS.escape(id)}"]`).forEach(x=>{
       const on=a.includes(x.dataset.status);x.classList.toggle('multi-active',on);x.setAttribute('aria-pressed',String(on));
