@@ -31,6 +31,19 @@
   }
   SECTION_IDS.forEach(sync);
 
+  // Teaching-lesson status buttons are independent toggles, not a radio group.
+  // Preserve older single-status saves by treating `status` as a one-item fallback.
+  const baseLessonStatusControls=typeof lessonStatusControls==='function'?lessonStatusControls:null;
+  if(baseLessonStatusControls){
+    lessonStatusControls=function(procedureId,lesson){
+      const key=`${procedureId}:${lesson.id}`;
+      const saved=state.lessonStatus[key]||{};
+      const current=Array.isArray(saved.statuses)?saved.statuses:(saved.status?[saved.status]:[]);
+      const lessonChoices=[['explained','Explained'],['live','Demonstrated Live'],['review','Needs Review'],['notReached','Not Reached']];
+      return `<div class="lesson-status"><p class="section-label">Training status</p><div class="status-grid compact">${lessonChoices.map(([k,l])=>`<button type="button" class="status-button ${current.includes(k)?'active':''}" data-lesson-status="${key}" data-status="${k}" aria-pressed="${current.includes(k)}">${l}</button>`).join('')}</div></div>`;
+    };
+  }
+
   function pilotCopilotBlock(id){
     if(!['opening','morning','shutdown'].includes(id))return '';
     const phase=id==='opening'?'setup and opening':id==='morning'?'start-of-day reopening':'shutdown and closing';
@@ -92,12 +105,21 @@
     const lesson=e.target.closest('[data-lesson-status]');
     if(lesson){
       e.preventDefault();e.stopPropagation();
-      const key=lesson.dataset.lessonStatus;
+      const key=lesson.dataset.lessonStatus,k=lesson.dataset.status;
       state.lessonStatus[key]=state.lessonStatus[key]||{};
-      state.lessonStatus[key].status=lesson.dataset.status;
+      const saved=state.lessonStatus[key];
+      const a=Array.isArray(saved.statuses)?[...saved.statuses]:(saved.status?[saved.status]:[]);
+      const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);
+      saved.statuses=a;
+      // Keep a backward-compatible single value without making it control the UI.
+      saved.status=a[0]||'';
       saveState();
       const group=lesson.closest('.lesson-status');
-      group?.querySelectorAll('[data-lesson-status]').forEach(x=>x.classList.toggle('active',x===lesson));
+      group?.querySelectorAll('[data-lesson-status]').forEach(x=>{
+        const on=a.includes(x.dataset.status);
+        x.classList.toggle('active',on);
+        x.setAttribute('aria-pressed',String(on));
+      });
       return;
     }
     const b=e.target.closest('[data-guide-section-status]');if(!b)return;
@@ -111,7 +133,7 @@
     });
   },true);
 
-  // Guide status changes are event-owned above; no global render wrapper is required.
+  // Status changes are event-owned above; no page rerender is required on click.
   saveState();
   render();
 })();
