@@ -121,6 +121,16 @@
     }));
   }
 
+  function setProcedureCardOpen(card,on){
+    if(!card)return;
+    card.classList.toggle('expanded',on);
+    card.querySelectorAll('.procedure-toggle,.guide-section-toggle').forEach(toggle=>{
+      toggle.setAttribute('aria-expanded',String(on));
+      const hint=toggle.querySelector('.open-hint');
+      if(hint)hint.textContent=`Tap to ${on?'close':'open'}`;
+    });
+  }
+
   function stabilizeShutdownWarning(){
     if(state.route!=='guide'||state.mode!=='early'||!main)return;
     const warning=main.querySelector('[data-procedure="shutdown"] .warning-box');
@@ -161,13 +171,13 @@
       return;
     }
 
-    const procedureToggle=e.target.closest('.procedure-toggle');
+    const procedureToggle=e.target.closest('.procedure-toggle,.guide-section-toggle');
     if(procedureToggle&&state.route==='guide'&&main){
       e.preventDefault();e.stopImmediatePropagation();
       const card=procedureToggle.closest('.procedure-card');
-      const wasOpen=card?.classList.contains('expanded');
-      main.querySelectorAll('.procedure-card.expanded').forEach(x=>x.classList.remove('expanded'));
-      if(card&&!wasOpen){card.classList.add('expanded');alignCard(card);}
+      const wasOpen=!!card?.classList.contains('expanded');
+      main.querySelectorAll('.procedure-card.expanded').forEach(x=>setProcedureCardOpen(x,false));
+      if(card&&!wasOpen){setProcedureCardOpen(card,true);alignCard(card);}
       return;
     }
 
