@@ -1,4 +1,4 @@
-// Contextual Home return and reliable scroll-to-top controls.
+// Contextual Home return, reliable scroll-to-top controls, and Guide accordion fallback.
 (function(){
   const main=document.getElementById('mainContent');
   const HOME_ORIGIN_KEY='mpwHomeCardOrigin';
@@ -43,6 +43,25 @@
     };
   }
 
+  function syncGuideCard(card,on){
+    if(!card)return;
+    card.classList.toggle('expanded',on);
+    card.querySelectorAll('.guide-section-toggle,.procedure-toggle').forEach(toggle=>{
+      toggle.setAttribute('aria-expanded',String(on));
+      const hint=toggle.querySelector('.open-hint');
+      if(hint)hint.textContent=`Tap to ${on?'close':'open'}`;
+    });
+  }
+
+  function alignGuideCard(card){
+    if(!main||!card)return;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(!card.isConnected)return;
+      const delta=card.getBoundingClientRect().top-main.getBoundingClientRect().top;
+      main.scrollTop+=delta-8;
+    }));
+  }
+
   function post(){
     ensureTopButton();
     ensureHomeReturn();
@@ -54,6 +73,23 @@
 
     const primaryNav=e.target.closest('.bottom-nav [data-route]');
     if(primaryNav)sessionStorage.removeItem(HOME_ORIGIN_KEY);
+
+    // Some later Guide presentation layers expose .guide-section-toggle instead
+    // of the base .procedure-toggle. Keep the same one-card-open behavior and
+    // top anchoring without forcing a full render.
+    const guideToggle=e.target.closest('.guide-section-toggle');
+    if(guideToggle&&state.route==='guide'&&main&&!guideToggle.classList.contains('procedure-toggle')){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const card=guideToggle.closest('.procedure-card');
+      const wasOpen=!!card?.classList.contains('expanded');
+      main.querySelectorAll('.procedure-card.expanded').forEach(open=>syncGuideCard(open,false));
+      if(card&&!wasOpen){
+        syncGuideCard(card,true);
+        alignGuideCard(card);
+      }
+      return;
+    }
   },true);
 
   document.addEventListener('mpw:rendered',()=>requestAnimationFrame(post));
