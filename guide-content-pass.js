@@ -27,7 +27,7 @@
     shutdown.summary='Verify the machine count, print the System Readiness Report, power down, complete seal and canister work, then close the ePollbooks after reconciliation.';
     shutdown.warning='DO NOT SELECT CLOSE POLL during an ordinary midweek Early Voting night. DO NOT shut down all ePollbooks until the Master Poll Worker has verified and reconciled the totals. * Exact Early Voting close-for-day screen labeling still requires confirmation.';
     shutdown.steps=[
-      'Gather the current binder and nightly closing materials. Retrieve the individual replacement seals from the small manila envelope so they are ready for the applicable seal steps.',
+      'Gather the small manila envelope with the individual replacement seals so they are ready for the applicable seal steps.',
       'At each replacement-seal step, match the seal number to the seal log and initial after physical verification.',
       'Verify the voting machine public counter, then press the public counter to open the menu.',
       'Press Mode, enter the required password/passcode, and open the Reports menu.',
