@@ -89,6 +89,17 @@
   const nf=fieldData.items.find(x=>x.id==='flag-notfound');if(nf)nf.critical='★ DO NOT SELECT VOTER NOT FOUND ★\nDo not select it unless the Board of Elections expressly directs you to do so.';
 
   document.addEventListener('click',e=>{
+    const lesson=e.target.closest('[data-lesson-status]');
+    if(lesson){
+      e.preventDefault();e.stopPropagation();
+      const key=lesson.dataset.lessonStatus;
+      state.lessonStatus[key]=state.lessonStatus[key]||{};
+      state.lessonStatus[key].status=lesson.dataset.status;
+      saveState();
+      const group=lesson.closest('.lesson-status');
+      group?.querySelectorAll('[data-lesson-status]').forEach(x=>x.classList.toggle('active',x===lesson));
+      return;
+    }
     const b=e.target.closest('[data-guide-section-status]');if(!b)return;
     e.preventDefault();e.stopPropagation();
     const id=b.dataset.guideSectionStatus,k=b.dataset.status;
@@ -100,7 +111,7 @@
     });
   },true);
 
-  // Section status changes are event-owned above; no global render wrapper is required.
+  // Guide status changes are event-owned above; no global render wrapper is required.
   saveState();
   render();
 })();
