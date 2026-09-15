@@ -1,7 +1,7 @@
 // Retained review-pass behavior after FOUNDATION v3 deduplication.
 // Multi-status handling, Guide↔Training sync, floating returns, and top-button wiring
 // are owned by later dedicated modules. This file now keeps only its unique lookup
-// ranking and the secondary Reprint guidance.
+// ranking, the secondary Reprint guidance, and final presentation-only review fixes.
 (function(){
   function scoreLookup(item,q){
     const title=String(item.title||'').toLowerCase();
@@ -28,6 +28,31 @@
       if(procedures.length)groups.push(`<section class="lookup-group"><h3>Procedures</h3><p class="small">Live field answers: what just happened and what do I do now?</p>${procedures.map(p=>card('Procedure',p,`data-lookup-procedure="${esc(p.id)}"`)).join('')}</section>`);
       if(guide.length)groups.push(`<section class="lookup-group"><h3>Guide</h3><p class="small">Training and checklist material.</p>${guide.map(p=>card('Guide',p,`data-lookup-guide="${esc(p.id)}"`)).join('')}</section>`);
       return `${pageHeading('Quick Lookup','Search once, then jump directly to the most relevant Guide or Procedure.')}<input id="lookupInput" class="search-box" placeholder="Search affirm, assistance, moved, reprint, spoil…" value="${esc(state.lookupQuery||'')}"><div style="height:12px"></div>${!q?'<div class="card empty">Type the voter situation or procedure you are looking for.</div>':groups.length?groups.join(''):'<div class="card empty">No matching Guide or Procedure.</div>'}`;
+    };
+  }
+
+  function outcomeBulletParts(item){
+    const text=String(item?.outcome||'').trim();
+    if(item?.id==='flag-affirm-address'){
+      const match=text.match(/^(.*?affirmation\.)\s*(If the voter moved,.*)$/);
+      return match?[match[1],match[2]]:null;
+    }
+    if(item?.id==='record-changed-residence'){
+      const match=text.match(/^(Same district.*?ballot\.)\s*(Different district.*?address\.)\s*(Out-of-county.*)$/);
+      return match?[match[1],match[2],match[3]]:null;
+    }
+    return null;
+  }
+
+  if(typeof fieldProcedureMarkup==='function'){
+    const baseFieldProcedureMarkup=fieldProcedureMarkup;
+    fieldProcedureMarkup=function(item){
+      const html=baseFieldProcedureMarkup(item);
+      const parts=outcomeBulletParts(item);
+      if(!parts)return html;
+      const plain=`<div class="outcome-box">${esc(item.outcome)}</div>`;
+      const bullets=`<div class="outcome-box"><ul class="outcome-bullets">${parts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+      return html.replace(plain,bullets);
     };
   }
 
