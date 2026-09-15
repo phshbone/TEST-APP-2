@@ -3,6 +3,10 @@
 .lesson-toggle[aria-expanded='true'] .chevron::after{content:'−'}
 .critical-do-not{font-weight:900}
 .activation-one{font-weight:900}
+[data-procedure='mailin'] .procedure-toggle{position:relative;padding-right:64px}
+[data-procedure='mailin'] .procedure-toggle .open-hint{position:absolute;right:22px;top:50%;transform:translateY(-50%);font-size:0;line-height:1;min-width:32px;text-align:center}
+[data-procedure='mailin'] .procedure-toggle .open-hint::after{content:'+';font-size:2rem;font-weight:900;line-height:1;color:#123f77}
+[data-procedure='mailin'].expanded .procedure-toggle .open-hint::after{content:'−'}
 [data-procedure='shutdown'] .warning-box{padding:18px 20px;text-align:center}
 .shutdown-warning-title{display:flex;align-items:center;justify-content:center;gap:.35em;white-space:nowrap;font-size:1.08rem;font-weight:900;line-height:1.25;letter-spacing:.01em;margin-bottom:10px}
 .shutdown-warning-title .warning-star{flex:0 0 auto;line-height:1}
