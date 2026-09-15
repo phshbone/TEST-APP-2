@@ -60,6 +60,8 @@ main{
   color:var(--navy,#123a6d);
   font-weight:900;
 }
+.outcome-bullets{margin:0;padding-left:1.25rem}
+.outcome-bullets li+li{margin-top:.55rem}
 /* Procedure Guide links are intentionally suppressed until a verified one-to-one teaching target exists. */
 .field-procedure [data-open-guide]{display:none!important}
 @media(max-width:560px){
