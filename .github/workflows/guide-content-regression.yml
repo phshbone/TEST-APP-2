@@ -80,7 +80,7 @@ jobs:
             await expect(shutdown).toContainText('small manila envelope');
             await expect(shutdown).toContainText('Verify the voting machine public counter');
             await expect(shutdown).toContainText('Print the System Readiness Report');
-            await expect(shutdown).toContainText('swipe the ePollbook app closed');
+            await expect(shutdown).toContainText('Swipe the ePollbook app closed');
             await expect(shutdown).toContainText('Power the router down last');
             await expect(shutdown).toContainText('return it to the secured cage/storage area');
             const warning=shutdown.locator('.warning-box');
