@@ -19,6 +19,13 @@
       url:'https://www.morriscountynj.gov/files/sharedassets/public/v/1/departments/elections/poll-worker-manual.pdf'
     },
     {
+      key:'green',
+      file:'troubleshoot-guide.pdf',
+      title:'Morris County Troubleshoot Guide — ePollbook & Printer',
+      note:'Troubleshooting reference',
+      url:'https://www.morriscountynj.gov/files/sharedassets/public/v/1/departments/elections/poll-worker-manual.pdf#page=56'
+    },
+    {
       key:'black',
       file:'reference-black.pdf',
       title:'New Jersey District Board Member Training Manual',
