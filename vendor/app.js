@@ -28,6 +28,13 @@ function outcomeMarkup(outcome){
   if(parts.length<2) return `<p class="outcome-single">${esc(text)}</p>`;
   return `<ul class="outcome-list">${parts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
 }
+function decisionMarkup(text){
+  const clean=String(text||'').replace(/^(YES|NO)\s*→\s*/i,'').trim();
+  if(!clean) return '';
+  const parts=(clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[clean]).map(x=>x.trim()).filter(Boolean);
+  if(parts.length<2) return `<p>${esc(clean)}</p>`;
+  return `<ul class="decision-list">${parts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+}
 function setRoute(route){ state.route=route; saveState(); render(); sideMenu.close(); window.scrollTo({top:0,behavior:'smooth'}); }
 function modeLabel(){ return state.mode === 'early' ? 'Early Voting' : 'Election Day'; }
 function filteredProcedures(){ return data.procedures.filter(p=>p.modes.includes(state.mode)); }
@@ -114,7 +121,7 @@ function fieldProcedureMarkup(item){
   return `<article class="card field-procedure" id="field-${esc(item.id)}">
     <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
     ${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
-    ${item.decision?`<section class="field-section"><h4>Decision point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong><p>${esc(item.decision.yes.replace(/^YES → /,''))}</p></div><div class="decision-choice no"><strong>NO</strong><p>${esc(item.decision.no.replace(/^NO → /,''))}</p></div></div></section>`:''}
+    ${item.decision?`<section class="field-section"><h4>Decision point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong>${decisionMarkup(item.decision.yes)}</div><div class="decision-choice no"><strong>NO</strong>${decisionMarkup(item.decision.no)}</div></div></section>`:''}
     ${steps.length?`<section class="field-section"><h4>What To Do</h4><ol>${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section>`:''}
     ${item.notDo?.length?`<section class="field-section"><h4>What NOT To Do</h4><ul>${item.notDo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
     ${item.outcome?`<section class="field-section"><h4>Voting Outcome</h4><div class="outcome-box">${outcomeMarkup(item.outcome)}</div></section>`:''}
