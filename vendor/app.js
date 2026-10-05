@@ -21,6 +21,13 @@ function loadState(){
 }
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function esc(v=''){ return String(v).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function outcomeMarkup(outcome){
+  const text=String(outcome||'').trim();
+  if(!text) return '';
+  const parts=(text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[text]).map(x=>x.trim()).filter(Boolean);
+  if(parts.length<2) return `<p class="outcome-single">${esc(text)}</p>`;
+  return `<ul class="outcome-list">${parts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+}
 function setRoute(route){ state.route=route; saveState(); render(); sideMenu.close(); window.scrollTo({top:0,behavior:'smooth'}); }
 function modeLabel(){ return state.mode === 'early' ? 'Early Voting' : 'Election Day'; }
 function filteredProcedures(){ return data.procedures.filter(p=>p.modes.includes(state.mode)); }
@@ -107,10 +114,10 @@ function fieldProcedureMarkup(item){
   return `<article class="card field-procedure" id="field-${esc(item.id)}">
     <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
     ${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
-    ${item.decision?`<section class="field-section"><h4>Decision point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice"><strong>YES</strong>${esc(item.decision.yes.replace(/^YES → /,''))}</div><div class="decision-choice"><strong>NO</strong>${esc(item.decision.no.replace(/^NO → /,''))}</div></div></section>`:''}
+    ${item.decision?`<section class="field-section"><h4>Decision point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong><p>${esc(item.decision.yes.replace(/^YES → /,''))}</p></div><div class="decision-choice no"><strong>NO</strong><p>${esc(item.decision.no.replace(/^NO → /,''))}</p></div></div></section>`:''}
     ${steps.length?`<section class="field-section"><h4>What To Do</h4><ol>${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section>`:''}
     ${item.notDo?.length?`<section class="field-section"><h4>What NOT To Do</h4><ul>${item.notDo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
-    ${item.outcome?`<section class="field-section"><h4>Voting Outcome</h4><div class="outcome-box">${esc(item.outcome)}</div></section>`:''}
+    ${item.outcome?`<section class="field-section"><h4>Voting Outcome</h4><div class="outcome-box">${outcomeMarkup(item.outcome)}</div></section>`:''}
     ${item.form?`<section class="field-section"><h4>Required Form</h4><p>${esc(item.form)}</p></section>`:''}
     ${item.escalation?`<section class="field-section"><h4>When To Call the Board</h4><p>${esc(item.escalation)}</p></section>`:''}
     ${item.boardQuestion?`<section class="field-section"><h4>Needs Board Confirmation</h4><p>${esc(item.boardQuestion)}</p></section>`:''}
