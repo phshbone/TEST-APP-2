@@ -80,7 +80,7 @@
   if(reprint){
     reprint.statuses=['Current Morris Guidance'];
     reprint.meaning='Use Re-Print after a check-in is complete when the ballot/activation card or authority slip needs to be printed again.';
-    reprint.steps=['Begin from the ePollbook home screen after the original check-in has been completed.','Open Launchpad and choose Re-Print.','Find the completed voter record using the standard Election Day 3 & 3 search.','Choose the correct voter and use Re-Print for the item that must be replaced.','Confirm the replacement printed correctly, then resume normal check-in workflow.'];
+    reprint.steps=['Start from the ePollbook home screen after the original check-in is complete.','Open Launchpad and choose Re-Print.','Find the completed voter record using the standard Election Day 3 & 3 search.','Choose the correct voter and use Re-Print for the item that must be replaced.','Confirm the replacement printed correctly, then resume normal check-in workflow.'];
     reprint.source=morrisSource('ePollbook Manual, Re-Printing a Ballot or Authority Slip, p. 25',29);
   }
 
