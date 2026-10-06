@@ -201,7 +201,8 @@ function renderSettings(){
   return `${pageHeading('Settings & Backup','Data remains on this device unless exported.')}
   <div class="card"><label><strong>Active date</strong></label><input id="reportDate" type="date" class="search-box" value="${state.reportDate}"></div>
   <div class="card"><h3>Backup</h3><div class="controls"><button id="exportJson" class="primary">Export JSON</button><label class="secondary" style="display:inline-flex;align-items:center"><input id="importJson" type="file" accept="application/json" hidden>Import JSON</label></div></div>
-  <div class="card"><h3>Reset active day</h3><p class="small">Clears active action checks, lesson statuses, training statuses, workers, and notes. Saved history remains.</p><button id="resetDay" class="danger">Reset Current Day</button></div>`;
+  <div class="card"><h3>Reset active day</h3><p class="small">Clears active action checks, lesson statuses, training statuses, workers, and notes. Saved history remains.</p><button id="resetDay" class="danger">Reset Current Day</button></div>
+  <div class="card"><h3>About this tool</h3><p class="small">Independent training and field-reference tool. It is not an official Morris County or New Jersey Division of Elections publication and does not imply endorsement. Official manuals, current election materials, and Board of Elections directions control when they differ from this app.</p></div>`;
 }
 function render(){
   document.querySelectorAll('.mode-button').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.mode));
