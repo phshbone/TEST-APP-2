@@ -25,6 +25,69 @@
     }
   }
 
+  function ensureTrainingLookup(){
+    let button=document.getElementById('trainingLookupButton');
+    let panel=document.getElementById('trainingLookupPanel');
+
+    if(!button){
+      button=document.createElement('button');
+      button.id='trainingLookupButton';
+      button.className='training-lookup-button';
+      button.type='button';
+      button.setAttribute('aria-label','Quick Lookup');
+      button.setAttribute('title','Quick Lookup');
+      button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l5 5"></path></svg>';
+      document.body.appendChild(button);
+    }
+
+    if(!panel){
+      panel=document.createElement('form');
+      panel.id='trainingLookupPanel';
+      panel.className='training-lookup-panel';
+      panel.setAttribute('role','search');
+      panel.innerHTML='<label class="sr-only" for="trainingLookupInput">Quick Lookup</label><input id="trainingLookupInput" class="search-box" type="search" placeholder="Quick Lookup…" autocomplete="off"><button type="submit" class="training-lookup-submit">Search</button><button type="button" class="training-lookup-close" aria-label="Close Quick Lookup">×</button>';
+      document.body.appendChild(panel);
+    }
+
+    const onTraining=state.route==='training';
+    button.classList.toggle('visible',onTraining);
+    if(!onTraining){
+      panel.classList.remove('visible');
+      button.setAttribute('aria-expanded','false');
+      return;
+    }
+
+    button.onclick=()=>{
+      const opening=!panel.classList.contains('visible');
+      panel.classList.toggle('visible',opening);
+      button.setAttribute('aria-expanded',String(opening));
+      if(opening){
+        const input=panel.querySelector('#trainingLookupInput');
+        input.value=state.lookupQuery||'';
+        requestAnimationFrame(()=>input.focus());
+      }
+    };
+
+    panel.querySelector('.training-lookup-close').onclick=()=>{
+      panel.classList.remove('visible');
+      button.setAttribute('aria-expanded','false');
+    };
+
+    panel.onsubmit=e=>{
+      e.preventDefault();
+      const input=panel.querySelector('#trainingLookupInput');
+      const q=(input.value||'').trim();
+      if(!q)return input.focus();
+      state.lookupQuery=q;
+      state.route='lookup';
+      saveState();
+      panel.classList.remove('visible');
+      render();
+      if(main)main.scrollTop=0;
+      requestAnimationFrame(()=>document.getElementById('lookupInput')?.focus());
+    };
+  }
+
   function ensureHomeReturn(){
     if(!main)return;
     main.querySelectorAll('[data-home-return-context]').forEach(x=>x.remove());
@@ -64,6 +127,7 @@
 
   function post(){
     ensureTopButton();
+    ensureTrainingLookup();
     ensureHomeReturn();
   }
 
