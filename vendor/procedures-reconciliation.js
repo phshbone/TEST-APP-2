@@ -63,7 +63,7 @@
   const already=byId('flag-already'); if(already){
     already.statuses=['Official Procedure','Current Morris Guidance'];
     already.meaning='The record shows the voter has already been credited as voting.';
-    already.decision={question:'Does the voter accept the Already Voted status?',yes:'Stop the transaction.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
+    already.decision={question:'Does the voter accept the Already Voted status?',yes:'Stop the check-in.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
     already.stepsByMode={
       early:['Explain that the record shows the voter has already voted.','If an Incident Report is required, place it in that day’s blue daily envelope and return it with the election materials at the end of the night.'],
       election:['Explain that the record shows the voter has already voted.','If an Incident Report is required, place it in the clear envelope and return it with the election materials at the end of the night.']
@@ -74,7 +74,7 @@
   const early=byId('flag-early'); if(early){
     early.statuses=['Official Procedure','Current Morris Guidance'];
     early.meaning='The record shows the voter has already been credited through Early Voting.';
-    early.decision={question:'Does the voter accept the Early Voted status?',yes:'Stop the transaction.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
+    early.decision={question:'Does the voter accept the Early Voted status?',yes:'Stop the check-in.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
     early.stepsByMode={
       early:['Explain that the record shows an Early Voting participation status.','If an Incident Report is required, place it in that day’s blue daily envelope and return it with the election materials at the end of the night.'],
       election:['Explain that the record shows an Early Voting participation status.','If an Incident Report is required, place it in the clear envelope and return it with the election materials at the end of the night.']
