@@ -110,7 +110,7 @@
   Object.entries(warningMap).forEach(([id,[head,body]])=>{const p=data.procedures.find(x=>x.id===id);if(p)p.warning=`${head}\n${body}`;});
   const affirm=fieldData.items.find(x=>x.id==='flag-affirm-address');if(affirm)affirm.critical='★ DO NOT ASK FOR ID ★\nDo not ask for ID or proof of address solely because of an Affirm Address flag.';
   const idreq=fieldData.items.find(x=>x.id==='flag-id');if(idreq)idreq.critical='★ DO NOT ASK EVERY VOTER FOR ID ★\nAsk only when the voter record specifically shows ID Required.';
-  const nf=fieldData.items.find(x=>x.id==='flag-notfound');if(nf)nf.critical='★ DO NOT SELECT VOTER NOT FOUND ★\nDo not select it unless the Board of Elections expressly directs you to do so.';
+  const nf=fieldData.items.find(x=>x.id==='flag-notfound');if(nf)nf.critical='★ DO NOT SELECT VOTER NOT FOUND OR BEGIN A NEW CHECK-IN ★\nDo not do either unless the Board of Elections expressly directs you to proceed.';
 
   function alignCard(card){
     if(!main||!card)return;
