@@ -34,7 +34,7 @@
   const item=fieldData.items.find(x=>x.id==='xref-reprint')||fieldData.items.find(x=>x.id==='reprint-field');
   if(item&&!item.__secondaryAdded){
     item.steps=item.steps||[];
-    const text='If the completed check-in screen still offers a Reprint option, use that on-screen Reprint path there instead of leaving the transaction to open the separate Re-Print menu.';
+    const text='If the completed check-in screen still offers a Reprint option, use that on-screen Reprint path there instead of leaving the check-in screen to open the separate Re-Print menu.';
     if(!item.steps.some(x=>String(x).includes('completed check-in screen'))) item.steps.splice(1,0,text);
     item.__secondaryAdded=true;
   }
