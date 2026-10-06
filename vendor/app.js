@@ -116,7 +116,7 @@ function sourceMarkup(source){
 function fieldProcedureMarkup(item){
   const shared=item.sharedProcedure?data.procedures.find(p=>p.id===item.sharedProcedure):null;
   const status=badges(item.statuses||[]);
-  const steps=item.steps||shared?.steps||[];
+  const steps=item.stepsByMode?.[state.mode]||item.steps||shared?.steps||[];
   const warning=item.warning||shared?.warning;
   return `<article class="card field-procedure" id="field-${esc(item.id)}">
     <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
