@@ -14,14 +14,16 @@
   if(moved){
     moved.statuses=['Official Procedure'];
     moved.meaning='First determine where the voter moved and when. The voting method changes by residence branch.';
-    moved.steps=[
-      'Moved within the same election district: complete the county change-of-address form and continue with a regular machine ballot.',
-      'Moved to a different election district but still within Morris County: direct the voter to the polling place for the new address; the voter votes provisionally there.',
-      'Moved out of Morris County after the close of registration, within 21 days before Election Day: follow the state former-county procedure and complete the required form; the voter may vote on the machine in the former county.',
-      'Moved out of Morris County in time to register in the new county, more than 21 days before Election Day: the voter was required to register in the new county and may not vote in the former county.'
+    moved.branchTitle='Residence Path';
+    moved.branches=[
+      {label:'Same election district',text:'Complete the county change-of-address form and continue with a regular machine ballot.'},
+      {label:'Different district within Morris County',text:'Direct the voter to the polling place for the new address; the voter votes provisionally there.'},
+      {label:'Out of county — within 21 days before Election Day',text:'Follow the state former-county procedure and complete the required form; the voter may vote on the machine in the former county.'},
+      {label:'Out of county — more than 21 days before Election Day',text:'The voter was required to register in the new county and may not vote in the former county.'}
     ];
+    moved.steps=[];
     moved.notDo=['Do not treat every move as provisional.','Do not send a same-district mover away from the polling place when the state procedure allows the address change and regular machine vote there.'];
-    moved.outcome='Same district → regular machine ballot. Different district within Morris County → provisional at the polling place for the new address. Out-of-county → outcome depends on whether the move occurred within or more than 21 days before Election Day.';
+    moved.outcome=null;
     moved.boardQuestion=null;
     moved.source=stateSource('Voters Who Have Changed Their Residence, p. 20',23);
   }
@@ -32,16 +34,15 @@
   const idreq=get('flag-id');
   if(idreq){
     idreq.statuses=['Official Procedure','Current Morris Guidance'];
-    idreq.meaning='Only voters whose record specifically shows ID Required must present identification during check-in.';
+    idreq.meaning='This flag means identification is required before regular check-in can continue.';
     idreq.critical='DO NOT ASK EVERY VOTER FOR ID. Ask only when the voter record specifically requires it.';
     idreq.steps=[
       'Ask the voter for a current and valid identifying document because the ePollbook shows ID Required.',
       'Compare the document with the voter information displayed on the ePollbook.',
-      'Tap the green Record ID button and follow the on-screen ID recording choices.',
-      'If acceptable ID is provided and recorded, continue the regular check-in.',
-      'If acceptable ID is not provided, continue through the ePollbook provisional path; Morris lists No ID Provided as a provisional-ballot reason.'
+      'Tap the green Record ID button and follow the on-screen ID recording choices.'
     ];
-    idreq.outcome='Acceptable ID provided and recorded → regular processing. No acceptable ID → provisional ballot.';
+    idreq.decision={question:'Was acceptable ID provided and recorded?',yes:'Continue regular check-in.',no:'Use the Not Provided path. Process the voter provisionally.'};
+    idreq.outcome=null;
     idreq.boardQuestion=null;
     idreq.source=morrisSource('ePollbook Manual, ID Required p. 22; Provisional Ballot Procedures pp. 37–38',26);
   }
