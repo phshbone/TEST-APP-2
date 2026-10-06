@@ -237,3 +237,8 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
 }
 
 .critical-command.critical-command-framed{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;column-gap:.38em!important}.critical-command-framed .critical-star{display:block;line-height:1;font-size:1.05em}.critical-command-framed .critical-command-text{display:block;min-width:0;text-align:center}
+
+/* Thumb-reachable side-menu close control. */
+#sideMenu.side-menu{padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
+#sideMenu .menu-header{display:block!important;padding-right:0!important}
+#sideMenu #closeMenu{position:fixed!important;right:20px!important;bottom:calc(20px + env(safe-area-inset-bottom))!important;top:auto!important;left:auto!important;z-index:2100!important;width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important;border-radius:999px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:1.8rem!important;line-height:1!important;box-shadow:0 8px 24px rgba(0,0,0,.26)!important}
