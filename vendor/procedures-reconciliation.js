@@ -9,14 +9,18 @@
     statuses:['Official Procedure','Current Morris Guidance'],
     meaning:'Board of Elections sent mail to the voter. The mail was returned for some reason and the voter must confirm the address on file. This is not an ID situation.',
     critical:'DO NOT ASK FOR ID or proof of address solely because of an Affirm Address flag.',
-    decision:{question:'Does the voter still live at the address shown in the voter record?',yes:'Complete the lower Affirmation of Residence portion inside the black-bordered section. Have two poll workers from differing parties witness and sign. Continue regular check-in.',no:'Do not have the voter affirm the old address. Complete the applicable top Correction of Record section and follow Changed Residence / Address Change.'},
-    steps:['Explain that Board of Elections mail was returned and the voter must confirm whether the address on file is still current.','If the address is current, complete and sign the lower Affirmation of Residence portion inside the black-bordered section.','Have two poll workers from differing parties sign the form.','Continue regular check-in when the voter remains eligible for a regular machine ballot.','Return the completed form with the election materials.'],
+    decision:{question:'Does the voter still live at the address shown in the voter record?',yes:'Complete the lower Affirmation of Residence portion inside the black-bordered section. Have two poll workers from differing parties witness and sign.',no:'Do not have the voter affirm the old address. Complete the applicable top Correction of Record section and follow Changed Residence / Address Change.'},
+    stepsByMode:{
+      early:['Explain that Board of Elections mail was returned and the voter must confirm whether the address on file is still current.','Follow the applicable YES or NO path above and complete the required portion of the form.','If the voter remains at the address, continue regular check-in. If the voter has moved, follow Changed Residence / Address Change.','Place the completed form in that day’s blue daily envelope. Return the envelope with the election materials at the end of the night.'],
+      election:['Explain that Board of Elections mail was returned and the voter must confirm whether the address on file is still current.','Follow the applicable YES or NO path above and complete the required portion of the form.','If the voter remains at the address, continue regular check-in. If the voter has moved, follow Changed Residence / Address Change.','Place the completed form in the clear envelope and return it with the election materials at the end of the night.']
+    },
     notDo:['DO NOT ASK FOR ID or proof of address for the Affirm Address flag.','Do not have a voter who has moved affirm that the old address is still current.'],
-    outcome:'Still at the address / same district as applicable → regular machine ballot after the required affirmation. If the voter moved, use the Changed Residence procedure; the ballot outcome depends on the move.',
+    outcome:'Address confirmed current → regular machine ballot. Voter moved → ballot type is determined under Changed Residence / Address Change.',
     form:'Morris County Correction of Record / Affirmation of Residence combined form.',
     escalation:'Call the Board when the voter’s residence cannot be resolved from the voter’s information or the correct district/remedy is unclear.',
     procedureLinks:[{id:'record-changed-residence',label:'Open Changed Residence'},{id:'record-correction',label:'Open Correction of Record'}]
   });
+  const affirm=byId('flag-affirm-address'); if(affirm) delete affirm.boardQuestion;
 
   const changed=byId('record-changed-residence'); if(changed){
     changed.statuses=['Official Procedure','Needs Board Confirmation'];
@@ -119,7 +123,7 @@
   }
   fieldProcedureMarkup=function(item){
     const shared=item.sharedProcedure?data.procedures.find(p=>p.id===item.sharedProcedure):null;
-    const status=badges(item.statuses||[]),steps=item.steps||shared?.steps||[],warning=item.warning||shared?.warning;
+    const status=badges(item.statuses||[]),steps=item.stepsByMode?.[state.mode]||item.steps||shared?.steps||[],warning=item.warning||shared?.warning;
     return `<article class="card field-procedure" id="field-${esc(item.id)}" data-field-procedure="${esc(item.id)}">
       <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
       ${item.critical?`<div class="procedure-critical">${esc(item.critical)}</div>`:''}${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
