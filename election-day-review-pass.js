@@ -40,7 +40,7 @@
     if(epb){
       epb.official=[
         'Use the Election Day station diagram as the reference for laying out and connecting the ePollbook equipment.',
-        'Verify that the Touchpad/ePollbook and both printers have the same station number before wiring them together.',
+        'Verify that the ePollbook and both printers have the same station number before wiring them together.',
         'Connect the labeled or color-coded cables to the corresponding labeled ports on the Epson printer, ExpressVote printer, server, and related equipment.',
         'Keep the wiring on the poll-worker side of the table, bundle it away from voter traffic, and secure any trip hazard with the supplied blue tape.'
       ];
@@ -51,7 +51,8 @@
       machineOpen.official=[
         'With the machine cover removed, confirm that the red Media Access Door seal is present.',
         'Cut and remove the red Media Access Door seal and place it in the green Spoiled Ballot/Used Seal Bag.',
-        'Connect the voting machine to a working wall outlet and confirm the machine is receiving power.',
+        'Connect the voting machine directly to a working wall outlet. Do not use a power strip. Confirm the machine is receiving power.',
+        'Up to four voting machines may be daisy-chained from one wall outlet.',
         'Use the barrel key to open the Top Access Compartment, start the machine with the red power button, then close and lock the compartment.',
         'Continue with the official ExpressVote XL opening instructions through Open Poll and the final readiness checks.',
         'The machine prints two Zero Reports. Confirm that every reported total is ZERO (0); two poll workers from opposing parties sign both reports and return them to the Red Bag.',
