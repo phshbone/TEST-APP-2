@@ -8,6 +8,12 @@
   sharedOpening.modes=['early'];
   sharedOpening.badges=(sharedOpening.badges||[]).filter(x=>x!=='Same for Both');
   if(!sharedOpening.badges.includes('Early Voting')) sharedOpening.badges.unshift('Early Voting');
+  sharedOpening.steps=sharedOpening.steps||[];
+  const earlyPower='Connect voting machines directly to a working wall outlet. Do not use a power strip. Up to four voting machines may be daisy-chained from one wall outlet.';
+  if(!sharedOpening.steps.includes(earlyPower)){
+    const afterBinder=sharedOpening.steps.findIndex(x=>x.includes('Match each binder'));
+    sharedOpening.steps.splice(afterBinder>=0?afterBinder+1:sharedOpening.steps.length,0,earlyPower);
+  }
 
   const electionOpening={
     id:'opening',
@@ -93,7 +99,7 @@
         lead:'Lay out one complete station, match the device numbers, and make the equipment connections before supplying power.',
         official:[
           'Use the supplied Election Day station diagram as the wiring reference.',
-          'Before connecting equipment, verify that the Touchpad/ePollbook and both printers carry the same station number.',
+          'Before connecting equipment, verify that the ePollbook and both printers carry the same station number.',
           'Connect each labeled or color-coded cable to its matching labeled port on the Epson printer, ExpressVote printer, server, and related equipment.',
           'Route and bundle the wiring on the poll-worker side of the table, away from voter traffic; secure any potential trip hazard with the supplied blue tape.'
         ],
@@ -139,7 +145,8 @@
         official:[
           'With the machine cover removed, confirm that the red Media Access Door seal is present.',
           'Cut and remove the red Media Access Door seal and place it in the green Spoiled Ballot/Used Seal Bag.',
-          'Connect the voting machine to a working wall outlet and confirm that it has power.',
+          'Connect the voting machine directly to a working wall outlet. Do not use a power strip. Confirm that the machine has power.',
+          'Up to four voting machines may be daisy-chained from one wall outlet.',
           'Open the Top Access Compartment with the barrel key, start the machine with the red power button, then relock the compartment and return the key to its Key Envelope.',
           'From that point, continue the official ExpressVote XL opening sequence in the Voting Machine Manual through the final ready-for-voting checks.'
         ],
