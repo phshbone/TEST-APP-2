@@ -18,16 +18,41 @@
   }
 
   if(typeof renderLookup==='function'){
+    const modesOf=item=>Array.isArray(item?.modes)&&item.modes.length?item.modes:['early','election'];
+    const modeLabelFor=item=>{
+      const modes=modesOf(item);
+      if(modes.includes('early')&&modes.includes('election'))return 'Both';
+      return modes.includes('election')?'Election Day':'Early Voting';
+    };
+    const preferredScore=(item,q)=>scoreLookup(item,q)+(modesOf(item).includes(state.mode)?120:0);
+
     renderLookup=function(){
       const q=(state.lookupQuery||'').trim().toLowerCase();
-      const procedures=q?fieldData.items.filter(p=>p.modes.includes(state.mode)&&JSON.stringify(p).toLowerCase().includes(q)).sort((a,b)=>scoreLookup(b,q)-scoreLookup(a,q)):[];
-      const guide=q?data.procedures.filter(p=>p.modes.includes(state.mode)&&JSON.stringify(p).toLowerCase().includes(q)).sort((a,b)=>scoreLookup(b,q)-scoreLookup(a,q)):[];
+      const matches=item=>JSON.stringify(item).toLowerCase().includes(q);
+
+      const procedures=q?fieldData.items
+        .filter(matches)
+        .sort((a,b)=>preferredScore(b,q)-preferredScore(a,q)):[];
+      const guide=q?data.procedures
+        .filter(matches)
+        .sort((a,b)=>preferredScore(b,q)-preferredScore(a,q)):[];
+      const reminders=q?[...(data.dosDonts?.dos||[]),...(data.dosDonts?.donts||[])]
+        .filter(matches)
+        .sort((a,b)=>preferredScore(b,q)-preferredScore(a,q)):[];
+      const current=q?(window.MPW_CURRENT_LOOKUP_ITEMS||[])
+        .filter(matches)
+        .sort((a,b)=>scoreLookup(b,q)-scoreLookup(a,q)):[];
+
       title.textContent='Quick Lookup';
-      const card=(layer,item,attr)=>`<button class="card lookup-result-card" ${attr}><span class="lookup-layer">${esc(layer)}</span><strong>${esc(item.title)}</strong><span>${esc(item.meaning||item.summary||'Open result')}</span></button>`;
+      const card=(layer,item,attr,summary)=>`<button class="card lookup-result-card" ${attr}><span class="lookup-layer">${esc(layer)}</span><strong>${esc(item.title||item.text)}</strong><span>${esc(summary||item.meaning||item.summary||item.detail||'Open result')}</span></button>`;
       const groups=[];
-      if(procedures.length)groups.push(`<section class="lookup-group"><h3>Procedures</h3><p class="small">Live field answers: what just happened and what do I do now?</p>${procedures.map(p=>card('Procedure',p,`data-lookup-procedure="${esc(p.id)}"`)).join('')}</section>`);
-      if(guide.length)groups.push(`<section class="lookup-group"><h3>Guide</h3><p class="small">Training and checklist material.</p>${guide.map(p=>card('Guide',p,`data-lookup-guide="${esc(p.id)}"`)).join('')}</section>`);
-      return `${pageHeading('Quick Lookup','Search once, then jump directly to the most relevant Guide or Procedure.')}<input id="lookupInput" class="search-box" placeholder="Search affirm, assistance, moved, reprint, spoil…" value="${esc(state.lookupQuery||'')}"><div style="height:12px"></div>${!q?'<div class="card empty">Type the voter situation or procedure you are looking for.</div>':groups.length?groups.join(''):'<div class="card empty">No matching Guide or Procedure.</div>'}`;
+
+      if(procedures.length)groups.push(`<section class="lookup-group"><h3>Procedures</h3><p class="small">Field answers from both Early Voting and Election Day.</p>${procedures.map(p=>card(`Procedure · ${modeLabelFor(p)}`,p,`data-lookup-procedure="${esc(p.id)}" data-lookup-mode="${esc(modesOf(p).includes(state.mode)?state.mode:modesOf(p)[0])}"`)).join('')}</section>`);
+      if(guide.length)groups.push(`<section class="lookup-group"><h3>Guide</h3><p class="small">Training and checklist material from both modes.</p>${guide.map(p=>card(`Guide · ${modeLabelFor(p)}`,p,`data-lookup-guide="${esc(p.id)}" data-lookup-mode="${esc(modesOf(p).includes(state.mode)?state.mode:modesOf(p)[0])}"`)).join('')}</section>`);
+      if(reminders.length)groups.push(`<section class="lookup-group"><h3>Official Do’s & Don’ts</h3><p class="small">Official reminders and explanations.</p>${reminders.map((p,i)=>card(`Do / Don’t · ${modeLabelFor(p)}`,{title:p.text,summary:p.detail},`data-lookup-route="dosdonts" data-lookup-mode="${esc(modesOf(p).includes(state.mode)?state.mode:modesOf(p)[0])}" data-lookup-rule="${i}"`)).join('')}</section>`);
+      if(current.length)groups.push(`<section class="lookup-group"><h3>Important Dates & Rules</h3><p class="small">Standing rules, deadlines, and election-calendar topics.</p>${current.map(p=>card('Dates & Rules · Both',p,'data-lookup-route="current"')).join('')}</section>`);
+
+      return `${pageHeading('Quick Lookup','Search Guide, Procedures, Official Do’s & Don’ts, and Important Dates & Rules across both election modes.')}<input id="lookupInput" class="search-box" placeholder="Search electioneering, affirm, reprint, provisional…" value="${esc(state.lookupQuery||'')}"><div style="height:12px"></div>${!q?'<div class="card empty">Type a term, voter situation, rule, or procedure.</div>':groups.length?groups.join(''):'<div class="card empty">No matching result found.</div>'}`;
     };
   }
 
