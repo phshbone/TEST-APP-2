@@ -37,8 +37,9 @@
 
   const sig=byId('flag-signature'); if(sig){
     sig.statuses=['Official Procedure','Current Morris Guidance'];
-    sig.steps=['Recognize this as No Signature on File, not an ordinary current-signature mismatch.','Process the voter by provisional ballot.','The signature on the provisional affirmation becomes the voter’s signature on file.'];
-    sig.outcome='Provisional ballot. The provisional affirmation signature becomes the new signature on file.';
+    sig.steps=['Treat this as No Signature on File, not an ordinary Sign Again situation.','Process the voter using the provisional-ballot procedure.','The signature on the provisional affirmation becomes the voter’s signature on file.'];
+    sig.notDo=[];
+    sig.outcome='Provisional ballot.';
     sig.procedureLinks=[{id:'xref-provisional',label:'Open Provisional Ballot'}];
   }
 
@@ -52,24 +53,32 @@
 
   const nf=byId('flag-notfound'); if(nf){
     nf.statuses=['Current Morris Guidance','Critical'];
-    nf.meaning='A failed first search does not mean the voter is unregistered. Use every available search option before escalating.';
-    nf.critical='★ DO NOT SELECT VOTER NOT FOUND unless the Board of Elections instructs you to do so. ★';
-    nf.steps=['Use all available voter-search options before deciding the record cannot be found.','Check spelling and likely transcription errors.','Use alternate search fields such as address, street, date of birth, or other options shown by the ePollbook.','If the voter still cannot be located, call the Board of Elections.','Do not select Voter Not Found unless the Board directs you to do so.','DO NOT begin a new voter check-in unless directed.'];
-    nf.outcome='Search and Board determination first. Do not select Voter Not Found without Board direction.';
+    nf.meaning='A failed first search does not mean the voter is unregistered. Search carefully and escalate if the record still cannot be found.';
+    nf.critical='★ DO NOT SELECT VOTER NOT FOUND OR BEGIN A NEW CHECK-IN unless the Board of Elections directs you to do so. ★';
+    nf.steps=['Check spelling and likely transcription errors.','Use alternate search fields such as address, street, date of birth, or other options shown by the ePollbook.','If the voter still cannot be located, call the Board of Elections.'];
+    nf.outcome='Board determination required before proceeding.';
   }
 
   const already=byId('flag-already'); if(already){
     already.statuses=['Official Procedure','Current Morris Guidance'];
-    already.meaning='The record shows the voter has already been credited as voting. The voter may leave, or dispute the record and request to vote provisionally.';
-    already.steps=['Explain that the record shows the voter has already voted.','If the voter accepts that status, stop the transaction.','If the voter disputes the status and wishes to vote, process a provisional ballot.','Complete an Incident Report when the situation requires one and place it in the clear Election Day envelope or the corresponding blue transparent Early Voting day envelope.'];
-    already.outcome='Voter leaves, or disputes the record and votes provisionally.';
+    already.meaning='The record shows the voter has already been credited as voting.';
+    already.decision={question:'Does the voter accept the Already Voted status?',yes:'Stop the transaction.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
+    already.stepsByMode={
+      early:['Explain that the record shows the voter has already voted.','If an Incident Report is required, place it in that day’s blue daily envelope and return it with the election materials at the end of the night.'],
+      election:['Explain that the record shows the voter has already voted.','If an Incident Report is required, place it in the clear envelope and return it with the election materials at the end of the night.']
+    };
+    already.outcome=null;
     already.procedureLinks=[{id:'xref-provisional',label:'Open Provisional Ballot'}];
   }
   const early=byId('flag-early'); if(early){
     early.statuses=['Official Procedure','Current Morris Guidance'];
-    early.meaning='The record shows the voter has already been credited through Early Voting. The voter may leave, or dispute the record and request to vote provisionally.';
-    early.steps=['Explain that the record shows an Early Voting participation status.','If the voter accepts that status, stop the transaction.','If the voter disputes the status and wishes to vote, process a provisional ballot.','Complete an Incident Report when the situation requires one and place it in the clear Election Day envelope or the corresponding blue transparent Early Voting day envelope.'];
-    early.outcome='Voter leaves, or disputes the record and votes provisionally.';
+    early.meaning='The record shows the voter has already been credited through Early Voting.';
+    early.decision={question:'Does the voter accept the Early Voted status?',yes:'Stop the transaction.',no:'If the voter disputes the status and wishes to vote, process a provisional ballot.'};
+    early.stepsByMode={
+      early:['Explain that the record shows an Early Voting participation status.','If an Incident Report is required, place it in that day’s blue daily envelope and return it with the election materials at the end of the night.'],
+      election:['Explain that the record shows an Early Voting participation status.','If an Incident Report is required, place it in the clear envelope and return it with the election materials at the end of the night.']
+    };
+    early.outcome=null;
     early.procedureLinks=[{id:'xref-provisional',label:'Open Provisional Ballot'}];
   }
 
