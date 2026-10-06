@@ -59,6 +59,7 @@
         ${tile('current','Important Dates & Rules','Deadlines and standing rules.')}
         ${tile('report','Daily Report','Review progress and notes.')}
       </div>
+      <button class="card quick-card home-dashboard-tile home-dashboard-wide ${activeRoute()==='dosdonts'?'home-last-used':''}" data-go="dosdonts"><strong>Official Do’s & Don’ts</strong><span>Essential poll-worker reminders and rules.</span></button>
       <section class="card home-field-note"><h3>Field-use rule</h3><p>Use <strong>Guide</strong> to teach the normal job. Use <strong>Procedures</strong> when something happens during the job. Use <strong>Lookup</strong> when speed matters.</p></section>`;
   };
 
