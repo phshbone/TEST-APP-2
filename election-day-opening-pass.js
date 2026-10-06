@@ -60,8 +60,8 @@
         title:'Voting-machine physical setup',
         lead:'Position, secure, unseal, uncover, and remove the stored Election Day equipment from the correct machine.',
         official:[
-          'Move the voting machine into position with the chrome handles, then secure the swivel castors.',
-          'Raise the light stick into its operating position.',
+          'Move the voting machine into position with the chrome handles, then secure the wheels.',
+          'Raise the light stick to the upright position.',
           'Cut and remove the white cover seal with scissors, then place that used seal in the green Spoiled Ballot/Used Seal Bag.',
           'Take off the machine covers, fold them, and store them behind the machine.',
           'Open the rear compartment with the barrel key, remove the Election Day materials, then close and lock the compartment again.',
@@ -114,10 +114,10 @@
         title:'Power and configure one ePollbook station at a time',
         lead:'After the physical wiring is complete, energize one station and use the ePollbook interface to verify its printers before moving to the next station.',
         official:[
-          'Bring up and configure one numbered ePollbook station at a time so equipment from different stations is not accidentally paired.',
+          'Once the stations are laid out, configure one numbered ePollbook station at a time so equipment from different stations is not accidentally paired.',
           'After opening the ePollbook app, confirm the displayed location and district. If either is wrong, stop and call the Board of Elections.',
           'Use a loaded blank Activation Card when testing the ExpressVote printer from ePollbook settings.',
-          'Use the printer test controls available during opening/login. If a printer does not work, follow the Troubleshoot Guide.'
+          'Use the gear icon to access the printer test controls. If a printer does not work, follow the Troubleshoot Guide.'
         ],
         why:'Printer selection and testing are performed through the ePollbook software, so the ePollbook interface must be available for the functional test.',
         tips:[
@@ -137,7 +137,8 @@
         title:'Open the voting machine using Pilot / Co-Pilot',
         lead:'Use the official Voting Machine Manual in order; one worker reads while the other performs and confirms each step.',
         official:[
-          'Before removing any required seal, compare it with the information for that voting machine.',
+          'With the machine cover removed, confirm that the red Media Access Door seal is present.',
+          'Cut and remove the red Media Access Door seal and place it in the green Spoiled Ballot/Used Seal Bag.',
           'Connect the voting machine to a working wall outlet and confirm that it has power.',
           'Open the Top Access Compartment with the barrel key, start the machine with the red power button, then relock the compartment and return the key to its Key Envelope.',
           'From that point, continue the official ExpressVote XL opening sequence in the Voting Machine Manual through the final ready-for-voting checks.'
