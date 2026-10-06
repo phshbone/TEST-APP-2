@@ -71,14 +71,13 @@
         'If you have already advanced to the Authority Slip screen, use Reprint from the hamburger menu.',
         'DO NOT check the voter in again.'
       ];
-      preload.why='A missed preload interrupts voter flow and creates a recovery situation that must be handled with Reprint, not a second check-in.';
+      preload.why='A missed preload interrupts voter flow and requires Reprint recovery.';
       preload.tips=[
         'Place a small handwritten PRELOAD CARD reminder on or directly in front of the Epson printer.',
         'The authority slip is often the last item removed from the Epson printer, making that location an effective final visual reminder.',
         'Build the preload check into the transition from the completed voter to the next voter.'
       ];
       preload.mistakes=[
-        'DO NOT check the voter in a second time when the activation card was not preloaded; use Reprint.',
         'Beginning the next voter check-in without physically confirming the blank activation card.'
       ];
       preload.actions=['Blank activation card physically confirmed before starting the next voter check-in.'];
@@ -93,7 +92,6 @@
         'Review the result list carefully before selecting a voter.'
       ];
       search.tips=[
-        'Early Voting reminder: use 4+4. The voter list is countywide, so search broadly and carefully.',
         'Use alternate search methods when spelling, spacing, or a compound surname may affect the result.',
         'If a voter presents a scannable sample ballot, use the available sample-ballot scan function when appropriate.',
         'If a voter presents a driver’s license for scanning, use the available driver’s-license scan function when appropriate. DO NOT turn this into a request for ID.'
@@ -119,11 +117,14 @@
         'Slow the process down before asking for a second signature so the voter understands why another attempt is needed.',
         'Training phrasing used in the field: explain the difference between a quick “Home Depot signature” and the voter’s more formal or official signature.'
       ];
+      signature.mistakes=[
+        'Treating every signature issue as provisional.'
+      ];
     }
 
     const complete=lesson('complete');
     if(complete){
-      complete.lead='Complete the current voter check-in once, place the signed authority slip in the Yellow Signed Authority Slip Bag, preload the next blank activation card, and return the ePollbook to Process Next Voter.';
+      complete.lead='Finish the current voter’s materials, reset the station, and prepare for the next voter.';
       complete.official=[
         'Complete check-in only after the voter record, flags, signature, worker initials, and activation-card preload have been confirmed.',
         'Place the printed activation card into the Activation Card Sleeve to protect it from bending.',
@@ -160,8 +161,7 @@
       'Explain that the voter cannot receive a regular machine ballot.',
       'Explain the voter’s two practical choices: locate the mail-in ballot and return it to an authorized ballot drop box or the Morris County Board of Elections in Morristown, or vote provisionally in person.',
       'If the voter chooses to vote in person, process the voter provisionally.',
-      'Use Box 13 on the provisional envelope for mail-in opt-out when requested.',
-      'DO NOT accept the completed mail-in ballot at the polling location.'
+      'Use Box 13 on the provisional envelope for mail-in opt-out when requested.'
     ];
   }
 
