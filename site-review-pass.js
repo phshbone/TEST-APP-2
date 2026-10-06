@@ -26,10 +26,10 @@
       ...sharedDos
     ],
     donts:[
-      ...sharedDonts,
-      {text:'Do not select Close Poll during an intermediate Early Voting night.',detail:'Use the secured nightly shutdown path in the current binder.',tags:['Critical','Early Voting'],modes:['early']},
       {text:'Do not be late.',detail:'Early Voting workers must report by 9:00 AM.',tags:['Early Voting','Reporting Time'],modes:['early']},
-      {text:'Do not be late.',detail:'Election Day workers must report at 5:00 AM.',tags:['Election Day','Reporting Time'],modes:['election']}
+      {text:'Do not be late.',detail:'Election Day workers must report at 5:00 AM.',tags:['Election Day','Reporting Time'],modes:['election']},
+      ...sharedDonts,
+      {text:'Do not select Close Poll during an intermediate Early Voting night.',detail:'Use the secured nightly shutdown path in the current binder.',tags:['Critical','Early Voting'],modes:['early']}
     ]
   };
 
