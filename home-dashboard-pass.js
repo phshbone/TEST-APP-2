@@ -37,7 +37,7 @@
   }
 
   renderHome=function(){
-    title.textContent='Master Poll Worker Guide';
+    title.textContent='Master PW Guide';
     const g=guideStats(),t=trainingStats(),open=!!state.homeGlanceOpen;
     return `${pageHeading('Master Poll Worker Guide',electionDisplay())}
       <section class="card home-status-card home-glance ${open?'is-open':'is-collapsed'}">
