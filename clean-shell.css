@@ -235,3 +235,5 @@ body:has(.floating-internal-procedure-return.visible) .floating-top-button{displ
   .home-status-head{align-items:flex-end!important}
   #mainContent .controls a.secondary{width:100%!important}
 }
+
+.critical-command.critical-command-framed{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;column-gap:.38em!important}.critical-command-framed .critical-star{display:block;line-height:1;font-size:1.05em}.critical-command-framed .critical-command-text{display:block;min-width:0;text-align:center}
