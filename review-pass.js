@@ -42,10 +42,22 @@
       const current=q?(window.MPW_CURRENT_LOOKUP_ITEMS||[])
         .filter(matches)
         .sort((a,b)=>scoreLookup(b,q)-scoreLookup(a,q)):[];
+      const quickRefs=q?[
+        {
+          title:'Electioneering',
+          summary:'Election Day opening → Manuals, signage, paperwork, reports, and final readiness.',
+          aliases:['electioneering','campaigning','campaign sign','campaign signs','political sign','political signs'],
+          mode:'election',
+          guide:'opening',
+          lesson:'manuals-admin'
+        }
+      ].filter(matches):[];
 
       title.textContent='Quick Lookup';
       const card=(layer,item,attr,summary)=>`<button class="card lookup-result-card" ${attr}><span class="lookup-layer">${esc(layer)}</span><strong>${esc(item.title||item.text)}</strong><span>${esc(summary||item.meaning||item.summary||item.detail||'Open result')}</span></button>`;
       const groups=[];
+
+      if(quickRefs.length)groups.push(`<section class="lookup-group"><h3>Direct Match</h3><p class="small">Jump to the most specific section for this term.</p>${quickRefs.map(p=>card('Guide · Election Day',p,`data-lookup-guide="${esc(p.guide)}" data-lookup-mode="${esc(p.mode)}" data-lookup-lesson="${esc(p.lesson)}"`)).join('')}</section>`);
 
       if(procedures.length)groups.push(`<section class="lookup-group"><h3>Procedures</h3><p class="small">Field answers from both Early Voting and Election Day.</p>${procedures.map(p=>card(`Procedure · ${modeLabelFor(p)}`,p,`data-lookup-procedure="${esc(p.id)}" data-lookup-mode="${esc(modesOf(p).includes(state.mode)?state.mode:modesOf(p)[0])}"`)).join('')}</section>`);
       if(guide.length)groups.push(`<section class="lookup-group"><h3>Guide</h3><p class="small">Training and checklist material from both modes.</p>${guide.map(p=>card(`Guide · ${modeLabelFor(p)}`,p,`data-lookup-guide="${esc(p.id)}" data-lookup-mode="${esc(modesOf(p).includes(state.mode)?state.mode:modesOf(p)[0])}"`)).join('')}</section>`);
