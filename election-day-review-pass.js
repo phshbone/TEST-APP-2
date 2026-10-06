@@ -23,8 +23,7 @@
         'Separately inspect the voting-machine seals. If a required seal is missing, broken, or does not match the seal information recorded for that machine, stop and contact the Voting Machine Warehouse.'
       ];
       identify.tips=[
-        'The Election Day Red Bag is in the Maroon Bag with the Election Day materials.',
-        'The machine keys may be in separate small manila Key Envelopes labeled with the corresponding machine number. Match the machine number before opening the machine.'
+        'The Election Day Red Bag is in the Maroon Bag with the Election Day materials.'
       ];
     }
 
@@ -63,22 +62,20 @@
     const admin=lesson(electionOpening,'manuals-admin');
     if(admin){
       admin.title='Manuals, signage, paperwork, reports, and final readiness';
-      admin.lead='Keep the reference manuals at the table, finish the required paperwork and signage, verify opening reports, and prepare the room for voters.';
+      admin.lead='Finish the required paperwork and signage, verify opening reports, and prepare the room for voters.';
       admin.official=[
         'Complete and sign the Oath of Office before undertaking election duties.',
         'Post the required polling-place, accessibility, electioneering, sample-ballot, and voting-machine instruction signs as applicable.',
         'Select an official clock for the polling place and coordinate timekeeping to it so opening and closing times are consistent.',
         'Coordinate the voting-machine zero-printout time with the official clock. If the times differ, the judge determines the official time.',
-        'For each ePollbook, complete opening/login and place the printed Poll Opening Report in the Clear Envelope.',
-        'Election Day materials include the Morris County manuals and the New Jersey State manual.'
+        'For each ePollbook, complete opening/login and place the printed Poll Opening Report in the Clear Envelope.'
       ];
       admin.tips=[
-        'Keep the green Morris County Poll Worker Manual at the check-in table and keep the New Jersey State District Board Member Training Manual accessible throughout the day.',
         'If a voter situation is unfamiliar, explain that you are checking the manual so the procedure is handled correctly the first time.',
         'If no suitable wall clock is available, agree on one reliable time source before the polls open and use it consistently.',
         'The Master Poll Worker should verify attendance and completion of the required opening paperwork before the room is declared ready.'
       ];
-      admin.actions=['Manuals accessible.','Required opening paperwork and signage reviewed.','Zero Reports verified as zero and signed.','ePollbook Poll Opening Reports secured in the Clear Envelope.','Polling place ready for voters.'];
+      admin.actions=['Required opening paperwork and signage reviewed.','Zero Reports verified as zero and signed.','ePollbook Poll Opening Reports secured in the Clear Envelope.','Polling place ready for voters.'];
     }
   }
 
@@ -93,8 +90,6 @@
         'Review the result list carefully before selecting a voter.'
       ];
       search.tips=[
-        'Election Day reminder: use 3+3 first because the district list is much smaller.',
-        'Early Voting reminder: use 4+4 because the voter list is countywide.',
         'Use alternate search methods when spelling, spacing, or a compound surname may affect the result.',
         'If a voter presents a scannable sample ballot or driver’s license, use the available scan function when appropriate. DO NOT turn this into a request for ID.'
       ];
