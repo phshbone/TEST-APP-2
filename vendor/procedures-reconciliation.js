@@ -51,6 +51,10 @@
     idreq.procedureLinks=[{id:'xref-provisional',label:'Open Provisional Ballot'}];
   }
 
+  const mailin=byId('flag-mailin'); if(mailin){
+    mailin.outcome='In-person voting under this flag → provisional ballot.';
+  }
+
   const nf=byId('flag-notfound'); if(nf){
     nf.statuses=['Current Morris Guidance','Critical'];
     nf.meaning='A failed first search does not mean the voter is unregistered. Search carefully and escalate if the record still cannot be found.';
@@ -85,7 +89,7 @@
 
   const provisional=byId('xref-provisional'); if(provisional){
     provisional.statuses=['Official Procedure','Current Morris Guidance'];
-    provisional.note='Completed provisional ballots go in the provisional bag. Supporting forms and Incident Reports are returned in the clear Election Day envelope or the corresponding blue transparent Early Voting day envelope.';
+    provisional.note='Supporting forms and Incident Reports are returned in the clear Election Day envelope or the applicable blue Early Voting daily envelope.';
   }
 
   upsert({
@@ -93,8 +97,8 @@
     statuses:['Current Morris Guidance'],
     meaning:'Assistance rules depend on whether the voter brought an assistor or poll workers must provide the assistance.',
     critical:'IF POLL WORKERS ENTER THE VOTING BOOTH TO ASSIST, TWO POLL WORKERS FROM DIFFERING PARTIES MUST REMAIN PRESENT FOR THE ENTIRE ASSISTANCE.',
-    steps:['If the voter brings their own assistor and the assistor is under 18, no assistance form is required under current Morris practice.','If the voter brings their own assistor and the assistor is 18 or older, complete the assistance form; one assistor is sufficient.','If poll workers provide assistance, use two poll workers from differing parties and have them sign the assistance form.','The same two-worker rule applies when poll workers actually assist a voter through completion of a provisional ballot.','Simple verbal guidance from outside the booth, or showing how to insert the activation card before voting begins, is not treated as booth assistance.','If poll workers must enter the booth or physically guide the voting process, two differing-party poll workers must be present. If one leaves, stop until the second worker returns.','Return the assistance form in the clear Election Day envelope or the corresponding blue transparent Early Voting day envelope.'],
-    notDo:['Do not view or discuss the voter’s selections unless required for the requested assistance.','Do not allow one poll worker to remain alone in the booth while assisting a voter.'],
+    steps:['If the voter brings their own assistor and the assistor is under 18, no assistance form is required under current Morris practice.','If the voter brings their own assistor and the assistor is 18 or older, complete the assistance form; one assistor is sufficient.','If poll workers provide assistance, use two poll workers from differing parties and have them sign the assistance form.','The same two-worker rule applies when poll workers actually assist a voter through completion of a provisional ballot.','Simple verbal guidance from outside the booth, or showing how to insert the activation card before voting begins, is not treated as booth assistance.','If one assisting poll worker needs to leave, both poll workers must step out of the voting booth. Assistance may resume only when two poll workers from differing parties are present.','Return the assistance form in the clear Election Day envelope or the applicable blue Early Voting daily envelope.'],
+    notDo:['Do not view or discuss the voter’s selections unless required for the requested assistance.'],
     tip:'Master Poll Worker Tip: verbal communication can sometimes be given from outside the machine through the side gap without entering the booth or seeing the voter’s selections.',
     outcome:'The voter continues with the appropriate ballot while receiving only the assistance requested.'
   });
