@@ -49,7 +49,8 @@
     const machineOpen=lesson(electionOpening,'machine-open');
     if(machineOpen){
       machineOpen.official=[
-        'Check each required seal against the recorded machine-opening information before removing it.',
+        'With the machine cover removed, confirm that the red Media Access Door seal is present.',
+        'Cut and remove the red Media Access Door seal and place it in the green Spoiled Ballot/Used Seal Bag.',
         'Connect the voting machine to a working wall outlet and confirm the machine is receiving power.',
         'Use the barrel key to open the Top Access Compartment, start the machine with the red power button, then close and lock the compartment.',
         'Continue with the official ExpressVote XL opening instructions through Open Poll and the final readiness checks.',
