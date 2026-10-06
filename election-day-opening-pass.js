@@ -143,7 +143,7 @@
           'Continue the official ExpressVote XL Opening Procedures in the Voting Machine Manual through the ready-for-voting checks.'
         ],
         why:'The machine-opening sequence contains seal, key, power, and readiness checks that should be followed in the published order rather than reconstructed from memory.',
-        tips:['Pilot / Co-Pilot works especially well for the voting-machine opening: one person reads the manual step aloud and one person performs it; both verify before advancing.'],
+        tips:[],
         mistakes:['Working ahead of the reader or skipping a seal/number verification because the setup is familiar.'],
         actions:['Official machine-opening procedure completed and machine ready for voters.']
       },
