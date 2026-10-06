@@ -71,27 +71,28 @@
           'Cut and remove the white cover seal with scissors, then place that used seal in the green Spoiled Ballot/Used Seal Bag.',
           'Take off the machine covers, fold them, and store them behind the machine.',
           'Open the rear compartment with the barrel key, remove the Election Day materials, then close and lock the compartment again.',
-          'When two machines share supplies, identify which machine contains the Activation Cards, extension reel, and ePollbook power strips. The power strips are for ePollbook stations, not voting-machine power.'
+          'When two machines share supplies, identify which machine contains the Activation Cards, extension reel, and ePollbook power strips.',
+          'The yellow extension reel and power strip are for the ePollbook/check-in station, not the voting machines.',
+          'Connect voting machines directly to a working wall outlet. Do not use a power strip.',
+          'Up to four voting machines may be daisy-chained from one wall outlet.',
+          'Secure voting-machine cords so they are not a trip hazard.'
         ],
-        why:'The rear compartment contains the check-in equipment needed for Election Day, and the machine itself must be secured before it is opened for voting.',
+        why:'This step gets the voting machine physically ready, brings out the Election Day supplies, and establishes the correct power path before machine opening continues.',
         tips:['Move table equipment to the check-in area after it is removed from the voting machine.'],
-        mistakes:['Leaving used seals loose instead of placing them in the green Spoiled Ballot/Used Seal Bag.'],
-        actions:['Machine positioned, wheels locked, cover removed, rear equipment removed, rear compartment re-locked.']
+        mistakes:['Leaving used seals loose instead of placing them in the green Spoiled Ballot/Used Seal Bag.','Plugging a voting machine into the yellow extension reel or an ePollbook power strip.'],
+        actions:['Machine positioned, wheels locked, cover removed, rear equipment removed, rear compartment re-locked.','Voting-machine power path confirmed as direct wall power and cords secured.']
       },
       {
         id:'router-power',
-        title:'Router first — voting machines directly to the wall',
-        lead:'Power the location router first, and keep voting-machine power separate from the check-in extension reel and power strips.',
+        title:'Router first',
+        lead:'Identify the district with the router and power it before ePollbook setup continues.',
         official:[
-          'If the location has the bubble-wrapped router, remove it from the marked voting machine and plug it into a working outlet; it turns on automatically.',
-          'The yellow extension reel and power strip are for the check-in station.',
-          'The voting machine must be plugged into a working wall outlet. Up to four voting machines may be daisy-chained to one outlet.',
-          'Secure voting-machine cords so no one can trip over them.'
+          'If the location has the bubble-wrapped router, remove it from the marked voting machine and plug it into a working outlet; it turns on automatically.'
         ],
-        why:'The router provides Election Day connectivity, while the voting machines have a separate direct-wall power requirement.',
-        tips:['In a multi-district room, workers should identify immediately which district has the router and get it powered before check-in setup continues.'],
-        mistakes:['Plugging a voting machine into the yellow extension reel or an ePollbook power strip.'],
-        actions:['Router powered.','Voting-machine power path confirmed as direct wall power.']
+        why:'The router provides Election Day connectivity and should be online before the ePollbook stations are configured.',
+        tips:['In a multi-district room, identify immediately which district has the router and get it powered before check-in setup continues.'],
+        mistakes:['Failing to identify the router district or leaving the router packed in the voting machine while setup continues.'],
+        actions:['Router located and powered.']
       },
       {
         id:'epb-layout',
