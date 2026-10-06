@@ -137,6 +137,7 @@
       <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
       ${item.critical?`<div class="procedure-critical">${esc(item.critical)}</div>`:''}${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
       ${item.decision?`<section class="field-section"><h4>Decision Point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong>${decisionMarkup(item.decision.yes)}</div><div class="decision-choice no"><strong>NO</strong>${decisionMarkup(item.decision.no)}</div></div></section>`:''}
+      ${item.branches?.length?`<section class="field-section"><h4>${esc(item.branchTitle||'Paths')}</h4>${branchMarkup(item.branches)}</section>`:''}
       ${steps.length?`<section class="field-section"><h4>What To Do</h4><ol>${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section>`:''}
       ${item.notDo?.length?`<section class="field-section"><h4>What NOT To Do</h4><ul>${item.notDo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
       ${item.outcome?`<section class="field-section"><h4>Voting Outcome</h4><div class="outcome-box">${outcomeMarkup(item.outcome)}</div></section>`:''}
