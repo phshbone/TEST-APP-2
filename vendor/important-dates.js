@@ -87,6 +87,18 @@
     </section>`;
   }
 
+  window.MPW_CURRENT_LOOKUP_ITEMS=[
+    {title:'Official Morris County Election Calendar',summary:'Published Morris County election dates and Early Voting windows control when available.',aliases:['election dates','calendar','early voting dates','election day date','morris calendar']},
+    {title:'Regular Primary Election',summary:'Primary timing, registration, and party-affiliation rules.',aliases:['primary','55 days','party affiliation','party change','unaffiliated']},
+    {title:'Regular General Election',summary:'General Election timing and voter-registration deadline.',aliases:['general election','registration deadline','21 days']},
+    {title:'Early Voting',summary:'Use the official Morris County published Early Voting window for the specific election.',aliases:['early voting window','early voting dates']},
+    {title:'17-Year-Old Primary Voters',summary:'A registered 17-year-old may vote in a Primary if they turn 18 by the following General Election.',aliases:['17 year old','seventeen','minor voter','primary voter']},
+    {title:'County Residency',summary:'County-residency requirements apply before the election.',aliases:['residency','30 day','county residence']},
+    {title:'Special Elections',summary:'Use the official published timeline for special elections and special primaries.',aliases:['special election','special primary']},
+    {title:'Special-Election Registration',summary:'Use the registration deadline published for the specific special election.',aliases:['special registration','registration']},
+    {title:'Special-Primary Party Deadlines',summary:'Use the official party-change timeline for the specific special primary.',aliases:['special primary','party deadline','party change']}
+  ];
+
   renderCurrent=function(){
     title.textContent='Important Dates & Rules';
     const current=nextRegularElection(), next=followingRegularElection(current);
