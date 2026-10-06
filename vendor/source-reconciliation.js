@@ -79,7 +79,7 @@
   const reprint=get('xref-reprint');
   if(reprint){
     reprint.statuses=['Current Morris Guidance'];
-    reprint.meaning='Use Re-Print after a check-in is complete when the ballot/activation card or authority slip needs to be printed again. Do not check the voter in a second time.';
+    reprint.meaning='Use Re-Print after a check-in is complete when the ballot/activation card or authority slip needs to be printed again.';
     reprint.steps=['Return to the home screen with Process Next Voter.','Open the Launchpad Menu and choose Re-Print.','Search for the voter using the Morris 3 & 3 search method.','Select the correct voter, then tap the green Re-Print button.','Print only the replacement item needed and return to normal workflow.'];
     reprint.source=morrisSource('ePollbook Manual, Re-Printing a Ballot or Authority Slip, p. 25',29);
   }
