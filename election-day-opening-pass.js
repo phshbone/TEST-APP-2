@@ -60,12 +60,12 @@
         title:'Voting-machine physical setup',
         lead:'Position, secure, unseal, uncover, and remove the stored Election Day equipment from the correct machine.',
         official:[
-          'Use the chrome handles to position the machine and lock the swivel castors.',
-          'Move the light stick to the vertical position.',
-          'Use scissors to cut the white seal on the machine covers; place the used seal in the green Spoiled Ballot/Used Seal Bag.',
-          'Remove, fold, and place the machine covers at the back of the machine.',
-          'Use the barrel key to open the back compartment. Remove the materials stored there, then close and lock the compartment.',
-          'Activation Cards, extension reel, and power strips may be split between machines when a district has two machines. The power strips are for ePollbook stations only.'
+          'Move the voting machine into position with the chrome handles, then secure the swivel castors.',
+          'Raise the light stick into its operating position.',
+          'Cut and remove the white cover seal with scissors, then place that used seal in the green Spoiled Ballot/Used Seal Bag.',
+          'Take off the machine covers, fold them, and store them behind the machine.',
+          'Open the rear compartment with the barrel key, remove the Election Day materials, then close and lock the compartment again.',
+          'When two machines share supplies, identify which machine contains the Activation Cards, extension reel, and ePollbook power strips. The power strips are for ePollbook stations, not voting-machine power.'
         ],
         why:'The rear compartment contains the check-in equipment needed for Election Day, and the machine itself must be secured before it is opened for voting.',
         tips:['Move table equipment to the check-in area after it is removed from the voting machine.'],
@@ -92,10 +92,10 @@
         title:'ePollbook station layout — wire first, no power',
         lead:'Lay out one complete station, match the device numbers, and make the equipment connections before supplying power.',
         official:[
-          'Follow the visual station diagram supplied with the Election Day ePollbook materials.',
-          'Confirm that the Touchpad/ePollbook number matches both printer numbers.',
-          'Match the labeled/color-coded connections to the corresponding labeled ports on the Epson printer, ExpressVote printer, server, and associated cables.',
-          'Keep wires bundled, facing the poll-worker side, and out of the voter path; use the supplied blue tape for potential tripping hazards.'
+          'Use the supplied Election Day station diagram as the wiring reference.',
+          'Before connecting equipment, verify that the Touchpad/ePollbook and both printers carry the same station number.',
+          'Connect each labeled or color-coded cable to its matching labeled port on the Epson printer, ExpressVote printer, server, and related equipment.',
+          'Route and bundle the wiring on the poll-worker side of the table, away from voter traffic; secure any potential trip hazard with the supplied blue tape.'
         ],
         why:'Completing the physical wiring first makes it easier to catch a crossed connection before a station is powered and paired.',
         tips:[
@@ -114,10 +114,10 @@
         title:'Power and configure one ePollbook station at a time',
         lead:'After the physical wiring is complete, energize one station and use the ePollbook interface to verify its printers before moving to the next station.',
         official:[
-          'Set up one ePollbook station at a time to prevent cross-connections between numbered devices.',
-          'Open the ePollbook application and verify that the location and district shown are correct; if they are not correct, call the Board of Elections immediately.',
-          'The ExpressVote printer can be tested from the ePollbook settings using a loaded blank Activation Card.',
-          'During opening/login, both printers provide a test option; use the Troubleshoot Guide if either printer is not working.'
+          'Bring up and configure one numbered ePollbook station at a time so equipment from different stations is not accidentally paired.',
+          'After opening the ePollbook app, confirm the displayed location and district. If either is wrong, stop and call the Board of Elections.',
+          'Use a loaded blank Activation Card when testing the ExpressVote printer from ePollbook settings.',
+          'Use the printer test controls available during opening/login. If a printer does not work, follow the Troubleshoot Guide.'
         ],
         why:'Printer selection and testing are performed through the ePollbook software, so the ePollbook interface must be available for the functional test.',
         tips:[
@@ -137,10 +137,10 @@
         title:'Open the voting machine using Pilot / Co-Pilot',
         lead:'Use the official Voting Machine Manual in order; one worker reads while the other performs and confirms each step.',
         official:[
-          'Verify the required seals against the Key Envelope before removing them.',
-          'Plug the voting machine into the working wall outlet and verify its power indicators.',
-          'Use the barrel key to open the Top Access Compartment, use the red power button to start the machine, then close and lock the compartment and return the key to the Key Envelope.',
-          'Continue the official ExpressVote XL Opening Procedures in the Voting Machine Manual through the ready-for-voting checks.'
+          'Before removing any required seal, compare it with the information for that voting machine.',
+          'Connect the voting machine to a working wall outlet and confirm that it has power.',
+          'Open the Top Access Compartment with the barrel key, start the machine with the red power button, then relock the compartment and return the key to its Key Envelope.',
+          'From that point, continue the official ExpressVote XL opening sequence in the Voting Machine Manual through the final ready-for-voting checks.'
         ],
         why:'The machine-opening sequence contains seal, key, power, and readiness checks that should be followed in the published order rather than reconstructed from memory.',
         tips:[],
