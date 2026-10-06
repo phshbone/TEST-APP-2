@@ -14,11 +14,10 @@
     'Return the completed form with the proper election materials for Board processing.'
   ];
   item.notDo=[
-    'Do not treat the printed checkboxes as the only reasons the Correction of Record portion may be used.',
     'Do not imply that completing the form directly edits the official voter-registration database.',
     'Do not use the Correction of Record portion itself to decide regular versus provisional ballot eligibility; follow the underlying voter procedure.'
   ];
-  item.outcome='The correction or report is sent to the Board of Elections for processing. Any voting outcome is determined by the underlying voter situation, not by the Correction of Record form alone.';
+  item.outcome='The correction or report is sent to the Board of Elections for processing.';
   item.form='Morris County Correction of Record / Affirmation of Residence combined form — use the top Correction of Record portion for corrections and reports; the bottom Affirmation of Residence portion is a separate function.';
   item.tip='Master Poll Worker Tip: older voter records can contain unusual database information, such as an obviously incorrect birth year (for example, 1800). A legitimate record discrepancy like this may be documented on the Correction of Record form even when it does not neatly match a printed checkbox.';
   item.escalation='Call the Board when the information being reported cannot be clearly documented, the requested change appears unrelated to voter registration, or the voting remedy is unclear.';
