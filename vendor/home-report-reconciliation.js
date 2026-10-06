@@ -28,7 +28,7 @@
   }
 
   renderHome=function(){
-    title.textContent='Master Poll Worker Guide';
+    title.textContent='Master PW Guide';
     const g=homeGuideStats(), t=homeTrainingStats();
     return `${pageHeading('Master Poll Worker Guide',`${modeLabel()} • ${state.reportDate}`)}
       <section class="card home-status-card">
