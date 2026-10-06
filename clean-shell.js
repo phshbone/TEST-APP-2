@@ -31,7 +31,13 @@
         head=head.slice(0,secondStar+1).trim();
         if(remainder)body=`${remainder} ${body}`.trim();
       }
-      box.innerHTML=`<span class="critical-command">${esc(head)}</span>${body?`<span class="critical-explanation">${esc(body)}</span>`:''}`;
+      const framed=/VOTER NOT FOUND OR BEGIN A NEW CHECK-IN/i.test(head);
+      if(framed){
+        const label=head.replace(/^★\s*/,'').replace(/\s*★$/,'').trim();
+        box.innerHTML=`<span class="critical-command critical-command-framed"><span class="critical-star">★</span><span class="critical-command-text">${esc(label)}</span><span class="critical-star">★</span></span>${body?`<span class="critical-explanation">${esc(body)}</span>`:''}`;
+      }else{
+        box.innerHTML=`<span class="critical-command">${esc(head)}</span>${body?`<span class="critical-explanation">${esc(body)}</span>`:''}`;
+      }
       box.dataset.criticalFormatted='1';
     });
   }
