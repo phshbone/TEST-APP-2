@@ -135,12 +135,16 @@
   function procLinkMarkup(item){
     return (item.procedureLinks||[]).map(link=>`<button class="cross-link procedure-jump" data-procedure-jump="${esc(link.id)}">${esc(link.label||'Open Procedure')}</button>`).join('');
   }
+  function contactRoutingMarkup(item){
+    if(!item.contactRoutes?.length)return '';
+    return `<div class="warning-box contact-routing-box">${item.contactRoutes.map(route=>`<div class="contact-routing-row"><strong>${esc(route.label)}</strong><span class="contact-routing-destination">${esc(route.destination)}: ${esc(route.phone)}</span></div>`).join('')}</div>`;
+  }
   fieldProcedureMarkup=function(item){
     const shared=item.sharedProcedure?data.procedures.find(p=>p.id===item.sharedProcedure):null;
     const status=badges(item.statuses||[]),steps=item.stepsByMode?.[state.mode]||item.steps||shared?.steps||[],warning=item.suppressSharedWarning?item.warning:(item.warning||shared?.warning);
     return `<article class="card field-procedure" id="field-${esc(item.id)}" data-field-procedure="${esc(item.id)}">
       <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
-      ${item.critical?`<div class="procedure-critical">${esc(item.critical)}</div>`:''}${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
+      ${item.critical?`<div class="procedure-critical">${esc(item.critical)}</div>`:''}${contactRoutingMarkup(item)}${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
       ${item.decision?`<section class="field-section"><h4>Decision Point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong>${decisionMarkup(item.decision.yes)}</div><div class="decision-choice no"><strong>NO</strong>${decisionMarkup(item.decision.no)}</div></div></section>`:''}
       ${item.branches?.length?`<section class="field-section"><h4>${esc(item.branchTitle||'Paths')}</h4>${branchMarkup(item.branches)}</section>`:''}
       ${steps.length?`<section class="field-section"><h4>What To Do</h4><ol>${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section>`:''}
