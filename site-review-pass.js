@@ -63,9 +63,13 @@
       id:'who-to-call-routing',category:'equipment',title:'Who to Call — Equipment & Voter Issues',aliases:['who to call','machine warehouse','board number','ePollbook help','voter help'],modes:['early','election'],
       statuses:['Confirmed Morris County Contact Routing','Critical'],
       meaning:'Route the call by the type of problem instead of calling an individual staff member directly.',
-      warning:'VOTING MACHINE ISSUE → Machine Warehouse: (973) 285-6741. ePOLLBOOK OR VOTER ISSUE → Board of Elections main number: (973) 285-6715.',
-      steps:['For any voting-machine-related problem, call the Machine Warehouse at (973) 285-6741.','For any ePollbook-related problem, call the Board of Elections main number at (973) 285-6715.','For any voter-related question or eligibility/procedure issue, call the Board of Elections main number at (973) 285-6715.','Use the main Board number so the call can be routed to the appropriate person rather than choosing an individual staff member yourself.'],
-      notDo:['Do not guess which individual Board employee should handle an ePollbook or voter issue.','Do not route a voting-machine problem to the general Board line when the Machine Warehouse is the appropriate contact.']
+      contactRoutes:[
+        {label:'Voting machine issue:',destination:'Machine Warehouse',phone:'(973) 285-6741'},
+        {label:'ePollbook or voter issue:',destination:'Board of Elections',phone:'(973) 285-6715'}
+      ],
+      steps:[],
+      note:'Use the Board of Elections main number so the call can be routed to the appropriate person rather than choosing an individual staff member yourself.',
+      notDo:[]
     };
     field.items.splice(firstEquipment>=0?firstEquipment:field.items.length,0,routing);
   }
