@@ -33,7 +33,7 @@
         'Move table equipment to the check-in area after it is removed from the voting machine.',
         'After setup, return the barrel keys and Key Envelopes to the Red Bag. Do not leave machine keys at, on, or in the voting machine.'
       ];
-      physical.actions=['Machine positioned, wheels locked, cover removed, rear equipment removed, rear compartment re-locked.','Barrel keys and Key Envelopes returned to the Red Bag.'];
+      physical.actions=['Machine positioned, wheels locked, cover removed, rear equipment removed, rear compartment re-locked.','Voting machines on direct wall power; daisy-chain limit observed; cords secured.','Barrel keys and Key Envelopes returned to the Red Bag.'];
     }
 
     const epb=lesson(electionOpening,'epb-layout');
