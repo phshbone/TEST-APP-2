@@ -45,7 +45,7 @@ function pageHeading(name, sub=''){ return `<div class="page-heading"><h2>${name
 function badges(items=[]){ return `<div class="badge-row">${items.map(x=>`<span class="badge">${esc(x)}</span>`).join('')}</div>`; }
 
 function renderHome(){
-  title.textContent='Master Poll Worker Guide';
+  title.textContent='Master PW Guide';
   return `${pageHeading('Today’s Control Center', `${modeLabel()} mode • ${state.reportDate}`)}
   <div class="card">
     <h3>Teaching-guide prototype</h3>
