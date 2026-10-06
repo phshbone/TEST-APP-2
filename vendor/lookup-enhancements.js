@@ -27,15 +27,17 @@ renderLookup = function(){
     ${!q?'<div class="card empty">Type the voter situation or procedure you are looking for.</div>':groups.length?groups.join(''):'<div class="card empty">No matching Guide or Procedure.</div>'}`;
 };
 
-function openProcedureFromLookup(id){
+function openProcedureFromLookup(id,mode){
   const item=fieldData.items.find(x=>x.id===id);
   if(!item) return;
+  if(mode)state.mode=mode;
   state.route='procedures';
   state.procedureCategory=item.category;
   saveState(); render();
   requestAnimationFrame(()=>document.getElementById(`field-${id}`)?.scrollIntoView({block:'start',behavior:'auto'}));
 }
-function openGuideFromLookup(id){
+function openGuideFromLookup(id,mode){
+  if(mode)state.mode=mode;
   state.route='guide';
   saveState(); render();
   requestAnimationFrame(()=>{
@@ -115,8 +117,14 @@ renderReport=function(){
 const reconciliationBaseBindDynamic=bindDynamic;
 bindDynamic=function(){
   reconciliationBaseBindDynamic();
-  document.querySelectorAll('[data-lookup-procedure]').forEach(b=>b.onclick=()=>openProcedureFromLookup(b.dataset.lookupProcedure));
-  document.querySelectorAll('[data-lookup-guide]').forEach(b=>b.onclick=()=>openGuideFromLookup(b.dataset.lookupGuide));
+  document.querySelectorAll('[data-lookup-procedure]').forEach(b=>b.onclick=()=>openProcedureFromLookup(b.dataset.lookupProcedure,b.dataset.lookupMode));
+  document.querySelectorAll('[data-lookup-guide]').forEach(b=>b.onclick=()=>openGuideFromLookup(b.dataset.lookupGuide,b.dataset.lookupMode));
+  document.querySelectorAll('[data-lookup-route]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.lookupMode)state.mode=b.dataset.lookupMode;
+    state.route=b.dataset.lookupRoute;
+    saveState();render();
+    if(main)main.scrollTop=0;
+  });
 };
 
 /* Screenshot-era Guide restoration. */
