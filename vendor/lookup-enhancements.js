@@ -36,12 +36,14 @@ function openProcedureFromLookup(id,mode){
   saveState(); render();
   requestAnimationFrame(()=>document.getElementById(`field-${id}`)?.scrollIntoView({block:'start',behavior:'auto'}));
 }
-function openGuideFromLookup(id,mode){
+function openGuideFromLookup(id,mode,lesson){
   if(mode)state.mode=mode;
+  if(lesson)state.openLesson=`${id}:${lesson}`;
   state.route='guide';
   saveState(); render();
   requestAnimationFrame(()=>{
-    const target=document.querySelector(`[data-procedure="${CSS.escape(id)}"]`);
+    const lessonTarget=lesson?document.querySelector(`[data-lesson-card="${CSS.escape(`${id}:${lesson}`)}"]`):null;
+    const target=lessonTarget||document.querySelector(`[data-procedure="${CSS.escape(id)}"]`);
     if(!target) return;
     if(target.classList.contains('procedure-card')&&!target.classList.contains('teaching-procedure')) target.classList.add('expanded');
     target.scrollIntoView({block:'start',behavior:'auto'});
@@ -118,7 +120,7 @@ const reconciliationBaseBindDynamic=bindDynamic;
 bindDynamic=function(){
   reconciliationBaseBindDynamic();
   document.querySelectorAll('[data-lookup-procedure]').forEach(b=>b.onclick=()=>openProcedureFromLookup(b.dataset.lookupProcedure,b.dataset.lookupMode));
-  document.querySelectorAll('[data-lookup-guide]').forEach(b=>b.onclick=()=>openGuideFromLookup(b.dataset.lookupGuide,b.dataset.lookupMode));
+  document.querySelectorAll('[data-lookup-guide]').forEach(b=>b.onclick=()=>openGuideFromLookup(b.dataset.lookupGuide,b.dataset.lookupMode,b.dataset.lookupLesson));
   document.querySelectorAll('[data-lookup-route]').forEach(b=>b.onclick=()=>{
     if(b.dataset.lookupMode)state.mode=b.dataset.lookupMode;
     state.route=b.dataset.lookupRoute;
