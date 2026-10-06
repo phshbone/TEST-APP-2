@@ -55,6 +55,7 @@
     nf.statuses=['Current Morris Guidance','Critical'];
     nf.meaning='A failed first search does not mean the voter is unregistered. Search carefully and escalate if the record still cannot be found.';
     nf.critical='★ DO NOT SELECT VOTER NOT FOUND OR BEGIN A NEW CHECK-IN unless the Board of Elections directs you to do so. ★';
+    nf.suppressSharedWarning=true;
     nf.steps=['Check spelling and likely transcription errors.','Use alternate search fields such as address, street, date of birth, or other options shown by the ePollbook.','If the voter still cannot be located, call the Board of Elections.'];
     nf.outcome='Board determination required before proceeding.';
   }
@@ -132,7 +133,7 @@
   }
   fieldProcedureMarkup=function(item){
     const shared=item.sharedProcedure?data.procedures.find(p=>p.id===item.sharedProcedure):null;
-    const status=badges(item.statuses||[]),steps=item.stepsByMode?.[state.mode]||item.steps||shared?.steps||[],warning=item.warning||shared?.warning;
+    const status=badges(item.statuses||[]),steps=item.stepsByMode?.[state.mode]||item.steps||shared?.steps||[],warning=item.suppressSharedWarning?item.warning:(item.warning||shared?.warning);
     return `<article class="card field-procedure" id="field-${esc(item.id)}" data-field-procedure="${esc(item.id)}">
       <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
       ${item.critical?`<div class="procedure-critical">${esc(item.critical)}</div>`:''}${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
