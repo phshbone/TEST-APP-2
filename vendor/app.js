@@ -35,6 +35,9 @@ function decisionMarkup(text){
   if(parts.length<2) return `<p>${esc(clean)}</p>`;
   return `<ul class="decision-list">${parts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
 }
+function branchMarkup(branches=[]){
+  return `<div class="branch-grid">${branches.map(b=>`<div class="branch-choice"><strong>${esc(b.label||'Path')}</strong><p>${esc(b.text||'')}</p></div>`).join('')}</div>`;
+}
 function setRoute(route){ state.route=route; saveState(); render(); sideMenu.close(); window.scrollTo({top:0,behavior:'smooth'}); }
 function modeLabel(){ return state.mode === 'early' ? 'Early Voting' : 'Election Day'; }
 function filteredProcedures(){ return data.procedures.filter(p=>p.modes.includes(state.mode)); }
@@ -122,6 +125,7 @@ function fieldProcedureMarkup(item){
     <h3>${esc(item.title)}</h3>${status}<p class="summary">${esc(item.meaning||shared?.summary||'')}</p>
     ${warning?`<div class="warning-box">${esc(warning)}</div>`:''}
     ${item.decision?`<section class="field-section"><h4>Decision point</h4><p><strong>${esc(item.decision.question)}</strong></p><div class="decision-split"><div class="decision-choice yes"><strong>YES</strong>${decisionMarkup(item.decision.yes)}</div><div class="decision-choice no"><strong>NO</strong>${decisionMarkup(item.decision.no)}</div></div></section>`:''}
+    ${item.branches?.length?`<section class="field-section"><h4>${esc(item.branchTitle||'Paths')}</h4>${branchMarkup(item.branches)}</section>`:''}
     ${steps.length?`<section class="field-section"><h4>What To Do</h4><ol>${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section>`:''}
     ${item.notDo?.length?`<section class="field-section"><h4>What NOT To Do</h4><ul>${item.notDo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
     ${item.outcome?`<section class="field-section"><h4>Voting Outcome</h4><div class="outcome-box">${outcomeMarkup(item.outcome)}</div></section>`:''}
