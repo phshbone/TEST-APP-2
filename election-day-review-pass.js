@@ -18,9 +18,9 @@
     const identify=lesson(electionOpening,'identify-machines');
     if(identify){
       identify.official=[
-        'Locate the Key Envelope in the Red Bag.',
-        'Confirm that the machine number on the Key Envelope matches the number on the voting machine.',
-        'Separately inspect the voting-machine seals. If a required seal is missing, broken, or does not match the seal information recorded for that machine, stop and contact the Voting Machine Warehouse.'
+        'Retrieve the appropriate Key Envelope from the Red Bag.',
+        'Before opening the machine, verify that the Key Envelope number and voting-machine number are the same.',
+        'Inspect the machine seals separately. If a required seal is missing, damaged, or disagrees with the recorded seal information, stop and contact the Voting Machine Warehouse.'
       ];
       identify.tips=[
         'The Election Day Red Bag is in the Maroon Bag with the Election Day materials.'
@@ -39,23 +39,23 @@
     const epb=lesson(electionOpening,'epb-layout');
     if(epb){
       epb.official=[
-        'Follow the visual station diagram supplied with the Election Day ePollbook materials.',
-        'Confirm that the Touchpad/ePollbook number matches both printer numbers.',
-        'Match the labeled/color-coded connections to the corresponding labeled ports on the Epson printer, ExpressVote printer, server, and associated cables.',
-        'Route equipment wires down the poll-worker side of the table, not the voter side. Keep wires bundled and out of voter paths; use the supplied blue tape for potential tripping hazards.'
+        'Use the Election Day station diagram as the reference for laying out and connecting the ePollbook equipment.',
+        'Verify that the Touchpad/ePollbook and both printers have the same station number before wiring them together.',
+        'Connect the labeled or color-coded cables to the corresponding labeled ports on the Epson printer, ExpressVote printer, server, and related equipment.',
+        'Keep the wiring on the poll-worker side of the table, bundle it away from voter traffic, and secure any trip hazard with the supplied blue tape.'
       ];
     }
 
     const machineOpen=lesson(electionOpening,'machine-open');
     if(machineOpen){
       machineOpen.official=[
-        'Verify the required seals against the machine-opening information before removing them.',
-        'Plug the voting machine into the working wall outlet and verify its power indicators.',
-        'Use the barrel key to open the Top Access Compartment, use the red power button to start the machine, then close and lock the compartment.',
-        'Continue the official ExpressVote XL Opening Procedures in the Voting Machine Manual through Open Poll and the ready-for-voting checks.',
-        'Two Zero Reports print automatically. Verify that every number on both reports is ZERO (0). Two poll workers from opposing parties sign both reports and place them in the Red Bag.',
-        'If a Zero Report is not zero, STOP opening that machine and contact the Voting Machine Warehouse before proceeding.',
-        'After the machine-opening sequence is complete, return the barrel key and Key Envelope to the Red Bag.'
+        'Check each required seal against the recorded machine-opening information before removing it.',
+        'Connect the voting machine to a working wall outlet and confirm the machine is receiving power.',
+        'Use the barrel key to open the Top Access Compartment, start the machine with the red power button, then close and lock the compartment.',
+        'Continue with the official ExpressVote XL opening instructions through Open Poll and the final readiness checks.',
+        'The machine prints two Zero Reports. Confirm that every reported total is ZERO (0); two poll workers from opposing parties sign both reports and return them to the Red Bag.',
+        'If either Zero Report contains a nonzero total, stop the opening process for that machine and contact the Voting Machine Warehouse.',
+        'When opening is complete, put the barrel key and Key Envelope back in the Red Bag.'
       ];
     }
 
